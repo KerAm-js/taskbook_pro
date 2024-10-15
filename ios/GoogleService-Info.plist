@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>429120841111-qub6jc02ac17mrdfjmeptv1qi23fpnr7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.429120841111-qub6jc02ac17mrdfjmeptv1qi23fpnr7</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAeeerniknt9okUWPcGA0i461WSkQbwUqA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>429120841111</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.amirkerimov.taskbookpremium</string>
+	<key>PROJECT_ID</key>
+	<string>taskbook-premium</string>
+	<key>STORAGE_BUCKET</key>
+	<string>taskbook-premium.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:429120841111:ios:af82343b0b85b989bf90d2</string>
+</dict>
+</plist>

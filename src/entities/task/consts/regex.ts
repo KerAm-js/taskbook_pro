@@ -1,0 +1,1 @@
+export const TIME_IN_TASK_REGEX = /((\s)?([01]|\s)?[0-9]|2[0-3]):([0-5][0-9])\s/g;

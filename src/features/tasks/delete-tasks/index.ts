@@ -1,0 +1,1 @@
+export { DeleteTasks } from "./ui/DeleteTasks";
