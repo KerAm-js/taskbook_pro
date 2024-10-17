@@ -92,75 +92,89 @@ export const SettingsList = () => {
         style={styles.scroll}
         contentContainerStyle={styles.scrollContentContainer}
         showsVerticalScrollIndicator={false}>
-        <TaskbookForever />
-        <ThemedView colorName="lineGrey" style={styles.line} />
-        <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
-          account
-        </CustomText>
-        <UserCard data={user} onPress={goToAccount} />
-        <ThemedView colorName="lineGrey" style={styles.line} />
-        <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
-          general
-        </CustomText>
-        <Setting
-          type="toggle"
-          title="fastInputMode"
-          value={fastInputMode}
-          onPress={() => toggleFastInputMode()}
-          xmlGetter={keyboardSvg}
-        />
-        <Setting
-          type="navigate"
-          title="backupCopy"
-          onPress={() => navigation.navigate('Backup')}
-          xmlGetter={archieveSvg}
-        />
-        <Setting
-          type="navigate"
-          title="notifications"
-          onPress={() => navigation.navigate('Reminders')}
-          xmlGetter={bellSvg}
-        />
-        <Setting
-          type="navigate"
-          title="theme"
-          onPress={() => navigation.navigate('Theme')}
-          xmlGetter={paletteSvg}
-        />
-        <Setting
-          type="navigate"
-          title="language"
-          onPress={() => navigation.navigate('Language')}
-          xmlGetter={translateSvg}
-        />
-        <ThemedView colorName="lineGrey" style={styles.line} />
-        <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
-          app
-        </CustomText>
-        <Setting
-          type="navigate"
-          title="shareWithFriend"
-          onPress={shareApp}
-          xmlGetter={shareSvg}
-        />
-        <Setting
-          type="navigate"
-          title="leaveReview"
-          onPress={rateApp}
-          xmlGetter={likeSvg}
-        />
-        <Setting
-          type="navigate"
-          title="contactDeveloper"
-          onPress={contactDeveloper}
-          xmlGetter={dialogSvg}
-        />
-        {/* <Setting
+        <View style={styles.paddingContainer}>
+          <TaskbookForever />
+        </View>
+        <ThemedView
+          colorName="background"
+          borderColorName="lineGrey"
+          style={styles.section}>
+          <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
+            account
+          </CustomText>
+          <UserCard data={user} onPress={goToAccount} />
+        </ThemedView>
+        <ThemedView
+          colorName="background"
+          borderColorName="lineGrey"
+          style={styles.section}>
+          <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
+            general
+          </CustomText>
+          <Setting
+            type="toggle"
+            title="fastInputMode"
+            value={fastInputMode}
+            onPress={() => toggleFastInputMode()}
+            xmlGetter={keyboardSvg}
+          />
+          <Setting
+            type="navigate"
+            title="backupCopy"
+            onPress={() => navigation.navigate('Backup')}
+            xmlGetter={archieveSvg}
+          />
+          <Setting
+            type="navigate"
+            title="notifications"
+            onPress={() => navigation.navigate('Reminders')}
+            xmlGetter={bellSvg}
+          />
+          <Setting
+            type="navigate"
+            title="theme"
+            onPress={() => navigation.navigate('Theme')}
+            xmlGetter={paletteSvg}
+          />
+          <Setting
+            type="navigate"
+            title="language"
+            onPress={() => navigation.navigate('Language')}
+            xmlGetter={translateSvg}
+          />
+        </ThemedView>
+        <ThemedView
+          colorName="background"
+          borderColorName="lineGrey"
+          style={styles.section}>
+          <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
+            app
+          </CustomText>
+          <Setting
+            type="navigate"
+            title="shareWithFriend"
+            onPress={shareApp}
+            xmlGetter={shareSvg}
+          />
+          <Setting
+            type="navigate"
+            title="leaveReview"
+            onPress={rateApp}
+            xmlGetter={likeSvg}
+          />
+          <Setting
+            type="navigate"
+            title="contactDeveloper"
+            onPress={contactDeveloper}
+            xmlGetter={dialogSvg}
+          />
+          {/* <Setting
           type="navigate"
           title="supportProject"
           onPress={() => {}}
           xmlGetter={dollarSvg}
         /> */}
+        </ThemedView>
       </ScrollView>
       <ThemedView
         style={[styles.copyRightContainer, {paddingBottom}]}
@@ -189,7 +203,6 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     paddingTop: PADDING_TOP,
-    paddingHorizontal: SCREEN_PADDING,
   },
   scrollContentContainer: {
     paddingBottom: 200,
@@ -207,10 +220,14 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.whiteUltraOpacity,
     shadowOpacity: 0,
   },
-  line: {
-    height: 1,
+  section: {
+    paddingTop: 12,
     marginTop: 10,
-    marginBottom: 12,
+    borderTopWidth: 1,
+    paddingHorizontal: SCREEN_PADDING,
+  },
+  paddingContainer: {
+    paddingHorizontal: SCREEN_PADDING,
   },
   categoryTitle: {
     ...TEXT_STYLES.standart,

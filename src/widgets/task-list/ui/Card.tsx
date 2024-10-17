@@ -120,8 +120,7 @@ export const Card: FC<TPropTypes> = React.memo(
         <TaskRow id={id} onPress={onPress} onLayout={onLayout} />
       </ThemedView>
     );
-  },
-  () => true,
+  }
 );
 
 const styles = StyleSheet.create({

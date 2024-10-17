@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 interface IBasicProps {
   initValue?: string | null;
@@ -44,13 +44,13 @@ type TProps =
   | IPropsWithValueToConfirm;
 
 type TInputValidator = (
-  props: TProps
+  props: TProps,
 ) => [
   value: string,
   onChangeValue: (text: string) => void,
   isValid: boolean,
   error: string,
-  showErrorForce?: boolean
+  showErrorForce?: boolean,
 ];
 
 export const useInputValidator: TInputValidator = ({
@@ -62,21 +62,21 @@ export const useInputValidator: TInputValidator = ({
   valueToConfirm,
   confirmationErrorMessage,
 }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   const [isValid, setIsValid] = useState(false);
-  const [error, setError] = useState("");
-  const { t } = useTranslation();
+  const [error, setError] = useState('');
+  const {t} = useTranslation();
 
   const onValueValid = () => {
     setIsValid(true);
-    setError("");
+    setError('');
   };
 
   const validateRequiredValue = (text: string) => {
     if (!required) return;
-    if (required && !text.trim().length) {
+    if (required && text?.length === 0) {
       setIsValid(false);
-      setError(t("requiredValidationError"));
+      setError(t('requiredValidationError'));
     } else {
       onValueValid();
     }
@@ -86,7 +86,7 @@ export const useInputValidator: TInputValidator = ({
     if (!minLength) return;
     if (minLength && text.trim().length < minLength) {
       setIsValid(false);
-      setError(t("minLengthValidationError", { length: minLength }));
+      setError(t('minLengthValidationError', {length: minLength}));
     } else {
       onValueValid();
     }
@@ -94,7 +94,7 @@ export const useInputValidator: TInputValidator = ({
 
   const validatePattern = (text: string) => {
     if (!pattern) return;
-    if (pattern && text.length > 0 && !pattern.test(text)) {
+    if (text.length === 0 || (pattern && !pattern.test(text))) {
       setIsValid(false);
       setError(t(patternErrorMessage));
     } else {
@@ -121,7 +121,7 @@ export const useInputValidator: TInputValidator = ({
   };
 
   useEffect(() => {
-    onChangeValue(initValue || "");
+    onChangeValue(initValue || '');
   }, []);
 
   useEffect(() => {

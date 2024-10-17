@@ -1,12 +1,14 @@
-import { TEXT_STYLES, ThemedText } from "@/shared";
-import { FC, PropsWithChildren } from "react";
-import { StyleSheet } from "react-native";
+import {TEXT_STYLES, ThemedText, ThemedView} from '@/shared';
+import {FC, PropsWithChildren} from 'react';
+import {StyleSheet} from 'react-native';
 
-export const SectionTitle: FC<PropsWithChildren> = ({ children }) => {
+export const SectionTitle: FC<PropsWithChildren> = ({children}) => {
   return (
-    <ThemedText colorName="textGrey" style={styles.title}>
-      {children}
-    </ThemedText>
+    <ThemedView colorName="background">
+      <ThemedText colorName="textGrey" style={styles.title}>
+        {children}
+      </ThemedText>
+    </ThemedView>
   );
 };
 

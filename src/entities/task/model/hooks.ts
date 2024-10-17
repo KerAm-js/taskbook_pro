@@ -4,8 +4,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {tasksSlice} from './tasksSlice';
 import {RootState} from '@/app/store';
 import {
-  selectCompletedTasksCount,
   selectCompletedTaskEntities,
+  selectCompletedTasksCount,
   selectTaskById,
 } from './selectors';
 
@@ -108,7 +108,7 @@ export const useCompletedTasks = (date?: number) => {
   const ids = useSelector((state: RootState) =>
     selectCompletedTaskEntities(state, date || state.tasks.selectedDate),
   );
-  return ids;
+  return ids
 };
 
 export const useTaskReminderSettings = () => {

@@ -13,7 +13,7 @@ export const selectCompletedTaskEntities = createSelector(
     (_, date: number) => date,
   ],
   (entities, ids, date) => {
-    const result = ids[date].filter((id) => entities[id].isCompleted);
+    const result = ids[date].filter((id) => entities[id]?.isCompleted);
     return result;
   }
 );

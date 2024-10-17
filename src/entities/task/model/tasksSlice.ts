@@ -22,13 +22,22 @@ import {
   updateTaskNotifications,
   deleteTaskNotifications,
   clearTitleEditingTask,
+  setStateDefault,
+  rescheduleOverdueTasks,
+  rescheduleIfOverdue,
 } from './actionHelpers';
+import {DATA} from './data.dev';
+
+const TODAY = endOfDay();
 
 const initialState: ITasksState = {
   idCounter: 1,
-  ids: {[endOfDay()]: []},
-  entities: {},
-  selectedDate: endOfDay(),
+  // ids: {[TODAY]: []},
+  // entities: {},
+  ids: DATA.ids,
+  entities: DATA.entities,
+  selectedDate: TODAY,
+  lastVisit: 1723150799999,
   selectedTasksCount: 0,
   isTasksDateChanging: false,
   titleEditingTaskId: null,
@@ -47,7 +56,16 @@ export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    restoreFromBackup: (
+    setLastVisit: (state, action: PayloadAction<ITasksState['lastVisit']>) => {
+      state.lastVisit = action.payload;
+    },
+
+    onAppLoad: state => {
+      setStateDefault(state);
+      rescheduleOverdueTasks(state);
+    },
+
+    setDataFromBackup: (
       state,
       action: PayloadAction<
         Pick<ITasksState, 'idCounter' | 'ids' | 'entities'>
@@ -59,8 +77,6 @@ export const tasksSlice = createSlice({
       state.ids = ids;
       state.entities = entities;
     },
-
-    onAppLoad: () => {},
 
     addTask: (state, action: PayloadAction<TaskDto>) => {
       const {isRegular} = action.payload;
@@ -105,6 +121,7 @@ export const tasksSlice = createSlice({
           }
         } else {
           updateTaskNotifications(state, task.id);
+          rescheduleIfOverdue(state, task.id);
           if (task.isRegular) {
             const onTaskFind = (id: Task['id']) =>
               deleteTaskNotifications(state, id);
@@ -219,7 +236,6 @@ export const tasksSlice = createSlice({
 
     changeSelectedTasksDate: (state, action: PayloadAction<Task['date']>) => {
       const onChangeDate = (id: Task['id']) => {
-        cacheTask(state, id, 'changeDate');
         updateTaskNotifications(state, id);
       };
       changeSelectedTasksDate(state, action.payload, onChangeDate);
@@ -227,16 +243,18 @@ export const tasksSlice = createSlice({
     },
 
     copySelectedTasks: state => {
+      const copies: Task[] = [];
       state.ids[state.selectedDate].reduceRight((_, id) => {
         //use reduceRight to add tasks in the same order
         const task = state.entities[id];
         if (task.isSelected) {
           const newTask = createTaskCopy(state, task);
-          addTaskToState(state, newTask);
+          copies.push(newTask);
         }
         return 0;
       }, 0);
       stopSelection(state);
+      copies.forEach(task => addTaskToState(state, task));
     },
 
     undo: state => {

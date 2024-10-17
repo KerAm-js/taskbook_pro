@@ -23,8 +23,8 @@ export const Title: FC<{ isCalendarOpened: boolean }> = ({
   const titleStyleAnim = useAnimatedStyle(() => {
     return {
       opacity: isCalendarOpened
-        ? withTiming(0, { duration: 80 })
-        : withTiming(1, { duration: 80 }),
+        ? withTiming(0, { duration: 100 })
+        : withTiming(1, { duration: 70 }),
       position: "absolute",
       bottom: 10,
       zIndex: -2,

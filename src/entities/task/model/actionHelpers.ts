@@ -1,5 +1,6 @@
 import {
   deleteNotification,
+  endOfDay,
   getTimeValueFromString,
   setNotification,
 } from '@/shared';
@@ -15,7 +16,7 @@ import {
 
 // this action helpers can update only state object argument
 
-// if there is other object arguments, helper function can not update this object
+// if there is other object arguments, helper function can not update them
 
 const generateNotificationIds = (taskId: Task['id'], count: number) => {
   const result = [];
@@ -23,6 +24,53 @@ const generateNotificationIds = (taskId: Task['id'], count: number) => {
     result.push(taskId + '_' + i);
   }
   return result;
+};
+
+export const setStateDefault = (state: ITasksState) => {
+  state.selectedDate = endOfDay();
+  state.selectedTasksCount = 0;
+  state.isTasksDateChanging = false;
+  state.titleEditingTaskId = null;
+  state.taskToUpdateId = null;
+  state.cache = {
+    ids: [],
+    entities: {},
+  };
+};
+
+export const rescheduleIfOverdue = (state: ITasksState, id: Task['id']) => {
+  const today = endOfDay();
+  const task = state.entities[id];
+  if (task.date < today) {
+    const currDate = task.date;
+    state.ids[currDate] = state.ids[currDate].filter(item => item !== id);
+    state.ids[today].unshift(id);
+    task.date = today;
+  }
+};
+
+export const rescheduleOverdueTasks = (state: ITasksState) => {
+  const today = endOfDay();
+  if (state.lastVisit === today) {
+    return;
+  }
+  let date = state.lastVisit;
+  while (date < today) {
+    if (state.ids[date]) {
+      const overdueTasks: Task['id'][] = [];
+      state.ids[date] = state.ids[date].filter(id => {
+        const task = state.entities[id];
+        if (!task.isCompleted) {
+          overdueTasks.push(id);
+          task.date = today;
+        }
+        return task.isCompleted;
+      });
+      state.ids[today] = [...overdueTasks, ...state.ids[today]];
+    }
+    date += 86400000;
+  }
+  state.lastVisit = today;
 };
 
 export const deleteTaskNotifications = (state: ITasksState, id: Task['id']) => {
@@ -119,7 +167,7 @@ export const addTaskToState = (state: ITasksState, newTask: Task) => {
   const {id, date} = newTask;
   state.entities[id] = newTask;
   if (!state.ids[date]) state.ids[date] = [];
-  state.ids[date] = [id, ...state.ids[date]];
+  state.ids[date].unshift(id);
 };
 
 export const createCommonTask = (state: ITasksState, dto: CommonTaskDto) => {
@@ -267,7 +315,7 @@ export const changeTaskDate = (
 ) => {
   state.ids[task.date] = state.ids[task.date].filter(item => item !== task.id);
   if (!state.ids[newDate]) state.ids[newDate] = [];
-  state.ids[newDate] = [task.id, ...state.ids[newDate]];
+  state.ids[newDate].unshift(task.id);
 };
 
 export const changeSelectedTasksDate = (

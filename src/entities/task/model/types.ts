@@ -51,11 +51,13 @@ export type TTaskActionType =
   | 'changeDate';
 
 type TaskEntities = {[key: Task['id']]: Task};
+type TaskIds = {[key: number]: Array<Task['id']>};
 
 export interface ITasksState {
   idCounter: number;
-  ids: {[key: number]: Array<Task['id']>};
+  ids: TaskIds;
   entities: TaskEntities;
+  lastVisit: number;
   selectedDate: number;
   selectedTasksCount: number;
   isTasksDateChanging: boolean;

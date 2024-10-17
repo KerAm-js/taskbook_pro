@@ -13,7 +13,7 @@ export const RestoreBackup: FC<Backup & TPropTypes> = ({
   isSynchronized,
   onSynchronize,
 }) => {
-  const {restoreFromBackup} = useTaskActions();
+  const {setDataFromBackup} = useTaskActions();
   const [title, setTitle] = useState('restore');
   const {t} = useTranslation();
 
@@ -29,7 +29,7 @@ export const RestoreBackup: FC<Backup & TPropTypes> = ({
         onPress: () => {
           setTitle('copyIsRestored');
           onSynchronize();
-          restoreFromBackup({idCounter, ids, entities});
+          setDataFromBackup({idCounter, ids, entities});
         },
         text: 'OK',
       },

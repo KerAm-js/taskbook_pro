@@ -1,44 +1,45 @@
-import { undoArrowSvg } from "@/shared/assets/svg/undoArrow";
-import { CustomText, TEXT_STYLES, useThemeColors } from "@/shared";
-import { useEffect } from "react";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import {undoArrowSvg} from '@/shared/assets/svg/undoArrow';
+import {CustomText, TEXT_STYLES, useThemeColors} from '@/shared';
+import {useEffect, useState} from 'react';
+import {Dimensions, Pressable, StyleSheet, View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSequence,
   withTiming,
-} from "react-native-reanimated";
-import { SvgXml } from "react-native-svg";
-import { getMessage } from "../lib/getMessage";
-import { useCache, useTaskActions } from "@/entities/task";
+} from 'react-native-reanimated';
+import {SvgXml} from 'react-native-svg';
+import {getMessage} from '../lib/getMessage';
+import {useCache, useTaskActions} from '@/entities/task';
 
-const WIDTH = Dimensions.get("screen").width;
+const WIDTH = Dimensions.get('screen').width;
 
 export const Undo = () => {
-  const { colors } = useThemeColors();
-  const { undo, clearCache } = useTaskActions();
+  const {colors} = useThemeColors();
+  const {undo, clearCache} = useTaskActions();
   const cache = useCache();
+  const [title, setTitle] = useState('');
   const translationX = useSharedValue(-WIDTH);
   const opacity = useSharedValue(0);
 
   const containerStyleAnim = useAnimatedStyle(() => {
     return {
-      transform: [{ translateX: translationX.value }],
+      transform: [{translateX: translationX.value}],
       opacity: opacity.value,
-      display: translationX.value === -WIDTH ? "none" : "flex",
+      display: translationX.value === -WIDTH ? 'none' : 'flex',
     };
   });
 
   const toggleVisible = (visible: boolean) => {
     if (translationX.value === 0 && visible) {
-      const config = { duration: 150 };
+      const config = {duration: 150};
       translationX.value = withSequence(
         withTiming(-200, config),
-        withTiming(0, config)
+        withTiming(0, config),
       );
       opacity.value = withSequence(
         withTiming(0, config),
-        withTiming(1, config)
+        withTiming(1, config),
       );
     } else {
       translationX.value = withTiming(visible ? 0 : -WIDTH);
@@ -53,7 +54,7 @@ export const Undo = () => {
   };
 
   useEffect(() => {
-    const { actionType } = cache;
+    const {actionType} = cache;
     toggleVisible(!!actionType);
 
     let timout: any;
@@ -63,6 +64,7 @@ export const Undo = () => {
       }
     };
     if (actionType) {
+      setTitle(getMessage(actionType))
       clear();
       timout = setTimeout(() => clearCache(), 6000);
     }
@@ -77,18 +79,16 @@ export const Undo = () => {
         {
           backgroundColor: colors.background,
         },
-      ]}
-    >
+      ]}>
       <Pressable
         onPress={onPress}
         style={[
           styles.container,
           {
             backgroundColor: colors.accent_ultra_opacity,
-            borderColor: colors.accent_opacity
+            borderColor: colors.accent_opacity,
           },
-        ]}
-      >
+        ]}>
         <SvgXml
           style={styles.icon}
           xml={undoArrowSvg(colors.accent)}
@@ -100,7 +100,7 @@ export const Undo = () => {
             undo
           </CustomText>
           <CustomText themed colorName="accent" style={styles.subTitle}>
-            {getMessage(cache.actionType)}
+            {title}
           </CustomText>
         </View>
       </Pressable>
@@ -111,22 +111,22 @@ export const Undo = () => {
 const styles = StyleSheet.create({
   containerBackground: {
     borderRadius: 12,
-    borderCurve: "continuous",
+    borderCurve: 'continuous',
     flex: 1,
   },
   container: {
     flex: 1,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 8,
-    alignItems: "center",
+    alignItems: 'center',
     borderRadius: 12,
-    borderCurve: "continuous",
+    borderCurve: 'continuous',
     borderWidth: 1,
   },
   icon: {
-    transform: [{ rotate: "-45deg" }],
+    transform: [{rotate: '-45deg'}],
   },
   textContainer: {
     flex: 1,

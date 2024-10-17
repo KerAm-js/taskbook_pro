@@ -5,7 +5,11 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {FC} from 'react';
 import {StyleSheet} from 'react-native';
-import Animated, {FadeOut} from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+} from 'react-native-reanimated';
 
 type TPropTypes = Pick<Task, 'id'>;
 
@@ -22,7 +26,7 @@ export const Card: FC<TPropTypes> = React.memo(
     };
 
     return (
-      <Animated.View exiting={FadeOut.duration(150)}>
+      <Animated.View layout={LinearTransition} entering={FadeIn} exiting={FadeOut.duration(150)}>
         <ThemedView
           style={[styles.card, VIEW_SHADOW]}
           nightStyle={styles.taskNight}
@@ -33,8 +37,7 @@ export const Card: FC<TPropTypes> = React.memo(
         </ThemedView>
       </Animated.View>
     );
-  },
-  () => true,
+  }
 );
 
 const styles = StyleSheet.create({

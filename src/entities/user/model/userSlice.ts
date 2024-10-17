@@ -1,20 +1,20 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "./types";
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {User} from './types';
 
 const initialState: User = {};
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     setUser: (state: User, action: PayloadAction<User>) => {
-      const { uid, name, email, emailVerified } = action.payload;
+      const {uid, name, email, emailVerified} = action.payload;
       state.uid = uid;
       state.email = email;
       state.emailVerified = emailVerified;
       state.name = name;
     },
-    updateName: (state: User, action: PayloadAction<User["name"]>) => {
+    updateName: (state: User, action: PayloadAction<User['name']>) => {
       state.name = action.payload;
       const updateTime = Date.now();
       if (!state.nameUpdatedAt) {
@@ -25,7 +25,7 @@ export const userSlice = createSlice({
         state.nameUpdatedAt = [state.nameUpdatedAt[1], updateTime];
       }
     },
-    updateEmail: (state: User, action: PayloadAction<User["name"]>) => {
+    updateEmail: (state: User, action: PayloadAction<User['name']>) => {
       state.email = action.payload;
       state.emailVerified = false;
       const updateTime = Date.now();

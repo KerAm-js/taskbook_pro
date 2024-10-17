@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  MutableRefObject,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, {FC, MutableRefObject, useEffect, useMemo, useState} from 'react';
 import Animated, {
   FadeIn,
   FadeInDown,
@@ -13,30 +7,30 @@ import Animated, {
   LinearTransition,
   useAnimatedStyle,
   useSharedValue,
-} from "react-native-reanimated";
-import { AnimatedIcon } from "./AnimatedIcon";
-import { layersSvg } from "@/shared/assets/svg/layers";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { StyleSheet } from "react-native";
+} from 'react-native-reanimated';
+import {AnimatedIcon} from './AnimatedIcon';
+import {layersSvg} from '@/shared/assets/svg/layers';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import {StyleSheet} from 'react-native';
 import {
   Task,
   useIsTaskTitleEditing,
   useTaskActions,
   useTaskTitle,
-} from "@/entities/task";
-import { trashSvg } from "@/shared/assets/svg/trash";
-import { Card } from "./Card";
-import { useKeyboard } from "@/shared";
-import { SelectionBackdrop } from "./SelectionBackdrop";
-import { onPanGestureEnd, onPanGestureUpdate } from "../lib/panGesture";
+} from '@/entities/task';
+import {trashSvg} from '@/shared/assets/svg/trash';
+import {Card} from './Card';
+import {useKeyboard} from '@/shared';
+import {SelectionBackdrop} from './SelectionBackdrop';
+import {onPanGestureEnd, onPanGestureUpdate} from '../lib/panGesture';
 
-type TPropTypes = Pick<Task, "id"> & {
-  index: { value: number };
+type TPropTypes = Pick<Task, 'id'> & {
+  index: {value: number};
   isInitialRender: MutableRefObject<boolean>;
 };
 
 export const ListItem: FC<TPropTypes> = React.memo(
-  ({ id, index, isInitialRender }) => {
+  ({id, index, isInitialRender}) => {
     const isTitleEditing = useIsTaskTitleEditing(id);
     const title = useTaskTitle(id);
     const isOverdraggedRight = useSharedValue(false);
@@ -44,7 +38,7 @@ export const ListItem: FC<TPropTypes> = React.memo(
     const translationX = useSharedValue(0);
     const opacity = useSharedValue(1);
     const keyboardHeight = useKeyboard();
-    const { deleteTask, toggleTaskSelected } = useTaskActions();
+    const {deleteTask, toggleTaskSelected} = useTaskActions();
 
     const [visible, setVisible] = useState(false);
 
@@ -54,7 +48,7 @@ export const ListItem: FC<TPropTypes> = React.memo(
 
     const itemStyleAnim = useAnimatedStyle(() => {
       return {
-        transform: [{ translateX: translationX.value }],
+        transform: [{translateX: translationX.value}],
         opacity: opacity.value,
       };
     }, [translationX.value, opacity.value]);
@@ -64,13 +58,13 @@ export const ListItem: FC<TPropTypes> = React.memo(
         Gesture.Pan()
           .enabled(!isTitleEditing)
           .minDistance(35)
-          .onUpdate((event) =>
+          .onUpdate(event =>
             onPanGestureUpdate(event, {
               keyboardHeight,
               translationX,
               isOverdraggedLeft,
               isOverdraggedRight,
-            })
+            }),
           )
           .onEnd(() =>
             onPanGestureEnd({
@@ -81,9 +75,9 @@ export const ListItem: FC<TPropTypes> = React.memo(
               onDelete: deleteTask,
               onSelect: toggleTaskSelected,
               taskId: id,
-            })
+            }),
           ),
-      [isTitleEditing]
+      [isTitleEditing],
     );
 
     const entering = title
@@ -91,7 +85,7 @@ export const ListItem: FC<TPropTypes> = React.memo(
         ? FadeInDown
         : FadeIn
       : FadeInRight.withInitialValues({
-          transform: [{ translateX: 80 }],
+          transform: [{translateX: 80}],
         });
 
     useEffect(() => {
@@ -112,8 +106,7 @@ export const ListItem: FC<TPropTypes> = React.memo(
         style={styles.container}
         exiting={FadeOut.duration(150)}
         entering={entering}
-        layout={LinearTransition}
-      >
+        layout={LinearTransition}>
         <AnimatedIcon
           xmlGetter={layersSvg}
           opacity={opacity}
@@ -137,7 +130,6 @@ export const ListItem: FC<TPropTypes> = React.memo(
       </Animated.View>
     );
   },
-  () => true
 );
 
 const styles = StyleSheet.create({

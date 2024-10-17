@@ -107,7 +107,7 @@ const List: FC<TPropTypes> = React.memo(
         keyExtractor={keyExtractor}
         horizontal
         showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
+        scrollEventThrottle={4}
         pagingEnabled
         onScroll={onScroll}
         initialNumToRender={2}

@@ -20,6 +20,12 @@ import {MAX_H, MIN_H} from '../config/headerHeight';
 import {Title} from './components/Title';
 import {KeyboardBackdrop} from '@/features/keyboard-backdrop';
 
+const springAnimationConfig = {
+  damping: 20,
+  stiffness: 300,
+  mass: 1
+};
+
 export const MainHeader = () => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
   const {paddingTop} = useSafeAreaPadding();
@@ -34,10 +40,10 @@ export const MainHeader = () => {
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,
     });
-    calendarTranslate.value = withSpring(!isCalendarOpened ? 0 : -TRANSLATE, {
-      duration: 1100,
-      dampingRatio: 0.48,
-    });
+    calendarTranslate.value = withSpring(
+      !isCalendarOpened ? 0 : -TRANSLATE,
+      springAnimationConfig,
+    );
   };
 
   const calendarStyleAnim = useAnimatedStyle(() => {
@@ -46,30 +52,19 @@ export const MainHeader = () => {
       transform: [{translateY: calendarTranslate.value}],
       display: calendarTranslate.value === -TRANSLATE ? 'none' : 'flex',
       opacity: withTiming(isCalendarOpened ? 1 : 0, {
-        duration: isCalendarOpened ? 150 : 80,
+        duration: isCalendarOpened ? 250 : 80,
       }),
     };
   }, [isCalendarOpened]);
 
   const contentStyleAnim = useAnimatedStyle(() => {
     return {
-      height: withSpring(isCalendarOpened ? MAX_H : MIN_H, {
-        duration: 1100,
-        dampingRatio: 0.48,
-      }),
+      height: withSpring(
+        isCalendarOpened ? MAX_H : MIN_H,
+        springAnimationConfig,
+      ),
     };
   }, [isCalendarOpened]);
-
-  const titleStyleAnim = useAnimatedStyle(() => {
-    return {
-      opacity: isCalendarOpened
-        ? withTiming(0, {duration: 80})
-        : withTiming(1, {duration: 80}),
-      position: 'absolute',
-      bottom: 10,
-      zIndex: -2,
-    };
-  });
 
   return (
     <ThemedView colorName="background" style={[styles.container, {paddingTop}]}>

@@ -27,13 +27,11 @@ export const ResetPasswordForm = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  const isFormValid = isEmailValid;
-
   const onSubmit = () => {
-    if (user.email) {
+    if (email) {
       setLoading(true);
       auth()
-        .sendPasswordResetEmail(user.email)
+        .sendPasswordResetEmail(email)
         .then(() => {
           Alert.alert(t('emailSent'), t('followLinkWeSent'), [
             {
@@ -68,12 +66,12 @@ export const ResetPasswordForm = () => {
           onChangeText={onChangeEmail}
           error={emailError}
           textContentType="emailAddress"
-          editable={false}
+          editable={!(user.uid && user.email)}
         />
         <InputComment>{t('passwordResettingPeriodComment')}</InputComment>
       </View>
       <FormButton
-        disabled={!isFormValid}
+        disabled={!isEmailValid}
         type="accent"
         title="send"
         onPress={onSubmit}
