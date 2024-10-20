@@ -1,5 +1,11 @@
 import {undoArrowSvg} from '@/shared/assets/svg/undoArrow';
-import {CustomText, TEXT_STYLES, useThemeColors} from '@/shared';
+import {
+  CustomText,
+  SCREEN_PADDING,
+  TEXT_STYLES,
+  useSafeAreaPadding,
+  useThemeColors,
+} from '@/shared';
 import {useEffect, useState} from 'react';
 import {Dimensions, Pressable, StyleSheet, View} from 'react-native';
 import Animated, {
@@ -20,6 +26,7 @@ export const Undo = () => {
   const cache = useCache();
   const [title, setTitle] = useState('');
   const translationX = useSharedValue(-WIDTH);
+  const {paddingBottom} = useSafeAreaPadding();
   const opacity = useSharedValue(0);
 
   const containerStyleAnim = useAnimatedStyle(() => {
@@ -64,12 +71,14 @@ export const Undo = () => {
       }
     };
     if (actionType) {
-      setTitle(getMessage(actionType))
+      setTitle(getMessage(actionType));
       clear();
       timout = setTimeout(() => clearCache(), 6000);
     }
     return clear;
   }, [cache]); //need handle every change of cache
+
+  const bottom = paddingBottom < 40 ? 40 : paddingBottom + 10;
 
   return (
     <Animated.View
@@ -78,6 +87,7 @@ export const Undo = () => {
         containerStyleAnim,
         {
           backgroundColor: colors.background,
+          bottom,
         },
       ]}>
       <Pressable
@@ -112,7 +122,13 @@ const styles = StyleSheet.create({
   containerBackground: {
     borderRadius: 12,
     borderCurve: 'continuous',
-    flex: 1,
+    position: 'absolute',
+    left: SCREEN_PADDING,
+    height: 54,
+    width: WIDTH - SCREEN_PADDING * 2 - 20 - 54, //add task button width
+    flexDirection: 'row',
+    gap: 15,
+    justifyContent: 'flex-end',
   },
   container: {
     flex: 1,

@@ -134,7 +134,7 @@ export const Slider = () => {
   );
 
   return (
-    <View>
+    <>
       <List scrollX={scrollX} index={index} setContent={updateContent} />
       <View style={styles.textContainer}>
         <CustomText themed style={styles.title}>
@@ -144,7 +144,7 @@ export const Slider = () => {
           {content.text}
         </CustomText>
       </View>
-    </View>
+    </>
   );
 };
 

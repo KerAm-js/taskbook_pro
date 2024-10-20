@@ -27,7 +27,9 @@ const generateNotificationIds = (taskId: Task['id'], count: number) => {
 };
 
 export const setStateDefault = (state: ITasksState) => {
-  state.selectedDate = endOfDay();
+  const today = endOfDay();
+  state.selectedDate = today;
+  if (!state.ids[today]) state.ids[today] = [];
   state.selectedTasksCount = 0;
   state.isTasksDateChanging = false;
   state.titleEditingTaskId = null;

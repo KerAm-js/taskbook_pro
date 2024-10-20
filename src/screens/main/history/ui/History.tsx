@@ -5,7 +5,6 @@ import {StyleSheet} from 'react-native';
 export const History = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header title="history" />
       <TaskHistory />
     </ThemedView>
   );

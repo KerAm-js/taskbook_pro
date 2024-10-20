@@ -1,6 +1,6 @@
-import { COLORS, TColorName, useThemeColors } from "@/shared";
-import React, { FC, useState } from "react";
-import { StyleSheet } from "react-native";
+import {COLORS, TColorName, useThemeColors} from '@/shared';
+import React, {FC, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import Animated, {
   Easing,
   runOnJS,
@@ -8,30 +8,29 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
   withTiming,
-} from "react-native-reanimated";
-import { SvgXml } from "react-native-svg";
+} from 'react-native-reanimated';
+import {SvgXml} from 'react-native-svg';
 
 type TPropTypes = {
-  opacity: SharedValue<number>;
   translationX: SharedValue<number>;
   isOverDragged: SharedValue<boolean>;
   xmlGetter: (color: string) => string;
   colorName?: TColorName;
   color?: keyof typeof COLORS;
-  side?: "left" | "right";
+  side?: 'left' | 'right';
 };
 
+const easing = Easing.out(Easing.quad);
+
 export const AnimatedIcon: FC<TPropTypes> = ({
-  opacity,
   translationX,
   isOverDragged,
   xmlGetter,
   colorName,
-  color = "red",
-  side = "right",
+  color = 'red',
+  side = 'right',
 }) => {
-  const easing = Easing.out(Easing.quad);
-  const { colors } = useThemeColors();
+  const {colors} = useThemeColors();
   const [visible, setVisible] = useState(false); //performance optimization
 
   const mainIconStyleAnim = useAnimatedStyle(() => {
@@ -52,36 +51,29 @@ export const AnimatedIcon: FC<TPropTypes> = ({
     };
   }, [translationX.value, isOverDragged.value]);
 
-  const containerStyleAnim = useAnimatedStyle(() => {
-    const visible =
-      side === "left" ? translationX.value > 0 : translationX.value < 0;
-    return {
-      opacity: visible ? opacity.value : 0,
-    };
-  }, [opacity.value, translationX.value]);
-
   useAnimatedReaction(
     () => translationX.value,
     (curr, prev) => {
-      if (curr === 0) {
+      const isDragged = side === 'right' ? curr > 0 : curr < 0;
+      if (isDragged) {
+        runOnJS(setVisible)(false);
+      } else if (curr === 0) {
         runOnJS(setVisible)(false);
       } else {
         runOnJS(setVisible)(true);
       }
-    }
-  );
+    },
+  )
 
   if (!visible) {
     return null;
   }
+  console.log()
 
   return (
-    <Animated.View
-      style={[styles.container, { [side]: 0 }, containerStyleAnim]}
-    >
+    <View style={[styles.container, {[side]: 0}]}>
       <Animated.View
-        style={[styles.iconContainer, { [side]: 20 }, mainIconStyleAnim]}
-      >
+        style={[styles.iconContainer, {[side]: 20}, mainIconStyleAnim]}>
         <SvgXml
           width={26}
           height={26}
@@ -89,24 +81,23 @@ export const AnimatedIcon: FC<TPropTypes> = ({
         />
       </Animated.View>
       <Animated.View
-        style={[styles.iconContainer, { [side]: 20 }, greyIconStyleAnim]}
-      >
+        style={[styles.iconContainer, {[side]: 20}, greyIconStyleAnim]}>
         <SvgXml width={26} height={26} xml={xmlGetter(colors.grey)} />
       </Animated.View>
-    </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    height: "100%",
+    position: 'absolute',
+    height: '100%',
     width: 100,
     zIndex: -1,
   },
   iconContainer: {
-    position: "absolute",
-    height: "100%",
-    justifyContent: "center",
+    position: 'absolute',
+    height: '100%',
+    justifyContent: 'center',
   },
 });

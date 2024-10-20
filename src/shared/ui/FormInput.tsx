@@ -99,6 +99,8 @@ export const FormInput: FC<TPropTypes> = ({
           placeholderTextColor={colors.textGrey}
           style={inputStyle}
           multiline={multiline}
+          selectionColor={colors.accent}
+          cursorColor={colors.accent}
           {...props}
         />
       </Pressable>

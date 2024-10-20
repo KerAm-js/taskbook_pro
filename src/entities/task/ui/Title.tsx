@@ -2,7 +2,7 @@ import {FC, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Task} from '../model/types';
 import {TextInput} from 'react-native-gesture-handler';
-import {TEXT_STYLES, ThemedInput} from '@/shared';
+import {TEXT_STYLES, ThemedInput, ThemedText} from '@/shared';
 import {useTranslation} from 'react-i18next';
 import {findAndDeleteTime} from '../lib/findAndDeleteTime';
 import {useFastInputMode} from '@/entities/settings';
@@ -54,7 +54,6 @@ export const TaskTitle: FC<{task: Task}> = ({task}) => {
 
   useLayoutEffect(() => {
     if (inputRef.current && taskToUpdateId) {
-
       inputRef.current.blur();
     }
   }, [taskToUpdateId]);
@@ -65,6 +64,7 @@ export const TaskTitle: FC<{task: Task}> = ({task}) => {
 
   return (
     <View style={styles.container}>
+      {/* {isTitleEditing ? ( */}
       <ThemedInput
         inputRef={inputRef}
         style={styles.input}
@@ -80,6 +80,10 @@ export const TaskTitle: FC<{task: Task}> = ({task}) => {
         scrollEnabled={false}
         blurOnSubmit
       />
+      {/* ) : (
+         <ThemedText style={styles.input}
+         >{title}</ThemedText>
+       )} */}
     </View>
   );
 };
@@ -97,6 +101,5 @@ const styles = StyleSheet.create({
     ...TEXT_STYLES.standart,
     paddingTop: 0,
     lineHeight: 19,
-    // backgroundColor: '#dedede',
   },
 });

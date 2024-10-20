@@ -66,7 +66,7 @@ export const Slide: FC<TSlideProps> = ({ xmlGetter, index, scrollX }) => {
 const styles = StyleSheet.create({
   container: {
     width: ITEM_WIDTH,
-    paddingTop: 50,
+    paddingTop: 35,
     paddingBottom: 25,
     alignItems: "center",
   },

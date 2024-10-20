@@ -1,22 +1,30 @@
-import { ScrollView, StyleSheet } from "react-native";
-import React, { useEffect, useMemo, useRef } from "react";
-import { PADDING_TOP, SCREEN_PADDING } from "@/shared";
-import { EmptyListImage } from "./EmptyListImage";
+import {ListRenderItemInfo, StyleSheet} from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import {PADDING_TOP, SCREEN_PADDING} from '@/shared';
+import {EmptyListImage} from './EmptyListImage';
 import {
   useCompletedTasksCount,
   useSelectedDate,
   useTaskIds,
-} from "@/entities/task";
-import { updateDailyNotification, useDailyReminder } from "@/entities/settings";
-import { useTranslation } from "react-i18next";
-import { ListItem } from "./ListItem";
+} from '@/entities/task';
+import {updateDailyNotification, useDailyReminder} from '@/entities/settings';
+import {useTranslation} from 'react-i18next';
+import {ListItem} from './ListItem';
+import Animated, {LinearTransition} from 'react-native-reanimated';
+
+const keyExtractor = (item: number) => item.toString();
 
 export const TaskList = () => {
   const taskIds = useTaskIds();
   const completedTasksCount = useCompletedTasksCount();
   const selectedDate = useSelectedDate();
-  const { end, beginning } = useDailyReminder();
-  const { t } = useTranslation();
+  const {end, beginning} = useDailyReminder();
+  const {t} = useTranslation();
   const prevDate = useRef<null | number>(null);
   const isInitialRender = useRef(true);
 
@@ -37,9 +45,9 @@ export const TaskList = () => {
     if (!end.turnedOff) {
       for (let date in taskIds) {
         updateDailyNotification({
-          type: "end",
-          title: t("reviewOfTheDay"),
-          body: t("tasksCompleted", {
+          type: 'end',
+          title: t('reviewOfTheDay'),
+          body: t('tasksCompleted', {
             count: taskIds[date].length,
             completed: completedTasksCount,
           }),
@@ -54,9 +62,9 @@ export const TaskList = () => {
     if (!beginning.turnedOff) {
       for (let date in taskIds) {
         updateDailyNotification({
-          type: "beginning",
-          title: t("plansForToday"),
-          body: t("tasksToDo", { count: taskIds[date].length }),
+          type: 'beginning',
+          title: t('plansForToday'),
+          body: t('tasksToDo', {count: taskIds[date].length}),
           date: Number(date),
           ...beginning,
         });
@@ -67,9 +75,9 @@ export const TaskList = () => {
   useEffect(() => {
     if (!beginning.turnedOff) {
       updateDailyNotification({
-        type: "beginning",
-        title: t("plansForToday"),
-        body: t("tasksToDo", { count: taskIds[selectedDate].length }),
+        type: 'beginning',
+        title: t('plansForToday'),
+        body: t('tasksToDo', {count: taskIds[selectedDate].length}),
         date: selectedDate,
         ...beginning,
       });
@@ -79,9 +87,9 @@ export const TaskList = () => {
   useEffect(() => {
     if (!end.turnedOff) {
       updateDailyNotification({
-        type: "end",
-        title: t("reviewOfTheDay"),
-        body: t("tasksCompleted", {
+        type: 'end',
+        title: t('reviewOfTheDay'),
+        body: t('tasksCompleted', {
           count: taskIds[selectedDate].length,
           completed: completedTasksCount,
         }),
@@ -91,27 +99,36 @@ export const TaskList = () => {
     }
   }, [completedTasksCount]);
 
+  const renderItem = useCallback(
+    ({item, index}: ListRenderItemInfo<number>) => {
+      return (
+        <ListItem
+          isInitialRender={isInitialRender}
+          listLength={taskIds[selectedDate].length}
+          index={index}
+          id={item}
+        />
+      );
+    },
+    [],
+  );
+
   return (
-    <ScrollView
+    <Animated.FlatList
       style={styles.scroll}
+      itemLayoutAnimation={
+        isInitialRender.current ? undefined : LinearTransition
+      }
+      initialNumToRender={1}
+      maxToRenderPerBatch={1}
+      windowSize={15}
       contentContainerStyle={styles.contentContainer}
-    >
-      {!!taskIds[selectedDate].length ? (
-        taskIds[selectedDate].map((id, index) => {
-          const i = { value: index };
-          return (
-            <ListItem
-              key={id}
-              isInitialRender={isInitialRender}
-              index={i}
-              id={id}
-            />
-          );
-        })
-      ) : (
-        <EmptyListImage />
-      )}
-    </ScrollView>
+      showsVerticalScrollIndicator={false}
+      data={taskIds[selectedDate]}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      ListEmptyComponent={EmptyListImage}
+    />
   );
 };
 

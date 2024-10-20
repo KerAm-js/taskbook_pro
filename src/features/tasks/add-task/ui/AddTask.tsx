@@ -1,5 +1,10 @@
 import {plusSvg} from '@/shared/assets/svg/plus';
-import {AppStackParamsList, useThemeColors} from '@/shared';
+import {
+  AppStackParamsList,
+  SCREEN_PADDING,
+  useSafeAreaPadding,
+  useThemeColors,
+} from '@/shared';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {useTaskActions} from '@/entities/task';
@@ -11,6 +16,7 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 export const AddTask = () => {
   const {addEmptyTask} = useTaskActions();
   const fastInputMode = useFastInputMode();
+  const {paddingBottom} = useSafeAreaPadding();
   const {colors} = useThemeColors();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
@@ -27,12 +33,15 @@ export const AddTask = () => {
     }
   };
 
+  const bottom = paddingBottom < 40 ? 40 : paddingBottom;
+
   return (
     <View
       style={[
         styles.buttonContainer,
         {
           backgroundColor: colors.accent,
+          bottom,
         },
       ]}>
       <Pressable onPress={onPress} style={styles.button}>
@@ -43,8 +52,9 @@ export const AddTask = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
   buttonContainer: {
+    position: 'absolute',
+    right: SCREEN_PADDING,
     width: 54,
     height: 54,
     borderRadius: 30,

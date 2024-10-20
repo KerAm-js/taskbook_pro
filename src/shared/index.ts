@@ -26,7 +26,7 @@ export {
   COLORS,
   THEME_ICON_GRADIENTS,
 } from './config/style/colors';
-export {SCREEN_PADDING, PADDING_TOP} from './config/style/views';
+export {SCREEN_PADDING, PADDING_TOP, HEADER_CONTENT_HEIGHT} from './config/style/views';
 export {
   HEADER_SHADOW,
   HEADER_SHADOW_NIGHT,
@@ -53,6 +53,7 @@ export {
   isDatesEqual,
   getCalendarWeeks,
   isToday,
+  getWeekDay,
   isTomorrow,
   isYesterday,
   isCurrentYear,

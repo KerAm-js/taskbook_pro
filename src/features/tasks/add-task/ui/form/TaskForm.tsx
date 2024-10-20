@@ -6,10 +6,12 @@ import {
   CalendarPopup,
   CheckList,
   FormInput,
+  getDate,
   getDateTitle,
   getTime,
   getTimeString,
   getTimeValueFromString,
+  getWeekDay,
   Header,
   PADDING_TOP,
   SCREEN_PADDING,
@@ -52,7 +54,8 @@ const monthDays = Array(31)
   .map((_, i) => i + 1);
 
 export const TaskForm = () => {
-  const {updateTask, deleteTask, addTask, endTaskEditingWithTaskForm} = useTaskActions();
+  const {updateTask, deleteTask, addTask, endTaskEditingWithTaskForm} =
+    useTaskActions();
   const {t} = useTranslation();
   const navigation = useNavigation();
   const selectedDate = useSelectedDate();
@@ -121,7 +124,7 @@ export const TaskForm = () => {
   const onSelectRepeatingDay = (item: number) => {
     setRepeatingDays({
       ...repeatingDays,
-      [item]: !Boolean(repeatingDays[item]),
+      [item]: !repeatingDays[item],
     });
   };
 
@@ -187,20 +190,31 @@ export const TaskForm = () => {
   };
 
   useEffect(() => {
-    return () => setRepeatingDays({});
+    if (repeatingType === 'weekly') {
+      const day = getWeekDay(selectedDate);
+      setRepeatingDays({
+        [day ? day - 1 : 6]: true,
+      });
+    } else {
+      setRepeatingDays({
+        [getDate(selectedDate)]: true,
+      });
+    }
   }, [repeatingType]);
 
   useEffect(() => {
     return () => {
       endTaskEditingWithTaskForm();
-    }
-  }, [])
+    };
+  }, []);
 
   useLayoutEffect(() => {
     if (taskToEdit.title && !title) {
       onChangeTitle(taskToEdit.title);
     }
   }, [taskToEdit.title]);
+
+  console.log(repeatingDays);
 
   return (
     <>

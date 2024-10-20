@@ -1,10 +1,10 @@
 import {DATE_MONTHS, MONTHS, WEEK_DAYS} from '@/shared/consts/datetime';
 
-export type TLanguage = 'ru_RU' | 'en_EN';
+export type TLanguage = 'ru' | 'en';
 
 export const LANGUAGES: Array<{title: string; value: TLanguage}> = [
-  {title: 'Русский', value: 'ru_RU'},
-  {title: 'English', value: 'en_EN'},
+  {title: 'Русский', value: 'ru'},
+  {title: 'English', value: 'en'},
 ];
 
 export const TRANSLATIONS = {
@@ -197,6 +197,9 @@ export const TRANSLATIONS = {
       currentDataWillBeReplaced:
         'Текущие данные о задачах будут заменены на данные из резервной копии',
       copyIsRestored: 'Копия восстановлена',
+      recentlyCompleted: "Недавно завершённые",
+      search: 'Поиск',
+      dateInputPlaceholder: 'ДД.ММ.ГГ',
     },
   },
   en: {
@@ -388,6 +391,9 @@ export const TRANSLATIONS = {
       currentDataWillBeReplaced:
         'The current task data will be replaced with data from the backup',
       copyIsRestored: 'Copy is restored',
+      recentlyCompleted: "Recently completed",
+      search: 'Search',
+      dateInputPlaceholder: 'DD.MM.YY',
     },
   },
 };
