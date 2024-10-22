@@ -18,6 +18,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {
+  SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -32,9 +33,9 @@ import {useFastInputMode} from '@/entities/settings';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-type TPropTypes = Pick<Task, 'id'> & {getIsSwiped: () => boolean};
+type TPropTypes = Pick<Task, 'id'> & {translationX: SharedValue<number>};
 
-const CardComponent: FC<TPropTypes> = ({id, getIsSwiped}) => {
+const CardComponent: FC<TPropTypes> = ({id, translationX}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const isTitleEditing = useIsTaskTitleEditing(id);
@@ -68,7 +69,7 @@ const CardComponent: FC<TPropTypes> = ({id, getIsSwiped}) => {
   };
 
   const onPress = (event: GestureResponderEvent) => {
-    if (getIsSwiped()) return;
+    if (translationX.value !== 0) return;
     if (fastInputMode) {
       startTaskTitleEditing(id);
       event.target.measure((x, y, w, h, px, py) => {
@@ -113,7 +114,12 @@ const CardComponent: FC<TPropTypes> = ({id, getIsSwiped}) => {
       colorName="background"
       nightColorName="backgroundSecond">
       <ToggleTask id={id} />
-      <TaskRow id={id} onPress={onPress} onLayout={onLayout} />
+      <TaskRow
+        withInput={fastInputMode}
+        id={id}
+        onPress={onPress}
+        onLayout={onLayout}
+      />
     </ThemedView>
   );
 };

@@ -1,10 +1,9 @@
 import Animated, {
   useAnimatedStyle,
-  useSharedValue,
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import {FC, PropsWithChildren, useState} from 'react';
+import {Dispatch, FC, SetStateAction} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {arrowLeftSvg} from '@/shared/assets/svg/arrowLeft';
 import {SvgXml} from 'react-native-svg';
@@ -21,20 +20,28 @@ import {
 } from '@/shared';
 import {SearchBar} from './SearchBar';
 
-export const Header: FC<PropsWithChildren> = ({children}) => {
-  const [isSearching, setIsSearching] = useState(false);
+type TPropTypes = {
+  searchDate: string;
+  onSearchDateChange: (text: string) => void;
+  isSearching: boolean;
+  setIsSearching: Dispatch<SetStateAction<boolean>>;
+};
+
+export const Header: FC<TPropTypes> = ({
+  isSearching,
+  setIsSearching,
+  searchDate,
+  onSearchDateChange,
+}) => {
   const {paddingTop} = useSafeAreaPadding();
-
   const navigation = useNavigation();
-
   const goBack = () => navigation.goBack();
 
   const titleContainerStyleAnim = useAnimatedStyle(() => {
     return {
-      opacity: withDelay(
-        isSearching ? 0 : 150,
-        withTiming(isSearching ? 0 : 1, {duration: 100}),
-      ),
+      opacity: isSearching
+        ? withTiming(0, {duration: 100})
+        : withDelay(100, withTiming(1)),
     };
   }, [isSearching]);
 
@@ -55,7 +62,12 @@ export const Header: FC<PropsWithChildren> = ({children}) => {
         <CustomText style={styles.title}>recentlyCompleted</CustomText>
         <View style={styles.left} />
       </Animated.View>
-      <SearchBar isSearching={isSearching} setIsSearching={setIsSearching} />
+      <SearchBar
+        searchDate={searchDate}
+        onSearchDateChange={onSearchDateChange}
+        isSearching={isSearching}
+        setIsSearching={setIsSearching}
+      />
     </ThemedView>
   );
 };

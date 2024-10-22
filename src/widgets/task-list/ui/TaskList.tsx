@@ -81,6 +81,16 @@ export const TaskList = () => {
         date: selectedDate,
         ...beginning,
       });
+      updateDailyNotification({
+        type: 'end',
+        title: t('reviewOfTheDay'),
+        body: t('tasksCompleted', {
+          count: taskIds[selectedDate].length,
+          completed: completedTasksCount,
+        }),
+        date: selectedDate,
+        ...end,
+      });
     }
   }, [taskIds[selectedDate].length]);
 
@@ -104,7 +114,6 @@ export const TaskList = () => {
       return (
         <ListItem
           isInitialRender={isInitialRender}
-          listLength={taskIds[selectedDate].length}
           index={index}
           id={item}
         />
@@ -119,7 +128,7 @@ export const TaskList = () => {
       itemLayoutAnimation={
         isInitialRender.current ? undefined : LinearTransition
       }
-      initialNumToRender={1}
+      initialNumToRender={10}
       maxToRenderPerBatch={1}
       windowSize={15}
       contentContainerStyle={styles.contentContainer}

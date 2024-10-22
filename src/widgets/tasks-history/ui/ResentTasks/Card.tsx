@@ -8,7 +8,7 @@ import {ToggleTask} from '@/features/tasks/toggle-task';
 import {AppStackParamsList, ThemedView, VIEW_SHADOW} from '@/shared';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import Animated, {
   FadeIn,
@@ -16,10 +16,11 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated';
 
-type TPropTypes = Pick<Task, 'id'>;
+type TPropTypes = Pick<Task, 'id'> & {remove: (id: number) => void};
 
-export const Card: FC<TPropTypes> = React.memo(({id}) => {
+export const Card: FC<TPropTypes> = React.memo(({id, remove}) => {
   const {setTaskToUpdateId} = useTaskActions();
+  const isCompleted = useIsTaskCompleted(id);
 
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
@@ -29,8 +30,14 @@ export const Card: FC<TPropTypes> = React.memo(({id}) => {
     navigation.navigate('Task');
   };
 
+  useEffect(() => {
+    if (!isCompleted) {
+      remove(id);
+    }
+  }, [isCompleted]);
+
   return (
-    <Animated.View layout={LinearTransition} exiting={FadeOut.duration(150)}>
+    <Animated.View entering={FadeIn.duration(150)} exiting={FadeOut.duration(150)}>
       <ThemedView
         style={[styles.card, VIEW_SHADOW]}
         nightStyle={styles.taskNight}

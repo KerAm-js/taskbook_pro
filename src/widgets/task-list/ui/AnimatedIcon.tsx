@@ -68,7 +68,6 @@ export const AnimatedIcon: FC<TPropTypes> = ({
   if (!visible) {
     return null;
   }
-  console.log()
 
   return (
     <View style={[styles.container, {[side]: 0}]}>

@@ -10,35 +10,24 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {SvgXml} from 'react-native-svg';
-import {FilterButton} from './FilterButton';
 
-const PADDING_RIGHT = SCREEN_PADDING - 6;
-const FILTERS = [
-  {type: 'date', title: 'date', placeholder: 'dateInputPlaceholder'},
-  {type: 'task', title: 'task', placeholder: 'task'},
-  {type: 'note', title: 'note', placeholder: 'note'},
-];
+const PADDING_RIGHT = SCREEN_PADDING - 11;
 
-type TPropTypes = {
-  setIsSearching: Dispatch<SetStateAction<boolean>>;
+export type TSearchbarPropTypes = {
+  searchDate: string;
+  onSearchDateChange: (text: string) => void;
   isSearching: boolean;
+  setIsSearching: Dispatch<SetStateAction<boolean>>;
 };
 
-export const SearchBar: FC<TPropTypes> = ({setIsSearching, isSearching}) => {
+export const SearchBar: FC<TSearchbarPropTypes> = ({
+  setIsSearching,
+  isSearching,
+  searchDate,
+  onSearchDateChange,
+}) => {
   const {t} = useTranslation();
-  const [search, setSearch] = useState('');
   const input = useRef<TextInput | null>(null);
-  const [filter, setFilter] = useState<string>(FILTERS[0].type);
-
-  const selectFilter = (value: string) => {
-    setFilter(value);
-  };
-
-  const inputContainerStyleAnim = useAnimatedStyle(() => {
-    return {
-      transform: [{translateY: withTiming(isSearching ? -40 : 0)}],
-    };
-  }, [isSearching]);
 
   const closeButtonStyleAnim = useAnimatedStyle(() => {
     return {
@@ -56,19 +45,15 @@ export const SearchBar: FC<TPropTypes> = ({setIsSearching, isSearching}) => {
     };
   }, [isSearching]);
 
-  const filterContainerStyleAnim = useAnimatedStyle(() => {
-    return {
-      opacity: withDelay(
-        isSearching ? 150 : 0,
-        withTiming(isSearching ? 1 : 0, {duration: 150}),
-      ),
-      zIndex: -1,
-    };
-  }, [isSearching]);
-
   const onFocus = () => {
     setIsSearching(true);
   };
+
+  const onBlur = () => {
+    if (!searchDate && isSearching) {
+      setIsSearching(false);
+    }
+  }
 
   const onOpen = () => {
     if (input.current) {
@@ -78,25 +63,30 @@ export const SearchBar: FC<TPropTypes> = ({setIsSearching, isSearching}) => {
 
   const onClose = () => {
     if (input.current) input.current.blur();
-    setSearch('')
+    onSearchDateChange('');
     setIsSearching(false);
   };
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.inputContainer, inputContainerStyleAnim]}>
+      <View style={styles.inputContainer}>
         <Pressable onPress={onOpen} style={styles.inputView}>
-          <SvgXml xml={searchSvg(COLORS.white)} />
+          <SvgXml xml={searchSvg(COLORS.white)} width={18} height={18} />
           <TextInput
             ref={input}
-            value={search}
-            onChangeText={text => setSearch(text)}
+            value={searchDate}
+            onChangeText={onSearchDateChange}
             selectionColor={COLORS.white}
             cursorColor={COLORS.white}
             style={styles.input}
-            placeholder={t('search')}
+            placeholder={t(
+              isSearching ? 'dateInputPlaceholder' : 'searchByDate',
+            )}
             placeholderTextColor={COLORS.white}
             onFocus={onFocus}
+            onBlur={onBlur}
+            keyboardType="number-pad"
+            maxLength={10}
           />
         </Pressable>
         <Animated.View style={rightSpaceStyleAnim} />
@@ -109,17 +99,7 @@ export const SearchBar: FC<TPropTypes> = ({setIsSearching, isSearching}) => {
             onPress={onClose}
           />
         </Animated.View>
-      </Animated.View>
-      <Animated.View style={[styles.filterContainer, filterContainerStyleAnim]}>
-        {FILTERS.map(item => (
-          <FilterButton
-            {...item}
-            key={item.type}
-            isActive={item.type === filter}
-            select={selectFilter}
-          />
-        ))}
-      </Animated.View>
+      </View>
     </View>
   );
 };
@@ -130,7 +110,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 5,
     paddingLeft: SCREEN_PADDING,
     paddingRight: PADDING_RIGHT,
   },
@@ -154,12 +134,5 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     flex: 1,
     marginBottom: 2,
-  },
-  filterContainer: {
-    paddingHorizontal: SCREEN_PADDING,
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    flexDirection: 'row',
   },
 });

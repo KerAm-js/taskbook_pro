@@ -1,7 +1,6 @@
 import { CustomText, TEXT_STYLES, useThemeColors } from "@/shared";
 import { FC } from "react";
 import { StyleSheet, View } from "react-native";
-import Animated from "react-native-reanimated";
 import { SvgXml } from "react-native-svg";
 
 interface IProps {

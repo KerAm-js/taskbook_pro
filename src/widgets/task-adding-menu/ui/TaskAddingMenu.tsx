@@ -1,8 +1,8 @@
-import { AddNextTask } from "@/features/tasks/add-next-task";
-import { ThemedView, useKeyboard, VIEW_SHADOW_REVERSE } from "@/shared";
-import { Keyboard, StyleSheet, View } from "react-native";
-import { DoneBtn } from "./DoneBtn";
-import { OpenTaskForm } from "@/features/tasks/open-task-form";
+import {AddNextTask} from '@/features/tasks/add-next-task';
+import {ThemedView, useKeyboard} from '@/shared';
+import {Keyboard, StyleSheet, View} from 'react-native';
+import {DoneBtn} from './DoneBtn';
+import {OpenTaskForm} from '@/features/tasks/open-task-form';
 import {
   Easing,
   useAnimatedReaction,
@@ -10,7 +10,7 @@ import {
   useSharedValue,
   withDelay,
   withTiming,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 
 export const TaskAddingMenu = () => {
   const keyboardHeight = useKeyboard();
@@ -19,25 +19,25 @@ export const TaskAddingMenu = () => {
 
   const containerStyleAnim = useAnimatedStyle(() => {
     return {
-      transform: [{ translateY: translationY.value }],
+      transform: [{translateY: translationY.value}],
       opacity: opacity.value,
-      display: opacity.value === 0 ? "none" : "flex",
+      display: opacity.value === 0 ? 'none' : 'flex',
     };
   }, [translationY.value, opacity.value]);
 
-  const toggleMenu = (mode: "up" | "down") => {
-    "worklet";
+  const toggleMenu = (mode: 'up' | 'down') => {
+    'worklet';
     const easing = Easing.out(Easing.quad);
     const animationConfig = {
       duration: 350,
       easing,
     };
-    if (mode === "up") {
+    if (mode === 'up') {
       const delay = 50;
       opacity.value = withDelay(delay, withTiming(1, animationConfig));
       translationY.value = withDelay(
         delay,
-        withTiming(-keyboardHeight.value, animationConfig)
+        withTiming(-keyboardHeight.value, animationConfig),
       );
     } else {
       animationConfig.duration = 200;
@@ -52,13 +52,13 @@ export const TaskAddingMenu = () => {
 
   useAnimatedReaction(
     () => keyboardHeight.value,
-    (curr) => {
+    curr => {
       if (curr) {
-        toggleMenu("up");
+        toggleMenu('up');
       } else {
-        toggleMenu("down");
+        toggleMenu('down');
       }
-    }
+    },
   );
 
   return (
@@ -67,8 +67,7 @@ export const TaskAddingMenu = () => {
       colorName="background"
       borderColorName="lineGrey"
       style={[styles.container, containerStyleAnim]}
-      nightStyle={styles.containerNight}
-    >
+      nightStyle={styles.containerNight}>
       <OpenTaskForm />
       <View style={styles.leftSide}>
         <AddNextTask />
@@ -80,12 +79,12 @@ export const TaskAddingMenu = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
-    width: "100%",
-    flexDirection: "row",
+    width: '100%',
+    flexDirection: 'row',
     height: 40,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     paddingHorizontal: 9,
     borderTopWidth: 1,
   },
@@ -94,6 +93,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   leftSide: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 });

@@ -27,18 +27,15 @@ import {onPanGestureEnd, onPanGestureUpdate} from '../lib/panGesture';
 type TPropTypes = Pick<Task, 'id'> & {
   index: number;
   isInitialRender: MutableRefObject<boolean>;
-  listLength: number;
 };
 
 const ListItemComponent: FC<TPropTypes> = ({
   id,
   index,
   isInitialRender,
-  listLength,
 }) => {
   const isTitleEditing = useIsTaskTitleEditing(id);
   const title = useTaskTitle(id);
-  console.log(title);
   const isOverdraggedRight = useSharedValue(false);
   const isOverdraggedLeft = useSharedValue(false);
   const translationX = useSharedValue(0);
@@ -67,10 +64,6 @@ const ListItemComponent: FC<TPropTypes> = ({
   if (!visible && isInitialRender.current) {
     return;
   }
-
-  const getIsSwiped = () => {
-    return translationX.value !== 0;
-  };
 
   const pan = Gesture.Pan()
     .enabled(!isTitleEditing)
@@ -123,8 +116,8 @@ const ListItemComponent: FC<TPropTypes> = ({
       />
       <GestureDetector gesture={pan}>
         <Animated.View style={itemStyleAnim}>
-          <Card id={id} getIsSwiped={getIsSwiped} />
-          <SelectionBackdrop id={id} getIsSwiped={getIsSwiped} />
+          <Card id={id} translationX={translationX} />
+          <SelectionBackdrop id={id} translationX={translationX} />
         </Animated.View>
       </GestureDetector>
       <AnimatedIcon

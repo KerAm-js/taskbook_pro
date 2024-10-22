@@ -33,7 +33,7 @@ export const AddTask = () => {
     }
   };
 
-  const bottom = paddingBottom < 40 ? 40 : paddingBottom;
+  const bottom = paddingBottom < 20 ? 20 : paddingBottom + 30;
 
   return (
     <View

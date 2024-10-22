@@ -197,9 +197,11 @@ export const TRANSLATIONS = {
       currentDataWillBeReplaced:
         'Текущие данные о задачах будут заменены на данные из резервной копии',
       copyIsRestored: 'Копия восстановлена',
-      recentlyCompleted: "Недавно завершённые",
+      recentlyCompleted: 'Недавно завершённые',
       search: 'Поиск',
-      dateInputPlaceholder: 'ДД.ММ.ГГ',
+      dateInputPlaceholder: 'ДД.ММ.ГГГГ',
+      searchByDate: 'Поиск по дате',
+      completedTasksStoredHere: 'Здесь хранятся\nвыполненные задачи',
     },
   },
   en: {
@@ -391,9 +393,11 @@ export const TRANSLATIONS = {
       currentDataWillBeReplaced:
         'The current task data will be replaced with data from the backup',
       copyIsRestored: 'Copy is restored',
-      recentlyCompleted: "Recently completed",
+      recentlyCompleted: 'Recently completed',
       search: 'Search',
-      dateInputPlaceholder: 'DD.MM.YY',
+      dateInputPlaceholder: 'DD.MM.YYYY',
+      searchByDate: 'Search by date',
+      completedTasksStoredHere: 'Completed tasks\nare stored here',
     },
   },
 };
