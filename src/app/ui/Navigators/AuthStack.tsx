@@ -11,11 +11,7 @@ export const AuthStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Signin" component={Signin} />
       <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen
-        name="PasswordReset"
-        component={PasswordReset}
-        options={{presentation: 'modal'}}
-      />
+      <Stack.Screen name="PasswordReset" component={PasswordReset} />
     </Stack.Navigator>
   );
 };

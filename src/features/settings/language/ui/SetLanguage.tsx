@@ -1,13 +1,17 @@
-import {CheckList, LANGUAGES, TLanguage} from '@/shared';
+import {CheckList, LANGUAGES, TLanguage, useFirebase} from '@/shared';
 import {useTranslation} from 'react-i18next';
-import auth from '@react-native-firebase/auth';
 
 export const SetLanguage = () => {
   const {t, i18n} = useTranslation();
+  const {auth} = useFirebase();
 
   const onPress = async (value: TLanguage) => {
-    auth().setLanguageCode(value);
-    i18n.changeLanguage(value);
+    try {
+      auth.setLanguageCode(value);
+      i18n.changeLanguage(value);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const checkMethod = (value: TLanguage) => {

@@ -6,6 +6,10 @@ import {Navigator} from './Navigator';
 import i18n from 'i18next';
 import {LANGUAGE_DETECTOR, TRANSLATIONS} from '@/shared';
 import {initReactI18next} from 'react-i18next';
+import {
+  FirebaseContext,
+  firebaseContextDefaultValue,
+} from '../context/firebaseContext';
 
 i18n
   .use(LANGUAGE_DETECTOR)
@@ -24,11 +28,13 @@ i18n
 
 export const Root = () => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <StatusBar barStyle={'light-content'} />
-        <Navigator />
-      </PersistGate>
-    </Provider>
+    <FirebaseContext.Provider value={firebaseContextDefaultValue}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <StatusBar barStyle={'light-content'} />
+          <Navigator />
+        </PersistGate>
+      </Provider>
+    </FirebaseContext.Provider>
   );
 };

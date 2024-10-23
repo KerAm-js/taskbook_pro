@@ -15,7 +15,7 @@ import {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 export type TRate = {
   id: number;
   title: string;
-  type: 'monthly' | 'yearly';
+  type: 'monthly' | 'yearly' | 'unlimited';
   price: number;
   discount?: number;
 };
@@ -32,8 +32,6 @@ export const RateCard: FC<TPropTypes> = ({
   data: {id, type, price, discount, title},
 }) => {
   const {t} = useTranslation();
-  const mainPrice = type === 'monthly' ? price : Math.floor(price / 12);
-  const subPrice = type === 'yearly' ? price : price * 12;
 
   const containerStyleAnim = useAnimatedStyle(() => {
     return {
@@ -63,11 +61,15 @@ export const RateCard: FC<TPropTypes> = ({
           </CustomText>
           <View style={styles.priceContainer}>
             <CustomText themed style={styles.price}>
-              {t('monthlyPrice', {price: mainPrice})}
+              {type === 'unlimited'
+                ? t('unlimitedPrice', {price})
+                : t('monthlyPrice', {price})}
             </CustomText>
-            <CustomText themed colorName="textGrey" style={styles.subPrice}>
-              {t('yearlyPrice', {price: subPrice})}
-            </CustomText>
+            {type !== 'unlimited' && (
+              <CustomText themed colorName="textGrey" style={styles.subPrice}>
+                {t('yearlyPrice', {price: price * 12})}
+              </CustomText>
+            )}
           </View>
         </View>
         <AnimatedCheck size={20} isChecked={isSelected} greyWhenInactive />

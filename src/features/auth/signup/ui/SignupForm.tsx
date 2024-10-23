@@ -5,22 +5,25 @@ import {
   FormButton,
   FormInput,
   SCREEN_PADDING,
+  useFirebase,
   useHeaderHeight,
   useInputValidator,
 } from '@/shared';
 import {useState} from 'react';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';
-import auth from '@react-native-firebase/auth';
 import {userSvg} from '@/shared/assets/svg/user';
 import {shieldCheckSvg} from '@/shared/assets/svg/shieldCheck';
 import {useTranslation} from 'react-i18next';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useNavigation} from '@react-navigation/native';
+import {User, UserInfo} from '@/entities/user';
 
 const HEIGHT = Dimensions.get('screen').height;
 
 export const SignupForm = () => {
   const {t} = useTranslation();
+  const {auth, firestore} = useFirebase();
+  const usersCollection = firestore.collection('Users');
   const navigation = useNavigation();
   const [email, onChangeEmail, isEmailValid, emailError] = useInputValidator({
     pattern: EMAIL_REGEX,
@@ -49,12 +52,18 @@ export const SignupForm = () => {
   const onSubmit = async () => {
     setLoading(true);
     try {
-      const response = await auth().createUserWithEmailAndPassword(
+      const response = await auth.createUserWithEmailAndPassword(
         email,
         password,
       );
       if (response) {
+        const userData: UserInfo = {
+          emailUpdatedAt: undefined,
+          passwordUpdatedAt: undefined,
+          nameUpdatedAt: undefined,
+        };
         await response.user.updateProfile({displayName: name});
+        await usersCollection.doc(response.user.uid).set(userData);
         await response.user.sendEmailVerification();
         Alert.alert(
           t('emailConfirmationTitle'),

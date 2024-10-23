@@ -1,9 +1,9 @@
-import {StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import {RecentTasks} from './ResentTasks/RecentTasks';
 import {Header} from './Header/Header';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {convertInputToDate} from '../lib/convertInputToDate';
+import {SearchBar} from './Header/SearchBar';
 
 export const TaskHistory = () => {
   const [isSearching, setIsSearching] = useState(false);
@@ -26,12 +26,14 @@ export const TaskHistory = () => {
 
   return (
     <Animated.View style={styleAnim}>
-      <Header
-        searchDate={searchDate}
-        onSearchDateChange={onSearchDateChange}
-        isSearching={isSearching}
-        setIsSearching={setIsSearching}
-      />
+      <Header isSearching={isSearching}>
+        <SearchBar
+          searchDate={searchDate}
+          onSearchDateChange={onSearchDateChange}
+          isSearching={isSearching}
+          setIsSearching={setIsSearching}
+        />
+      </Header>
       <RecentTasks isSearching={isSearching} searchDate={searchDate} />
     </Animated.View>
   );

@@ -4,7 +4,7 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {BackupInfo} from './BackupInfo';
 import {CreateBackup, RestoreBackup} from '@/features/settings/backup';
 import React, { useState } from 'react';
-import {useStoredBackup} from '../api/hooks';
+import {useStoredBackup} from '../api/backup.api';
 
 export const BackupSettings = () => {
   const [storedBackup, loading] = useStoredBackup();

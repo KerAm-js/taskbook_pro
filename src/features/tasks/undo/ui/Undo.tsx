@@ -78,7 +78,7 @@ export const Undo = () => {
     return clear;
   }, [cache]); //need handle every change of cache
 
-  const bottom = paddingBottom < 40 ? 40 : paddingBottom + 10;
+  const bottom = paddingBottom < 20 ? 20 : paddingBottom + 30;
 
   return (
     <Animated.View

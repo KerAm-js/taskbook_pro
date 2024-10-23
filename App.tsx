@@ -5,7 +5,7 @@
  * @format
  */
 
-import { Root } from './src/app';
+import {Root} from './src/app';
 import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -14,7 +14,9 @@ import SplashScreen from 'react-native-splash-screen';
 
 function App(): React.JSX.Element {
   useEffect(() => {
-    SplashScreen.hide();
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 100);
   }, []);
 
   return (

@@ -5,6 +5,7 @@ import {repeatFillSvg} from '@/shared/assets/svg/repeatFill';
 import {
   CalendarPopup,
   CheckList,
+  endOfDay,
   FormInput,
   getDate,
   getDateTitle,
@@ -66,6 +67,7 @@ export const TaskForm = () => {
     required: true,
     initValue: taskToEdit.title,
   });
+  const today = endOfDay();
   const [note, setNote] = useState(taskToEdit.note || '');
   const [date, setDate] = useState(taskToEdit.date || selectedDate);
   const [isRegular, setIsRegular] = useState<boolean>(
@@ -296,7 +298,7 @@ export const TaskForm = () => {
             title={id ? 'save' : 'add'}
             onPress={onSubmit}
           />
-          {!!id && (
+          {!!id && taskToEdit?.date < today && (
             <FormButton
               type="destructive"
               title={id ? 'delete' : 'add'}

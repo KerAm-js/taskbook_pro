@@ -158,7 +158,7 @@ export const TRANSLATIONS = {
       quickAdditionMessage: 'Составляйте план действий быстро и удобно',
       notificationsMessage: 'Не забывайте о важных задачах и дедлайнах',
       changingPeriodComment:
-        '{{label}} можно менять не более 2-х раз в течение 15 дней',
+        '{{label}} можно менять не более 2-х раз в течение 15 дней. Пожалуйста, повторите попытку позже',
       nameSuccessfullyChanged: 'Имя успешно изменено',
       emailSent: 'Письмо отправлено',
       minLengthValidationError: 'Минимальное количество символов: {{length}}',
@@ -177,7 +177,7 @@ export const TRANSLATIONS = {
       error: 'Ошибка!',
       success: 'Успешно',
       passwordResettingPeriodComment:
-        'Пароль может быть сброшен не более 2-х раз в течение 15 дней',
+        'Пароль может быть сброшен не более 2-х раз в течение 15 дней. Пожалуйста, повторите попытку позже',
       passwordReset: 'Сброс пароля',
       followLinkWeSent:
         'Пожалуйста, перейдите по ссылке, которую мы отправили на ваш email-адрес',
@@ -202,6 +202,8 @@ export const TRANSLATIONS = {
       dateInputPlaceholder: 'ДД.ММ.ГГГГ',
       searchByDate: 'Поиск по дате',
       completedTasksStoredHere: 'Здесь хранятся\nвыполненные задачи',
+      oneTimePayment: 'Разовый платёж',
+      unlimitedPrice: '{{price}} ₽/навсегда',
     },
   },
   en: {
@@ -354,7 +356,7 @@ export const TRANSLATIONS = {
       quickAdditionMessage: 'Make your plan quickly and conveniently',
       notificationsMessage: "Don't forget about important tasks and deadlines",
       changingPeriodComment:
-        '{{label}} can be changed no more than 2 times within 15 days',
+        '{{label}} can be changed no more than 2 times within 15 days. Please, try again later',
       nameSuccessfullyChanged: 'Name is successfully changed',
       emailSent: 'Email is sent',
       minLengthValidationError: 'Minimum count of symbols: {{length}}',
@@ -373,7 +375,7 @@ export const TRANSLATIONS = {
       error: 'Error!',
       success: 'Success',
       passwordResettingPeriodComment:
-        'Password can be resetted no more than 2 times within 15 days',
+        'Password can be resetted no more than 2 times within 15 days. Please, try again later',
       passwordReset: 'Password reset',
       followLinkWeSent:
         'Please follow the link that we sent to your email-address',
@@ -398,6 +400,8 @@ export const TRANSLATIONS = {
       dateInputPlaceholder: 'DD.MM.YYYY',
       searchByDate: 'Search by date',
       completedTasksStoredHere: 'Completed tasks\nare stored here',
+      oneTimePayment: 'One-time payment',
+      unlimitedPrice: '{{price}} ₽/forever',
     },
   },
 };

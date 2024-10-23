@@ -1,7 +1,6 @@
 import {useTasksState} from '@/entities/task';
 import {useUser} from '@/entities/user';
-import {FormButton} from '@/shared';
-import firestore from '@react-native-firebase/firestore';
+import {FormButton, useFirebase} from '@/shared';
 import {FC, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert} from 'react-native';
@@ -16,9 +15,10 @@ export const CreateBackup: FC<TPropTypes> = ({
   onSynchronize,
 }) => {
   const {uid, email} = useUser();
+  const {firestore} = useFirebase();
   const {t} = useTranslation();
   const {idCounter, ids, entities} = useTasksState();
-  const backupsCollection = firestore().collection('Backups');
+  const backupsCollection = firestore.collection('Backups');
   const [loading, setLoading] = useState(false);
 
   const createBackup = async () => {

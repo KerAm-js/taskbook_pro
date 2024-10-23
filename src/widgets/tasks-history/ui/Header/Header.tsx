@@ -3,7 +3,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import {Dispatch, FC, SetStateAction} from 'react';
+import {FC, PropsWithChildren} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {arrowLeftSvg} from '@/shared/assets/svg/arrowLeft';
 import {SvgXml} from 'react-native-svg';
@@ -18,20 +18,14 @@ import {
   ThemedView,
   useSafeAreaPadding,
 } from '@/shared';
-import {SearchBar} from './SearchBar';
 
-type TPropTypes = {
-  searchDate: string;
-  onSearchDateChange: (text: string) => void;
+type TPropTypes = PropsWithChildren & {
   isSearching: boolean;
-  setIsSearching: Dispatch<SetStateAction<boolean>>;
 };
 
 export const Header: FC<TPropTypes> = ({
   isSearching,
-  setIsSearching,
-  searchDate,
-  onSearchDateChange,
+  children: SearchBar
 }) => {
   const {paddingTop} = useSafeAreaPadding();
   const navigation = useNavigation();
@@ -59,15 +53,10 @@ export const Header: FC<TPropTypes> = ({
         <Pressable onPress={goBack} style={styles.left}>
           <SvgXml xml={arrowLeftSvg(COLORS.white)} width={18} height={18} />
         </Pressable>
-        <CustomText style={styles.title}>recentlyCompleted</CustomText>
+        <CustomText style={styles.title}>history</CustomText>
         <View style={styles.left} />
       </Animated.View>
-      <SearchBar
-        searchDate={searchDate}
-        onSearchDateChange={onSearchDateChange}
-        isSearching={isSearching}
-        setIsSearching={setIsSearching}
-      />
+      {SearchBar}
     </ThemedView>
   );
 };

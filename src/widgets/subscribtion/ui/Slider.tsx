@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   textContainer: {
     paddingHorizontal: SCREEN_PADDING,
     gap: 10,
-    marginBottom: 25,
+    marginBottom: 10,
   },
   title: {
     ...TEXT_STYLES.title,

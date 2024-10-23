@@ -7,23 +7,25 @@ import {
   FormInput,
   SCREEN_PADDING,
   ThemedView,
+  useFirebase,
   useHeaderHeight,
   useInputValidator,
   useSafeAreaPadding,
 } from '@/shared';
 import {useState} from 'react';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';
-import auth from '@react-native-firebase/auth';
 import {useTranslation} from 'react-i18next';
 import {useUserActions} from '@/entities/user';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import * as Keychain from 'react-native-keychain';
 
 const HEIGHT = Dimensions.get('screen').height;
 
 export const SigninForm = () => {
   const {t} = useTranslation();
+  const {auth} = useFirebase();
   const navigation =
     useNavigation<NativeStackNavigationProp<AuthStackParamsList>>();
   const [email, onChangeEmail, isEmailValid, emailError] = useInputValidator({
@@ -43,8 +45,8 @@ export const SigninForm = () => {
   };
 
   const confirmEmail = async () => {
-    auth()
-      .currentUser?.sendEmailVerification()
+    auth.currentUser
+      ?.sendEmailVerification()
       .then(() => {
         Alert.alert(t('emailSent'), t('followLinkWeSent'));
       })
@@ -60,7 +62,7 @@ export const SigninForm = () => {
   const onSubmit = async () => {
     setLoading(true);
     try {
-      const response = await auth().signInWithEmailAndPassword(email, password);
+      const response = await auth.signInWithEmailAndPassword(email, password);
       if (response) {
         if (response.user.emailVerified) {
           const {uid, displayName, email, emailVerified} = response.user;
@@ -70,6 +72,7 @@ export const SigninForm = () => {
             emailVerified,
             name: displayName,
           });
+          await Keychain.setGenericPassword(uid, password);
         } else {
           Alert.alert(
             t('emailIsNotConfirmed'),
@@ -89,6 +92,7 @@ export const SigninForm = () => {
         }
       }
     } catch (error: any) {
+      console.log(error);
       if (error.code === 'auth/network-request-failed') {
         Alert.alert(t('error'), t('noInternetConnection'));
       } else if (
@@ -138,8 +142,8 @@ export const SigninForm = () => {
             error={passwordError}
             maxLength={20}
             textContentType="password"
-          autoComplete="password"
-          secureTextEntry
+            autoComplete="password"
+            secureTextEntry
           />
           <View style={styles.buttonsContainer}>
             <FormButton

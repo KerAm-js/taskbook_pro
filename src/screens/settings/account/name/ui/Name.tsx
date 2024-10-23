@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 export const Name = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header title="fullName" modalHeader />
+      <Header title="fullName" />
       <ChangeNameForm />
     </ThemedView>
   );

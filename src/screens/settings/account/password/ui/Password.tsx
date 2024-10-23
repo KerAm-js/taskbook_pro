@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 export const Password = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header title="password" modalHeader />
+      <Header title="password" />
       <ChangePasswordForm />
     </ThemedView>
   );

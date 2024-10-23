@@ -1,5 +1,10 @@
 import {shieldSvg} from '@/shared/assets/svg/shield';
-import {checkCanUpdate, useUser} from '@/entities/user';
+import {
+  checkCanUpdate,
+  getNewUpdatedAt,
+  UserInfo,
+  useUser,
+} from '@/entities/user';
 import {
   FormButton,
   FormInput,
@@ -7,12 +12,12 @@ import {
   PADDING_TOP,
   PasswordStackParamsList,
   SCREEN_PADDING,
+  useFirebase,
   useInputValidator,
 } from '@/shared';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert, ScrollView, StyleSheet, View} from 'react-native';
-import auth from '@react-native-firebase/auth';
 import {shieldMinusSvg} from '@/shared/assets/svg/shieldMinus';
 import {shieldCheckSvg} from '@/shared/assets/svg/shieldCheck';
 import {useNavigation} from '@react-navigation/native';
@@ -20,6 +25,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export const ChangePasswordForm = () => {
   const {t} = useTranslation();
+  const {auth, firestore} = useFirebase();
+  const usersCollection = firestore.collection('Users');
   const user = useUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<PasswordStackParamsList>>();
@@ -51,36 +58,49 @@ export const ChangePasswordForm = () => {
   const isFormValid =
     isCurrentPasswordValid && isPasswordAgainValid && isNewPasswordValid;
 
-  const onSubmit = () => {
-    const canUpdatePassword = checkCanUpdate(user.passwordUpdatedAt);
-    if (!canUpdatePassword) {
-      Alert.alert(t('changingPeriodComment', {label: t('password')}));
-    } else if (newPassword === currentPassword) {
-      Alert.alert(t('passwordAlreadyInUse'));
-    } else if (user.email) {
-      setLoading(true);
-      auth()
-        .signInWithEmailAndPassword(user.email, currentPassword)
-        .then(response => {
-          return response.user.updatePassword(newPassword);
-        })
-        .then(() => {
-          Alert.alert(t('success'), t('passwordSuccessfullyChanged'), [
-            {
-              onPress: () => navigation.goBack(),
-            },
-          ]);
-        })
-        .catch(error => {
-          if (error.code === 'auth/wrong-password') {
-            Alert.alert(t('error'), t('wrongPassword'));
-          } else if (error.code === 'auth/network-request-failed') {
-            Alert.alert(t('error'), t('noInternetConnection'));
-          } else {
-            Alert.alert(t('error'), t('somethingWentWrong'));
-          }
-        })
-        .finally(() => setLoading(false));
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      if (!user.email) return;
+      const authorization = await auth.signInWithEmailAndPassword(
+        user.email,
+        currentPassword,
+      );
+      const response = await usersCollection.doc(authorization.user.uid).get();
+      const userInfo = response.data() as UserInfo;
+      const canUpdate = checkCanUpdate(userInfo.passwordUpdatedAt);
+      if (newPassword === currentPassword) {
+        Alert.alert(t('passwordAlreadyInUse'));
+        return;
+      }
+      if (canUpdate) {
+        await authorization.user.updatePassword(newPassword);
+        const passwordUpdatedAt: UserInfo['emailUpdatedAt'] = getNewUpdatedAt(
+          userInfo.passwordUpdatedAt,
+        );
+        usersCollection.doc(authorization.user.uid).set({...userInfo, passwordUpdatedAt});
+        Alert.alert(t('success'), t('passwordSuccessfullyChanged'), [
+          {
+            onPress: () => navigation.goBack(),
+          },
+        ]);
+      } else {
+        Alert.alert(
+          t('error'),
+          t('changingPeriodComment', {label: t('password')}),
+        );
+      }
+    } catch (error: any) {
+      console.log(error)
+      if (error.code === 'auth/wrong-password') {
+        Alert.alert(t('error'), t('wrongPassword'));
+      } else if (error.code === 'auth/network-request-failed') {
+        Alert.alert(t('error'), t('noInternetConnection'));
+      } else {
+        Alert.alert(t('error'), t('somethingWentWrong'));
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

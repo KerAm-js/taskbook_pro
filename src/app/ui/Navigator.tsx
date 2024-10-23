@@ -2,12 +2,11 @@ import {useUser} from '@/entities/user';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthStack} from './Navigators/AuthStack';
 import {AppStack} from './Navigators/App/AppStack';
-import {RootStackParamsList} from '@/shared';
+import {RootStackParamsList, useFirebase} from '@/shared';
 import {NavigationContainer} from '@react-navigation/native';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import {useBackupInfo, useSettingsActions} from '@/entities/settings';
-import firestore from '@react-native-firebase/firestore';
 import {store} from '../store';
 import {Backup} from '@/features/settings/backup';
 import {useTaskActions} from '@/entities/task';
@@ -16,10 +15,11 @@ const Stack = createNativeStackNavigator<RootStackParamsList>();
 
 export const Navigator = () => {
   const [loading, setLoading] = useState(true);
+  const {firestore} = useFirebase();
   const {onAppLoad} = useTaskActions();
   const {email, emailVerified, uid} = useUser();
   const {setLastBackup} = useSettingsActions();
-  const backupsCollection = firestore().collection('Backups');
+  const backupsCollection = firestore.collection('Backups');
   const {isAutoSync, lastBackup} = useBackupInfo();
   const appState = useRef(AppState.currentState);
 
@@ -67,7 +67,7 @@ export const Navigator = () => {
     };
   }, []);
 
-  const isAuthorized = email && emailVerified;
+  const isAuthorized = email;
 
   if (isAuthorized && loading) {
     return null;

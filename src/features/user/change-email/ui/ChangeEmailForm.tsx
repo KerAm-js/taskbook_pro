@@ -1,6 +1,12 @@
 import {emailSvg} from '@/shared/assets/svg/email';
 import {shieldSvg} from '@/shared/assets/svg/shield';
-import {checkCanUpdate, useUser, useUserActions} from '@/entities/user';
+import {
+  checkCanUpdate,
+  getNewUpdatedAt,
+  UserInfo,
+  useUser,
+  useUserActions,
+} from '@/entities/user';
 import {
   EMAIL_REGEX,
   FormButton,
@@ -8,18 +14,18 @@ import {
   InputComment,
   PADDING_TOP,
   SCREEN_PADDING,
+  useFirebase,
   useInputValidator,
 } from '@/shared';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert, ScrollView, StyleSheet, View} from 'react-native';
-import auth from '@react-native-firebase/auth';
-import {useNavigation} from '@react-navigation/native';
 
 export const ChangeEmailForm = () => {
   const {t} = useTranslation();
-  const {updateEmail} = useUserActions();
-  const navigation = useNavigation();
+  const {auth, firestore} = useFirebase();
+  const usersCollection = firestore.collection('Users');
+  const {removeUser} = useUserActions();
   const user = useUser();
   const [email, onChangeEmail, isEmailValid, emailError] = useInputValidator({
     pattern: EMAIL_REGEX,
@@ -47,36 +53,50 @@ export const ChangeEmailForm = () => {
     isPasswordValid &&
     email !== user.email;
 
-  const onSubmit = () => {
-    const canUpdateEmail = checkCanUpdate(user.emailUpdatedAt);
-    if (!canUpdateEmail) {
-      Alert.alert(t('changingPeriodComment', {label: t('emailAddress')}));
-    } else if (user.email) {
-      setLoading(true);
-      auth()
-        .signInWithEmailAndPassword(user.email, password)
-        .then(response => {
-          return response.user.updateEmail(email);
-        })
-        .then(() => {
-          auth().currentUser?.reload();
-          updateEmail(email);
-          Alert.alert(t('success'), t('emailAddressSuccessfullyChanged'), [
-            {
-              onPress: () => navigation.goBack(),
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      if (!user.email) return;
+      const authorization = await auth.signInWithEmailAndPassword(
+        user.email,
+        password,
+      );
+      const response = await usersCollection.doc(authorization.user.uid).get();
+      const userInfo = response.data() as UserInfo;
+      const canUpdate = checkCanUpdate(userInfo.emailUpdatedAt);
+      if (canUpdate) {
+        await authorization.user.updateEmail(email);
+        const emailUpdatedAt: UserInfo['emailUpdatedAt'] = getNewUpdatedAt(
+          userInfo.emailUpdatedAt,
+        );
+        usersCollection.doc(authorization.user.uid).set({...userInfo, emailUpdatedAt});
+        Alert.alert(t('success'), t('emailAddressSuccessfullyChanged'), [
+          {
+            onPress: async () => {
+              await auth.signOut();
+              removeUser();
             },
-          ]);
-        })
-        .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
-            Alert.alert(t('error'), t('emailAlreadyInUse'));
-          } else if (error.code === 'auth/network-request-failed') {
-            Alert.alert(t('error'), t('noInternetConnection'));
-          } else {
-            Alert.alert(t('error'), t('somethingWentWrong'));
-          }
-        })
-        .finally(() => setLoading(false));
+          },
+        ]);
+      } else {
+        Alert.alert(
+          t('error'),
+          t('changingPeriodComment', {label: t('emailAddress')}),
+        );
+      }
+    } catch (error: any) {
+      console.log(error);
+      if (error.code === 'auth/wrong-password') {
+        Alert.alert(t('error'), t('wrongPassword'));
+      } else if (error.code === 'auth/email-already-in-use') {
+        Alert.alert(t('error'), t('emailAlreadyInUse'));
+      } else if (error.code === 'auth/network-request-failed') {
+        Alert.alert(t('error'), t('noInternetConnection'));
+      } else {
+        Alert.alert(t('error'), t('somethingWentWrong'));
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

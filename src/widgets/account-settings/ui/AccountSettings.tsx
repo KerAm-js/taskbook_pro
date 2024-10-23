@@ -6,16 +6,17 @@ import {
   PADDING_TOP,
   SCREEN_PADDING,
   Setting,
+  useFirebase,
 } from '@/shared';
 import {keySvg} from '@/shared/assets/svg/key';
 import {useUser, useUserActions} from '@/entities/user';
-import auth from '@react-native-firebase/auth';
 import {useTranslation} from 'react-i18next';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export const AccountSettings = () => {
+  const {auth} = useFirebase();
   const user = useUser();
   const {removeUser} = useUserActions();
   const navigation =
@@ -34,11 +35,8 @@ export const AccountSettings = () => {
 
   const signOut = () => {
     setLoading(true);
-    auth()
+    auth
       .signOut()
-      .then(() => {
-        removeUser();
-      })
       .catch(error => {
         if (error.code === 'auth/network-request-failed') {
           Alert.alert(t('error'), t('noInternetConnection'));
@@ -46,7 +44,10 @@ export const AccountSettings = () => {
           Alert.alert(t('error'), t('somethingWentWrong'));
         }
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        removeUser();
+        setLoading(false);
+      });
   };
 
   const onSignOutHandler = () => {

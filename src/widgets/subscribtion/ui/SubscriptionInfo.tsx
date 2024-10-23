@@ -3,20 +3,22 @@ import { FormButton, SCREEN_PADDING } from "@/shared";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Slider } from "./Slider";
+import { useSubscriptionRates } from "../api/subscription.api";
 
-const rates: TRate[] = [
+const data: TRate[] = [
   {
     id: 0,
     type: "yearly",
     title: "yearlySubscription",
-    price: 1590,
-    discount: 42,
+    price: 119,
+    discount: 35,
   },
-  { id: 1, type: "monthly", title: "monthlySubscription", price: 229 },
+  { id: 1, type: "monthly", title: "monthlySubscription", price: 199 },
 ];
 
 export const SubscriptionInfo = () => {
   const [rate, setRate] = useState(0);
+  const [rates, isRatesLoading] = useSubscriptionRates();
 
   const onSelectRate = (id: number) => setRate(id);
 
@@ -24,7 +26,7 @@ export const SubscriptionInfo = () => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Slider />
       <View style={styles.content}>
-        {rates.map((item) => (
+        {data.map((item) => (
           <RateCard
             onPress={onSelectRate}
             key={item.id}

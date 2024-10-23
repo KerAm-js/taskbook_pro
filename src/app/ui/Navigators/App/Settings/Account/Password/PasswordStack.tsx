@@ -14,7 +14,6 @@ export const PasswordStack = () => {
       <Stack.Screen
         name="PasswordReset"
         component={PasswordReset}
-        options={{presentation: 'modal'}}
       />
     </Stack.Navigator>
   );

@@ -1,10 +1,5 @@
 import {ListRenderItemInfo, StyleSheet} from 'react-native';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {PADDING_TOP, SCREEN_PADDING} from '@/shared';
 import {EmptyListImage} from './EmptyListImage';
 import {
@@ -27,6 +22,7 @@ export const TaskList = () => {
   const {t} = useTranslation();
   const prevDate = useRef<null | number>(null);
   const isInitialRender = useRef(true);
+  const isScreenRender = useRef(true);
 
   useMemo(() => {
     if (!prevDate.current) {
@@ -40,6 +36,10 @@ export const TaskList = () => {
       isInitialRender.current = false;
     }
   }, [taskIds, selectedDate]);
+
+  useEffect(() => {
+    isScreenRender.current = false;
+  }, []);
 
   useEffect(() => {
     if (!end.turnedOff) {
@@ -112,11 +112,7 @@ export const TaskList = () => {
   const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<number>) => {
       return (
-        <ListItem
-          isInitialRender={isInitialRender}
-          index={index}
-          id={item}
-        />
+        <ListItem isInitialRender={isInitialRender} index={index} id={item} />
       );
     },
     [],
@@ -129,7 +125,7 @@ export const TaskList = () => {
         isInitialRender.current ? undefined : LinearTransition
       }
       initialNumToRender={10}
-      maxToRenderPerBatch={1}
+      maxToRenderPerBatch={isScreenRender.current ? 10 : 1}
       windowSize={15}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}

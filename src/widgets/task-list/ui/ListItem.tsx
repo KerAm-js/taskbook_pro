@@ -29,11 +29,7 @@ type TPropTypes = Pick<Task, 'id'> & {
   isInitialRender: MutableRefObject<boolean>;
 };
 
-const ListItemComponent: FC<TPropTypes> = ({
-  id,
-  index,
-  isInitialRender,
-}) => {
+const ListItemComponent: FC<TPropTypes> = ({id, index, isInitialRender}) => {
   const isTitleEditing = useIsTaskTitleEditing(id);
   const title = useTaskTitle(id);
   const isOverdraggedRight = useSharedValue(false);
@@ -54,9 +50,12 @@ const ListItemComponent: FC<TPropTypes> = ({
 
   useEffect(() => {
     if (isInitialRender.current) {
-      const timer = setTimeout(() => {
-        setVisible(true);
-      }, index < 9 ? index * 50 : 450);
+      const timer = setTimeout(
+        () => {
+          setVisible(true);
+        },
+        index < 9 ? index * 50 : 450,
+      );
       return () => clearTimeout(timer);
     }
   }, []);
@@ -67,7 +66,7 @@ const ListItemComponent: FC<TPropTypes> = ({
 
   const pan = Gesture.Pan()
     .enabled(!isTitleEditing)
-    .minDistance(70)
+    .minDistance(50)
     .onUpdate(event =>
       onPanGestureUpdate(event, {
         keyboardHeight,

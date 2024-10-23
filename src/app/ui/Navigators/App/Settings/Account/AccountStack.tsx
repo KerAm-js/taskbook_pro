@@ -18,17 +18,14 @@ export const AccountStack = () => {
       <Stack.Screen
         name="Email"
         component={Email}
-        options={{presentation: 'modal'}}
       />
       <Stack.Screen
         name="Name"
         component={Name}
-        options={{presentation: 'modal'}}
       />
       <Stack.Screen
         name="Password"
         component={PasswordStack}
-        options={{presentation: 'modal'}}
       />
     </Stack.Navigator>
   );

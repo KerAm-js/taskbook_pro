@@ -1,22 +1,30 @@
 import {shieldSvg} from '@/shared/assets/svg/shield';
 import {userSvg} from '@/shared/assets/svg/user';
-import {checkCanUpdate, useUser, useUserActions} from '@/entities/user';
+import {
+  checkCanUpdate,
+  getNewUpdatedAt,
+  UserInfo,
+  useUser,
+  useUserActions,
+} from '@/entities/user';
 import {
   FormButton,
   FormInput,
   InputComment,
   PADDING_TOP,
   SCREEN_PADDING,
+  useFirebase,
   useInputValidator,
 } from '@/shared';
 import {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, View} from 'react-native';
-import auth from '@react-native-firebase/auth';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 
 export const ChangeNameForm = () => {
   const user = useUser();
+  const {auth, firestore} = useFirebase();
+  const usersCollection = firestore.collection('Users');
   const {updateName} = useUserActions();
   const navigation = useNavigation();
   const [name, onChangeName, isNameValid, nameError] = useInputValidator({
@@ -32,34 +40,47 @@ export const ChangeNameForm = () => {
   const [loading, setLoading] = useState(false);
   const {t} = useTranslation();
 
-  const onSubmit = () => {
-    const canUpdateName = checkCanUpdate(user.nameUpdatedAt);
-    if (!canUpdateName) {
-      Alert.alert(t('changingPeriodComment', {label: t('fullName')}));
-    } else if (user.email) {
-      setLoading(true);
-      auth()
-        .signInWithEmailAndPassword(user.email, password)
-        .then(response => {
-          return response.user.updateProfile({displayName: name});
-        })
-        .then(() => {
-          auth().currentUser?.reload();
-          updateName(name);
-          Alert.alert(t('success'), t('nameSuccessfullyChanged'), [
-            {
-              onPress: () => navigation.goBack(),
-            },
-          ]);
-        })
-        .catch(error => {
-          if (error.code === 'auth/network-request-failed') {
-            Alert.alert(t('error'), t('noInternetConnection'));
-          } else {
-            Alert.alert(t('error'), t('somethingWentWrong'));
-          }
-        })
-        .finally(() => setLoading(false));
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      if (!user.email) return;
+      const authorization = await auth.signInWithEmailAndPassword(
+        user.email,
+        password,
+      );
+      const response = await usersCollection.doc(authorization.user.uid).get();
+      const userInfo = response.data() as UserInfo;
+      const canUpdate = checkCanUpdate(userInfo.nameUpdatedAt);
+      if (canUpdate) {
+        await authorization.user.updateProfile({displayName: name});
+        const nameUpdatedAt: UserInfo['emailUpdatedAt'] = getNewUpdatedAt(
+          userInfo.nameUpdatedAt,
+        );
+        usersCollection
+          .doc(authorization.user.uid)
+          .set({...userInfo, nameUpdatedAt});
+        updateName(name);
+        Alert.alert(t('success'), t('nameSuccessfullyChanged'), [
+          {
+            onPress: () => navigation.goBack(),
+          },
+        ]);
+      } else {
+        Alert.alert(
+          t('error'),
+          t('changingPeriodComment', {label: t('fullName')}),
+        );
+      }
+    } catch (error: any) {
+      if (error.code === 'auth/wrong-password') {
+        Alert.alert(t('error'), t('wrongPassword'));
+      } else if (error.code === 'auth/network-request-failed') {
+        Alert.alert(t('error'), t('noInternetConnection'));
+      } else {
+        Alert.alert(t('error'), t('somethingWentWrong'));
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
