@@ -1,5 +1,26 @@
-import { ISettingsState } from "@/entities/settings";
-import { setNotification } from "@/shared";
+import {ISettingsState} from '@/entities/settings';
+import {deleteNotification, setNotification} from '@/shared';
+
+type TParams = {
+  type: keyof ISettingsState['dailyReminder'];
+  title: string;
+  body: string;
+  date: number;
+  hour: number;
+  minute: number;
+};
+
+const generateDailyNotificationId = (
+  date: TParams['date'],
+  type: TParams['type'],
+) => `${date}:${type}`;
+
+export const deleteDailyNotification = (
+  date: TParams['date'],
+  type: TParams['type'],
+) => {
+  deleteNotification(generateDailyNotificationId(date, type));
+};
 
 export const updateDailyNotification = async ({
   type,
@@ -8,19 +29,12 @@ export const updateDailyNotification = async ({
   date,
   hour,
   minute,
-}: {
-  type: keyof ISettingsState["dailyReminder"];
-  title: string;
-  body: string;
-  date: number;
-  hour: number;
-  minute: number;
-}) => {
+}: TParams) => {
   const notificationDate = new Date(date).setHours(hour, minute, 0, 0);
   const isTimeExpired = Date.now() >= notificationDate;
   if (isTimeExpired) return;
 
-  const id = `${date}:${type}`;
+  const id = generateDailyNotificationId(date, type);
   setNotification({
     title,
     body,

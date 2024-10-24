@@ -1,4 +1,4 @@
-export { updateDailyNotification } from "./lib/updateDailyNotifications";
+export { updateDailyNotification, deleteDailyNotification } from "./lib/updateDailyNotifications";
 export {
   useSettingsActions,
   useSettings,

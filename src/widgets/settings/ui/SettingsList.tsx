@@ -95,18 +95,14 @@ export const SettingsList = () => {
         <View style={styles.paddingContainer}>
           <TaskbookForever />
         </View>
-        <ThemedView
-          colorName="background"
-          borderColorName="lineGrey"
+        <View
           style={styles.section}>
           <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
             account
           </CustomText>
           <UserCard data={user} onPress={goToAccount} />
-        </ThemedView>
-        <ThemedView
-          colorName="background"
-          borderColorName="lineGrey"
+        </View>
+        <View
           style={styles.section}>
           <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
             general
@@ -142,10 +138,8 @@ export const SettingsList = () => {
             onPress={() => navigation.navigate('Language')}
             xmlGetter={translateSvg}
           />
-        </ThemedView>
-        <ThemedView
-          colorName="background"
-          borderColorName="lineGrey"
+        </View>
+        <View
           style={styles.section}>
           <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
             app
@@ -174,7 +168,7 @@ export const SettingsList = () => {
           onPress={() => {}}
           xmlGetter={dollarSvg}
         /> */}
-        </ThemedView>
+        </View>
       </ScrollView>
       <ThemedView
         style={[styles.copyRightContainer, {paddingBottom}]}
@@ -222,8 +216,6 @@ const styles = StyleSheet.create({
   },
   section: {
     paddingTop: 12,
-    marginTop: 10,
-    borderTopWidth: 1,
     paddingHorizontal: SCREEN_PADDING,
   },
   paddingContainer: {

@@ -216,8 +216,6 @@ export const TaskForm = () => {
     }
   }, [taskToEdit.title]);
 
-  console.log(repeatingDays);
-
   return (
     <>
       <Header modalHeader title={id ? 'editing' : 'newTask'} />
