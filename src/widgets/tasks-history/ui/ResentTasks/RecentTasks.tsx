@@ -115,7 +115,6 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
         const ids = [...taskIds[date]].reverse();
         setFiltered([date.toString(), ...ids]);
       }
-      console.log(date, taskIds[date]);
     } else {
       setFiltered([]);
     }

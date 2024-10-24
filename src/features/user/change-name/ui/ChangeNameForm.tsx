@@ -1,12 +1,6 @@
 import {shieldSvg} from '@/shared/assets/svg/shield';
 import {userSvg} from '@/shared/assets/svg/user';
-import {
-  checkCanUpdate,
-  getNewUpdatedAt,
-  UserInfo,
-  useUser,
-  useUserActions,
-} from '@/entities/user';
+import {useUser, useUserActions} from '@/entities/user';
 import {
   FormButton,
   FormInput,
@@ -16,16 +10,16 @@ import {
   useFirebase,
   useInputValidator,
 } from '@/shared';
-import {useState} from 'react';
 import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
+import {useEffect} from 'react';
 
 export const ChangeNameForm = () => {
-  const user = useUser();
+  const {loading, success, error, ...user} = useUser();
   const {auth, firestore} = useFirebase();
   const usersCollection = firestore.collection('Users');
-  const {updateName} = useUserActions();
+  const {changeNameThunk, clearMessages} = useUserActions();
   const navigation = useNavigation();
   const [name, onChangeName, isNameValid, nameError] = useInputValidator({
     required: true,
@@ -37,54 +31,29 @@ export const ChangeNameForm = () => {
       required: true,
       minLength: 6,
     });
-  const [loading, setLoading] = useState(false);
   const {t} = useTranslation();
 
-  const onSubmit = async () => {
-    setLoading(true);
-    try {
-      if (!user.email) return;
-      const authorization = await auth.signInWithEmailAndPassword(
-        user.email,
-        password,
-      );
-      const response = await usersCollection.doc(authorization.user.uid).get();
-      const userInfo = response.data() as UserInfo;
-      const canUpdate = checkCanUpdate(userInfo.nameUpdatedAt);
-      if (canUpdate) {
-        await authorization.user.updateProfile({displayName: name});
-        const nameUpdatedAt: UserInfo['emailUpdatedAt'] = getNewUpdatedAt(
-          userInfo.nameUpdatedAt,
-        );
-        usersCollection
-          .doc(authorization.user.uid)
-          .set({...userInfo, nameUpdatedAt});
-        updateName(name);
-        Alert.alert(t('success'), t('nameSuccessfullyChanged'), [
-          {
-            onPress: () => navigation.goBack(),
-          },
-        ]);
-      } else {
-        Alert.alert(
-          t('error'),
-          t('changingPeriodComment', {label: t('fullName')}),
-        );
-      }
-    } catch (error: any) {
-      if (error.code === 'auth/wrong-password') {
-        Alert.alert(t('error'), t('wrongPassword'));
-      } else if (error.code === 'auth/network-request-failed') {
-        Alert.alert(t('error'), t('noInternetConnection'));
-      } else {
-        Alert.alert(t('error'), t('somethingWentWrong'));
-      }
-    } finally {
-      setLoading(false);
-    }
+  const onSubmit = () => {
+    changeNameThunk({user, usersCollection, auth, password, name});
   };
 
   const isFormValid = name !== user.name && isNameValid && isPasswordValid;
+
+  useEffect(() => {
+    if (success) {
+      Alert.alert(t(success.title), t(success.message), [
+        {onPress: navigation.goBack},
+      ]);
+      clearMessages();
+    }
+  });
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert(t(error.title), t(error.message));
+      clearMessages();
+    }
+  }, [error]);
 
   return (
     <ScrollView
@@ -101,9 +70,7 @@ export const ChangeNameForm = () => {
           textContentType="name"
           autoComplete="name"
         />
-        <InputComment>
-          {t('changingPeriodComment', {label: t('name')})}
-        </InputComment>
+        <InputComment>{t('nameCanBeChangedNoMoreThan')}</InputComment>
         <FormInput
           xmlGetter={shieldSvg}
           value={password}

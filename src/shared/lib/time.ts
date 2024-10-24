@@ -1,4 +1,4 @@
-import { TIME_REGEX } from "../consts/regex";
+import { TIME_REGEX } from "../config/consts/regex";
 
 export type TTimeValue = { hour: number; minute: number };
 

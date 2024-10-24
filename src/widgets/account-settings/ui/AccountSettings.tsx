@@ -11,18 +11,17 @@ import {
 import {keySvg} from '@/shared/assets/svg/key';
 import {useUser, useUserActions} from '@/entities/user';
 import {useTranslation} from 'react-i18next';
-import {useState} from 'react';
+import {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export const AccountSettings = () => {
   const {auth} = useFirebase();
-  const user = useUser();
-  const {removeUser} = useUserActions();
+  const {error, loading, email, name} = useUser();
+  const {signoutThunk, clearMessages} = useUserActions();
   const navigation =
     useNavigation<NativeStackNavigationProp<AccountSettingsStackParamsList>>();
   const {t} = useTranslation();
-  const [loading, setLoading] = useState(false);
   const goToChangePassword = () => {
     navigation.navigate('Password');
   };
@@ -34,20 +33,7 @@ export const AccountSettings = () => {
   };
 
   const signOut = () => {
-    setLoading(true);
-    auth
-      .signOut()
-      .catch(error => {
-        if (error.code === 'auth/network-request-failed') {
-          Alert.alert(t('error'), t('noInternetConnection'));
-        } else {
-          Alert.alert(t('error'), t('somethingWentWrong'));
-        }
-      })
-      .finally(() => {
-        removeUser();
-        setLoading(false);
-      });
+    signoutThunk({auth});
   };
 
   const onSignOutHandler = () => {
@@ -57,6 +43,13 @@ export const AccountSettings = () => {
     ]);
   };
 
+  useEffect(() => {
+    if (error) {
+      Alert.alert(t(error.title), t(error.message));
+      clearMessages();
+    }
+  }, [error]);
+
   return (
     <ScrollView
       style={styles.container}
@@ -64,14 +57,10 @@ export const AccountSettings = () => {
       showsVerticalScrollIndicator={false}>
       <NavButton
         title="emailAddress"
-        value={user.email || ''}
+        value={email || ''}
         onPress={goToChangeEmail}
       />
-      <NavButton
-        title="fullName"
-        value={user.name || ''}
-        onPress={goToChangeName}
-      />
+      <NavButton title="fullName" value={name || ''} onPress={goToChangeName} />
       <Setting
         type="navigate"
         xmlGetter={keySvg}

@@ -1,15 +1,18 @@
-import { bindActionCreators } from "@reduxjs/toolkit";
-import { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { userSlice } from "./userSlice";
-import { RootState } from "@/app/store";
+import {bindActionCreators} from '@reduxjs/toolkit';
+import {useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {userSlice} from './userSlice';
+import {RootState} from '@/app/store';
+import * as apiActions from '../api/auth.api';
+
+const actions = {
+  ...userSlice.actions,
+  ...apiActions,
+};
 
 export const useUserActions = () => {
   const dispatch = useDispatch();
-  return useMemo(
-    () => bindActionCreators(userSlice.actions, dispatch),
-    [dispatch]
-  );
+  return useMemo(() => bindActionCreators(actions, dispatch), [dispatch]);
 };
 
 export const useUser = () => {

@@ -1,4 +1,4 @@
-import { DATE_MONTHS, WEEK_DAYS } from "@/shared/consts/datetime";
+import { DATE_MONTHS, WEEK_DAYS } from "@/shared/config/consts/datetime";
 import { TFunction } from "i18next";
 
 export type TCalendarWeek = {

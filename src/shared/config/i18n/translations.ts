@@ -1,4 +1,5 @@
-import {DATE_MONTHS, MONTHS, WEEK_DAYS} from '@/shared/consts/datetime';
+import {DATE_MONTHS, MONTHS, WEEK_DAYS} from '@/shared/config/consts/datetime';
+import {USER_UPDATES_PERIOD} from '../consts/api';
 
 export type TLanguage = 'ru' | 'en';
 
@@ -157,8 +158,14 @@ export const TRANSLATIONS = {
       calendarMessage: 'Смотрите в будущее и планируйте наперёд',
       quickAdditionMessage: 'Составляйте план действий быстро и удобно',
       notificationsMessage: 'Не забывайте о важных задачах и дедлайнах',
-      changingPeriodComment:
-        '{{label}} можно менять не более 2-х раз в течение 15 дней. Пожалуйста, повторите попытку позже',
+      emailCanBeChangedNoMoreThan: `Email можно менять не более 2-х раз в течение ${USER_UPDATES_PERIOD} дней`,
+      nameCanBeChangedNoMoreThan: `Имя можно менять не более 2-х раз в течение ${USER_UPDATES_PERIOD} дней`,
+      passwordCanBeChangeNoMoreThan: `Пароль можно менять не более 2-х раз в течение ${USER_UPDATES_PERIOD} дней`,
+      passwordCanBeResettedNoMoreThan: `Пароль может быть сброшен не более 2-х раз в течение ${USER_UPDATES_PERIOD} дней`,
+      youHaveAlreadyChangedEmail: `Вы уже меняли свой email 2 раза за последние ${USER_UPDATES_PERIOD} дней. Пожалуйста, повторите попытку позже`,
+      youHaveAlreadyChangedName: `Вы уже меняли своё имя 2 раза за последние ${USER_UPDATES_PERIOD} дней. Пожалуйста, повторите попытку позже`,
+      youHaveAlreadyChangedPassword: `Вы уже меняли пароль 2 раза за последние ${USER_UPDATES_PERIOD} дней. Пожалуйста, повторите попытку позже`,
+      passwordResetEmailHasAlreadyBeenSent: `Письмо для сброса пароля было отправлено на этот email 2 раза за последние ${USER_UPDATES_PERIOD} дней. Пожалуйста, повторите попытку позже`,
       nameSuccessfullyChanged: 'Имя успешно изменено',
       emailSent: 'Письмо отправлено',
       minLengthValidationError: 'Минимальное количество символов: {{length}}',
@@ -176,8 +183,6 @@ export const TRANSLATIONS = {
       wrongPassword: 'Неверный пароль',
       error: 'Ошибка!',
       success: 'Успешно',
-      passwordResettingPeriodComment:
-        'Пароль может быть сброшен не более 2-х раз в течение 15 дней. Пожалуйста, повторите попытку позже',
       passwordReset: 'Сброс пароля',
       followLinkWeSent:
         'Пожалуйста, перейдите по ссылке, которую мы отправили на ваш email-адрес',
@@ -356,7 +361,15 @@ export const TRANSLATIONS = {
       quickAdditionMessage: 'Make your plan quickly and conveniently',
       notificationsMessage: "Don't forget about important tasks and deadlines",
       changingPeriodComment:
-        '{{label}} can be changed no more than 2 times within 15 days. Please, try again later',
+        '{{label}} can be changed no more than 2 times within ${USER_UPDATES_PERIOD} days',
+      emailCanBeChangedNoMoreThan: `Email can be changed no more than 2 times within ${USER_UPDATES_PERIOD} days`,
+      nameCanBeChangedNoMoreThan: `Name can be changed no more than 2 times within ${USER_UPDATES_PERIOD} days`,
+      passwordCanBeChangeNoMoreThan: `Password can be changed no more than 2 times within ${USER_UPDATES_PERIOD} days`,
+      passwordCanBeResettedNoMoreThan: `Password can be resetted no more than 2 times within ${USER_UPDATES_PERIOD} days`,
+      youHaveAlreadyChangedEmail: `You have already changed your email 2 times in the last ${USER_UPDATES_PERIOD} days. Please, try again later`,
+      youHaveAlreadyChangedName: `You have already changed your name 2 times in the last ${USER_UPDATES_PERIOD} days. Please, try again later`,
+      youHaveAlreadyChangedPassword: `You have already changed password 2 times in the last ${USER_UPDATES_PERIOD} days. Please, try again later`,
+      passwordResetEmailHasAlreadyBeenSent: `A password reset email has been sent to this email 2 times in the last ${USER_UPDATES_PERIOD} days. Please, try again later`,
       nameSuccessfullyChanged: 'Name is successfully changed',
       emailSent: 'Email is sent',
       minLengthValidationError: 'Minimum count of symbols: {{length}}',
@@ -374,8 +387,6 @@ export const TRANSLATIONS = {
       wrongPassword: 'Wrong password',
       error: 'Error!',
       success: 'Success',
-      passwordResettingPeriodComment:
-        'Password can be resetted no more than 2 times within 15 days. Please, try again later',
       passwordReset: 'Password reset',
       followLinkWeSent:
         'Please follow the link that we sent to your email-address',

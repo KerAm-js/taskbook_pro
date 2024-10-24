@@ -12,14 +12,18 @@ import {
   useInputValidator,
   useSafeAreaPadding,
 } from '@/shared';
-import {useState} from 'react';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {useUserActions} from '@/entities/user';
+import {
+  SEND_EMAIL_VERIFICATION_ACTION,
+  useUser,
+  useUserActions,
+} from '@/entities/user';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import * as Keychain from 'react-native-keychain';
+import {useEffect} from 'react';
+import { confirmEmail } from '../api/confirmEmail.api';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -35,84 +39,55 @@ export const SigninForm = () => {
   });
   const [password, onChangePassword, isPasswordValid, passwordError] =
     useInputValidator({minLength: 6});
-  const [loading, setLoading] = useState(false);
-  const {setUser} = useUserActions();
+  const {signinThunk, clearMessages} = useUserActions();
+  const {loading, error, success} = useUser();
   const headerHeight = useHeaderHeight();
   const {paddingBottom} = useSafeAreaPadding();
+  const isFocused = useIsFocused();
 
   const goToRegistration = () => {
-    navigation.navigate('Signup');
-  };
-
-  const confirmEmail = async () => {
-    auth.currentUser
-      ?.sendEmailVerification()
-      .then(() => {
-        Alert.alert(t('emailSent'), t('followLinkWeSent'));
-      })
-      .catch(error => {
-        if (error.code === 'auth/network-request-failed') {
-          Alert.alert(t('error'), t('noInternetConnection'));
-        } else {
-          Alert.alert(t('error'), t('somethingWentWrong'));
-        }
-      });
+    navigation.push('Signup');
   };
 
   const onSubmit = async () => {
-    setLoading(true);
-    try {
-      const response = await auth.signInWithEmailAndPassword(email, password);
-      if (response) {
-        if (response.user.emailVerified) {
-          const {uid, displayName, email, emailVerified} = response.user;
-          setUser({
-            uid,
-            email,
-            emailVerified,
-            name: displayName,
-          });
-          await Keychain.setGenericPassword(uid, password);
-        } else {
-          Alert.alert(
-            t('emailIsNotConfirmed'),
-            t('shouldWeSendConfirmationLink'),
-            [
+    signinThunk({email, password, auth});
+  };
+
+  const isFormValid = isEmailValid && isPasswordValid;
+
+  const goToPasswordReset = () => {
+    navigation.navigate('PasswordReset');
+  };
+
+  useEffect(() => {
+    if (success && isFocused) {
+      Alert.alert(t(success.title), t(success.message));
+      clearMessages();
+    }
+  }, [success, isFocused]);
+
+  useEffect(() => {
+    if (error && isFocused) {
+      Alert.alert(
+        t(error.title),
+        t(error.message),
+        error.action === SEND_EMAIL_VERIFICATION_ACTION
+          ? [
               {
                 text: t('send'),
                 style: 'default',
-                onPress: confirmEmail,
+                onPress: () => confirmEmail(auth),
               },
               {
                 text: t('cancel'),
                 style: 'cancel',
               },
-            ],
-          );
-        }
-      }
-    } catch (error: any) {
-      console.log(error);
-      if (error.code === 'auth/network-request-failed') {
-        Alert.alert(t('error'), t('noInternetConnection'));
-      } else if (
-        error.code === 'auth/invalid-credential' ||
-        error.code === 'auth/user-not-found' ||
-        error.code === 'auth/wrong-password'
-      ) {
-        Alert.alert(t('error'), t('wrongEmailOrPassword'));
-      } else {
-        Alert.alert(t('error'), t('somethingWentWrong'));
-      }
+            ]
+          : undefined,
+      );
+      clearMessages();
     }
-    setLoading(false);
-  };
-
-  const isFormValid = isEmailValid && isPasswordValid;
-
-  const resetPassword = () => {
-    navigation.navigate('PasswordReset');
-  };
+  }, [error, isFocused]);
 
   return (
     <View style={styles.container}>
@@ -168,7 +143,7 @@ export const SigninForm = () => {
         <FormButton
           type="secondary"
           title="forgotPassword"
-          onPress={resetPassword}
+          onPress={goToPasswordReset}
         />
       </ThemedView>
     </View>

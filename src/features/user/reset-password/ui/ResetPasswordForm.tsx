@@ -1,5 +1,5 @@
 import {emailSvg} from '@/shared/assets/svg/email';
-import {checkCanUpdate, TUserUpdates, useUser} from '@/entities/user';
+import {useUser} from '@/entities/user';
 import {
   EMAIL_REGEX,
   FormButton,
@@ -14,6 +14,7 @@ import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Alert, ScrollView, StyleSheet, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {sendPasswordResetEmail} from '../api/sendPasswordResetEmail.api';
 
 export const ResetPasswordForm = () => {
   const {t} = useTranslation();
@@ -30,32 +31,18 @@ export const ResetPasswordForm = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    try {
-      if (!user.email) return;
-      const response = await passwordResetsCollection.doc(user.uid).get();
-      const passwordResettedAt = response.data() as TUserUpdates;
-      const canUpdate = checkCanUpdate(passwordResettedAt);
-      if (canUpdate) {
-        await auth.sendPasswordResetEmail(email);
-        Alert.alert(t('emailSent'), t('followLinkWeSent'), [
-          {
-            onPress: () => navigation.goBack(),
-          },
-        ]);
-      } else {
-        Alert.alert(t('error'), t('passwordResettingPeriodComment'));
-      }
-    } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        Alert.alert(t('error'), t('emailAlreadyInUse'));
-      } else if (error.code === 'auth/network-request-failed') {
-        Alert.alert(t('error'), t('noInternetConnection'));
-      } else {
-        Alert.alert(t('error'), t('somethingWentWrong'));
-      }
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const result = await sendPasswordResetEmail({
+      auth,
+      email,
+      passwordResetsCollection,
+    });
+    Alert.alert(
+      t(result.title),
+      t(result.message),
+      result.status === 'resolved' ? [{onPress: navigation.goBack}] : undefined,
+    );
+    setLoading(false);
   };
 
   return (
@@ -74,7 +61,7 @@ export const ResetPasswordForm = () => {
           textContentType="emailAddress"
           editable={!(user.uid && user.email)}
         />
-        <InputComment>{t('passwordResettingPeriodComment')}</InputComment>
+        <InputComment>{t('passwordCanBeResettedNoMoreThan')}</InputComment>
       </View>
       <FormButton
         disabled={!isEmailValid}

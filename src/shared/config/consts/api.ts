@@ -1,0 +1,1 @@
+export const USER_UPDATES_PERIOD = 15;

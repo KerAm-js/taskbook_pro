@@ -8,7 +8,7 @@ import {
   getNextDate,
 } from "@/shared";
 import { SCREEN_PADDING } from "@/shared/config/style/views";
-import { MONTHS, WEEK_DAYS } from "@/shared/consts/datetime";
+import { MONTHS, WEEK_DAYS } from "@/shared/config/consts/datetime";
 import { getDateLater } from "@/shared/lib/dates";
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

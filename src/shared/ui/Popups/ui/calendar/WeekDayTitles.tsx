@@ -1,5 +1,5 @@
 import { TEXT_STYLES } from "@/shared/config/style/texts";
-import { WEEK_DAYS } from "@/shared/consts/datetime";
+import { WEEK_DAYS } from "@/shared/config/consts/datetime";
 import { CustomText } from "@/shared/ui/CustomText";
 import { ThemedView } from "@/shared/ui/Theme";
 import { StyleSheet } from "react-native";

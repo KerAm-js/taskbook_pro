@@ -67,7 +67,7 @@ export const Navigator = () => {
     };
   }, []);
 
-  const isAuthorized = email;
+  const isAuthorized = email && emailVerified;
 
   if (isAuthorized && loading) {
     return null;

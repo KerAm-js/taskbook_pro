@@ -8,7 +8,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { MONTHS } from "@/shared/consts/datetime";
+import { MONTHS } from "@/shared/config/consts/datetime";
 import { WeekDayTitles } from "./WeekDayTitles";
 import { SlideButton } from "./SlideButton";
 import { TEXT_STYLES } from "@/shared/config/style/texts";

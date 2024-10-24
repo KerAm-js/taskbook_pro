@@ -19,8 +19,7 @@ export {FormButton} from './ui/FormButton';
 
 //config
 export {LANGUAGE_DETECTOR} from './config/i18n/i18n';
-export {TRANSLATIONS} from './config/i18n/translations';
-export {LANGUAGES} from './config/i18n/translations';
+export {TRANSLATIONS, LANGUAGES} from './config/i18n/translations';
 export {
   THEME_COLORS,
   COLORS,
@@ -38,8 +37,9 @@ export {
   VIEW_SHADOW_REVERSE,
 } from './config/style/shadows';
 export {TEXT_STYLES} from './config/style/texts';
-export {WEEK_DAYS} from './consts/datetime';
-export {TIME_REGEX, EMAIL_REGEX} from './consts/regex';
+export {WEEK_DAYS} from './config/consts/datetime';
+export {TIME_REGEX, EMAIL_REGEX} from './config/consts/regex';
+export {USER_UPDATES_PERIOD} from './config/consts/api';
 
 //hooks
 export {useSafeAreaPadding} from './hooks/useSafeAreaPadding';

@@ -4,14 +4,13 @@ import {Task} from '../model/types';
 import {TEXT_STYLES, ThemedText} from '@/shared';
 
 export const TaskTitle: FC<{task: Task}> = ({task}) => {
-  return <ThemedText style={styles.input}>{task.title}</ThemedText>;
+  return <ThemedText style={styles.title}>{task.title}</ThemedText>;
 };
 
 const styles = StyleSheet.create({
-  input: {
+  title: {
     ...TEXT_STYLES.standart,
     paddingRight: 15,
     paddingTop: 0,
-    lineHeight: 19,
   },
 });

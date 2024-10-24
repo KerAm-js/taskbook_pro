@@ -2,7 +2,7 @@ import {shieldSvg} from '@/shared/assets/svg/shield';
 import {
   checkCanUpdate,
   getNewUpdatedAt,
-  UserInfo,
+  UserUpdates,
   useUser,
 } from '@/entities/user';
 import {
@@ -22,6 +22,7 @@ import {shieldMinusSvg} from '@/shared/assets/svg/shieldMinus';
 import {shieldCheckSvg} from '@/shared/assets/svg/shieldCheck';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {changePassword} from '../api/changePassword.api';
 
 export const ChangePasswordForm = () => {
   const {t} = useTranslation();
@@ -60,48 +61,19 @@ export const ChangePasswordForm = () => {
 
   const onSubmit = async () => {
     setLoading(true);
-    try {
-      if (!user.email) return;
-      const authorization = await auth.signInWithEmailAndPassword(
-        user.email,
-        currentPassword,
-      );
-      const response = await usersCollection.doc(authorization.user.uid).get();
-      const userInfo = response.data() as UserInfo;
-      const canUpdate = checkCanUpdate(userInfo.passwordUpdatedAt);
-      if (newPassword === currentPassword) {
-        Alert.alert(t('passwordAlreadyInUse'));
-        return;
-      }
-      if (canUpdate) {
-        await authorization.user.updatePassword(newPassword);
-        const passwordUpdatedAt: UserInfo['emailUpdatedAt'] = getNewUpdatedAt(
-          userInfo.passwordUpdatedAt,
-        );
-        usersCollection.doc(authorization.user.uid).set({...userInfo, passwordUpdatedAt});
-        Alert.alert(t('success'), t('passwordSuccessfullyChanged'), [
-          {
-            onPress: () => navigation.goBack(),
-          },
-        ]);
-      } else {
-        Alert.alert(
-          t('error'),
-          t('changingPeriodComment', {label: t('password')}),
-        );
-      }
-    } catch (error: any) {
-      console.log(error)
-      if (error.code === 'auth/wrong-password') {
-        Alert.alert(t('error'), t('wrongPassword'));
-      } else if (error.code === 'auth/network-request-failed') {
-        Alert.alert(t('error'), t('noInternetConnection'));
-      } else {
-        Alert.alert(t('error'), t('somethingWentWrong'));
-      }
-    } finally {
-      setLoading(false);
-    }
+    const result = await changePassword({
+      auth,
+      user,
+      usersCollection,
+      currentPassword,
+      newPassword,
+    });
+    Alert.alert(
+      t(result.title),
+      t(result.message),
+      result.status === 'resolved' ? [{onPress: navigation.goBack}] : undefined,
+    );
+    setLoading(false);
   };
 
   const resetPassword = () => {
@@ -147,9 +119,7 @@ export const ChangePasswordForm = () => {
           autoComplete="new-password"
           secureTextEntry
         />
-        <InputComment>
-          {t('changingPeriodComment', {label: t('password')})}
-        </InputComment>
+        <InputComment>{t('passwordCanBeChangeNoMoreThan')}</InputComment>
       </View>
       <View style={styles.buttons}>
         <FormButton

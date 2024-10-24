@@ -9,22 +9,22 @@ import {
   useHeaderHeight,
   useInputValidator,
 } from '@/shared';
-import {useState} from 'react';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';
 import {userSvg} from '@/shared/assets/svg/user';
 import {shieldCheckSvg} from '@/shared/assets/svg/shieldCheck';
 import {useTranslation} from 'react-i18next';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useNavigation} from '@react-navigation/native';
-import {User, UserInfo} from '@/entities/user';
+import {useState} from 'react';
+import {signup} from '../api/singup.api';
 
 const HEIGHT = Dimensions.get('screen').height;
 
 export const SignupForm = () => {
   const {t} = useTranslation();
-  const {auth, firestore} = useFirebase();
-  const usersCollection = firestore.collection('Users');
+  const {auth} = useFirebase();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [email, onChangeEmail, isEmailValid, emailError] = useInputValidator({
     pattern: EMAIL_REGEX,
     patternErrorMessage: t('incorrectEmail'),
@@ -46,44 +46,16 @@ export const SignupForm = () => {
     valueToConfirm: password,
     confirmationErrorMessage: 'passwordsDontMatch',
   });
-  const [loading, setLoading] = useState(false);
   const headerHeight = useHeaderHeight();
 
   const onSubmit = async () => {
     setLoading(true);
-    try {
-      const response = await auth.createUserWithEmailAndPassword(
-        email,
-        password,
-      );
-      if (response) {
-        const userData: UserInfo = {
-          emailUpdatedAt: undefined,
-          passwordUpdatedAt: undefined,
-          nameUpdatedAt: undefined,
-        };
-        await response.user.updateProfile({displayName: name});
-        await usersCollection.doc(response.user.uid).set(userData);
-        await response.user.sendEmailVerification();
-        Alert.alert(
-          t('emailConfirmationTitle'),
-          t('emailConfirmationMessage'),
-          [
-            {
-              onPress: () => navigation.goBack(),
-            },
-          ],
-        );
-      }
-    } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        Alert.alert(t('error'), t('emailAlreadyInUse'));
-      } else if (error.code === 'auth/network-request-failed') {
-        Alert.alert(t('error'), t('noInternetConnection'));
-      } else {
-        Alert.alert(t('error'), t('somethingWentWrong'));
-      }
-    }
+    const result = await signup({email, name, password, auth});
+    Alert.alert(
+      t(result.title),
+      t(result.message),
+      result.status === 'rejected' ? [{onPress: navigation.goBack}] : undefined,
+    );
     setLoading(false);
   };
 

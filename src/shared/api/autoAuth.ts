@@ -12,6 +12,5 @@ export const autoAuth = async (
   const credentials = await Keychain.getGenericPassword();
   if (credentials) {
     await auth.signInWithEmailAndPassword(email, credentials.password);
-    console.log(auth.currentUser)
   }
 };
