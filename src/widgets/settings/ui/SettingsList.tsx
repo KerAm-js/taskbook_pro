@@ -5,15 +5,12 @@ import {shareSvg} from '@/shared/assets/svg/share';
 import {keyboardSvg} from '@/shared/assets/svg/keyboard';
 import {paletteSvg} from '@/shared/assets/svg/palette';
 import {
-  COLORS,
   CustomText,
   PADDING_TOP,
   SCREEN_PADDING,
   Setting,
   SettingsStackParamsList,
   TEXT_STYLES,
-  ThemedText,
-  ThemedView,
 } from '@/shared';
 import {
   Alert,

@@ -2,9 +2,8 @@ import {
   checkCanUpdate,
   getNewUpdatedAt,
   TUserUpdates,
-  User,
+  TApiMessage,
 } from '@/entities/user';
-import {TApiMessage} from '@/entities/user/model/types';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 

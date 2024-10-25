@@ -1,4 +1,4 @@
-import {TApiMessage} from '@/entities/user/model/types';
+import { TApiMessage } from '@/entities/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 type TSignupCredentials = {
