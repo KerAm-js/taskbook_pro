@@ -1,4 +1,4 @@
-import { useTaskActions } from "@/entities/task";
+import {useTaskActions} from '@/entities/task';
 import {
   COLORS,
   CustomText,
@@ -6,44 +6,41 @@ import {
   isToday,
   TEXT_STYLES,
   THEME_COLORS,
-} from "@/shared";
-import React, { FC } from "react";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+} from '@/shared';
+import React, {FC} from 'react';
+import {Dimensions, Pressable, StyleSheet, View} from 'react-native';
 
 type TPropTypes = {
   day: number;
   isSelected: boolean;
 };
 
-const WIDTH = Dimensions.get("screen").width;
+const WIDTH = Dimensions.get('screen').width;
 const BUTTON_WIDTH = WIDTH * 0.132;
 
 export const SelectDay: FC<TPropTypes> = React.memo(
-  ({ day, isSelected }) => {
-    const { selectDate } = useTaskActions();
+  ({day, isSelected}) => {
+    const {selectDate} = useTaskActions();
     const isExpired = Date.now() > day;
     return (
       <Pressable
         disabled={isExpired}
         onPress={() => selectDate(day)}
-        style={styles.container}
-      >
+        style={styles.container}>
         <View
           style={[
             styles.titleWrapper,
             isSelected
               ? styles.selected
               : isToday(day) && styles.todayTitleWrapper,
-          ]}
-        >
+          ]}>
           <CustomText
             style={[
               styles.dateTitle,
               isSelected && styles.selectedDateTitle,
-              isExpired && { opacity: 0.5 },
+              isExpired && {opacity: 0.5},
             ]}
-            translate={false}
-          >
+            translate={false}>
             {getDate(day)}
           </CustomText>
         </View>
@@ -52,7 +49,7 @@ export const SelectDay: FC<TPropTypes> = React.memo(
   },
   (prev, curr) => {
     return prev.isSelected === curr.isSelected;
-  }
+  },
 );
 
 const styles = StyleSheet.create({
@@ -60,7 +57,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     width: BUTTON_WIDTH,
     height: 60,
-    alignItems: "center",
+    alignItems: 'center',
   },
   todayTitleWrapper: {
     borderWidth: 1.5,
@@ -71,12 +68,12 @@ const styles = StyleSheet.create({
   },
   titleWrapper: {
     borderRadius: 7,
-    borderCurve: "continuous",
+    borderCurve: 'continuous',
     height: 30,
     width: 30,
     paddingTop: 3,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   dateTitle: {
     color: THEME_COLORS.night.text,

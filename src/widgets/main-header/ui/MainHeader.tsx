@@ -48,7 +48,7 @@ export const MainHeader = () => {
 
   const calendarStyleAnim = useAnimatedStyle(() => {
     return {
-      zIndex: -1,
+      zIndex: -100,
       transform: [{translateY: calendarTranslate.value}],
       display: calendarTranslate.value === -TRANSLATE ? 'none' : 'flex',
       opacity: withTiming(isCalendarOpened ? 1 : 0, {

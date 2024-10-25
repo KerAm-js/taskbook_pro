@@ -27,7 +27,8 @@ export const Title: FC<{ isCalendarOpened: boolean }> = ({
         : withTiming(1, { duration: 70 }),
       position: "absolute",
       bottom: 10,
-      zIndex: -2,
+      zIndex: isCalendarOpened ? -100 : 100,
+      width: '100%',
     };
   });
 

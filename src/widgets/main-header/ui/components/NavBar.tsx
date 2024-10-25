@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    marginBottom: 25 - (40 - 24) / 2,
+    paddingBottom: 10,
     paddingHorizontal: SCREEN_PADDING - (40 - 24) / 2,
   },
   navBarRight: {
