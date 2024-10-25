@@ -296,7 +296,7 @@ export const TaskForm = () => {
             title={id ? 'save' : 'add'}
             onPress={onSubmit}
           />
-          {!!id && taskToEdit?.date < today && (
+          {!!id && taskToEdit?.date >= today && (
             <FormButton
               type="destructive"
               title={id ? 'delete' : 'add'}
