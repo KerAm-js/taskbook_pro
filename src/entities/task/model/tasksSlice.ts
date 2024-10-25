@@ -26,7 +26,7 @@ import {
   rescheduleOverdueTasks,
   rescheduleIfOverdue,
 } from './actionHelpers';
-import { DATA } from './data.dev';
+import {DATA} from './data.dev';
 
 const TODAY = endOfDay();
 
@@ -252,6 +252,9 @@ export const tasksSlice = createSlice({
     },
 
     toggleTaskSelected: (state, action: PayloadAction<Task['id']>) => {
+      if (state.selectedTasksCount === 0) {
+        clearCache(state);
+      }
       const id = action.payload;
       const task = state.entities[id];
       task.isSelected = !task.isSelected;
@@ -259,9 +262,6 @@ export const tasksSlice = createSlice({
         state.selectedTasksCount++;
       } else {
         state.selectedTasksCount--;
-        if (state.selectedTasksCount === 0) {
-          clearCache(state);
-        }
       }
     },
 

@@ -7,19 +7,27 @@ import {
 } from '@/shared';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import {useTaskActions} from '@/entities/task';
+import {useIsSelection, useTaskActions} from '@/entities/task';
 import {useFastInputMode} from '@/entities/settings';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 
 export const AddTask = () => {
   const {addEmptyTask} = useTaskActions();
   const fastInputMode = useFastInputMode();
   const {paddingBottom} = useSafeAreaPadding();
+  const isSelection = useIsSelection();
   const {colors} = useThemeColors();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
+
+  const containerStyleAnim = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(isSelection ? 0 : 1)
+    };
+  }, [isSelection]);
 
   const onPress = () => {
     ReactNativeHapticFeedback.trigger('impactMedium', {
@@ -36,18 +44,19 @@ export const AddTask = () => {
   const bottom = paddingBottom < 20 ? 20 : paddingBottom + 30;
 
   return (
-    <View
+    <Animated.View
       style={[
         styles.buttonContainer,
         {
           backgroundColor: colors.accent,
           bottom,
         },
+        containerStyleAnim
       ]}>
-      <Pressable onPress={onPress} style={styles.button}>
+      <Pressable disabled={isSelection} onPress={onPress} style={styles.button}>
         <SvgXml xml={plusSvg(colors.background)} />
       </Pressable>
-    </View>
+    </Animated.View>
   );
 };
 
