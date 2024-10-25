@@ -209,6 +209,7 @@ export const TRANSLATIONS = {
       completedTasksStoredHere: 'Здесь хранятся\nвыполненные задачи',
       oneTimePayment: 'Разовый платёж',
       unlimitedPrice: '{{price}} ₽/навсегда',
+      version: 'Версия {{version}}',
     },
   },
   en: {
@@ -413,6 +414,7 @@ export const TRANSLATIONS = {
       completedTasksStoredHere: 'Completed tasks\nare stored here',
       oneTimePayment: 'One-time payment',
       unlimitedPrice: '{{price}} ₽/forever',
+      version: 'Version {{version}}',
     },
   },
 };

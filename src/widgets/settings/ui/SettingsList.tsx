@@ -26,20 +26,18 @@ import {
 } from 'react-native';
 import {useFastInputMode, useSettingsActions} from '@/entities/settings';
 import {likeSvg} from '@/shared/assets/svg/like';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {UserCard, useUser} from '@/entities/user';
 import {TaskbookForever} from './TaskbookForever';
 import {archieveSvg} from '@/shared/assets/svg/archieve';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { SettingsFooter } from './Footer';
 
 export const SettingsList = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<SettingsStackParamsList>>();
   const {toggleFastInputMode} = useSettingsActions();
   const fastInputMode = useFastInputMode();
-  const {bottom} = useSafeAreaInsets();
-  const paddingBottom = bottom < 20 ? 20 : bottom;
   const user = useUser();
 
   const itunesItemId = 1604538068;
@@ -170,22 +168,7 @@ export const SettingsList = () => {
         /> */}
         </View>
       </ScrollView>
-      <ThemedView
-        style={[styles.copyRightContainer, {paddingBottom}]}
-        nightStyle={styles.copyRightContainerNight}
-        borderColorName="lineGrey"
-        colorName="background">
-        <ThemedText colorName="accent" style={styles.appName}>
-          Taskbook Pro
-        </ThemedText>
-        <CustomText
-          themed
-          translate
-          colorName="accent"
-          style={styles.authorName}>
-          developedByAmirKerimov
-        </CustomText>
-      </ThemedView>
+      <SettingsFooter />
     </View>
   );
 };
@@ -204,16 +187,6 @@ const styles = StyleSheet.create({
   premium: {
     flexDirection: 'row',
   },
-  copyRightContainer: {
-    alignItems: 'center',
-    paddingTop: 10,
-    borderTopWidth: 1,
-  },
-  copyRightContainerNight: {
-    borderTopWidth: 0.5,
-    borderTopColor: COLORS.whiteUltraOpacity,
-    shadowOpacity: 0,
-  },
   section: {
     paddingTop: 12,
     paddingHorizontal: SCREEN_PADDING,
@@ -224,12 +197,5 @@ const styles = StyleSheet.create({
   categoryTitle: {
     ...TEXT_STYLES.standart,
     marginBottom: 10,
-  },
-  appName: {
-    marginBottom: 5,
-    ...TEXT_STYLES.standartBold,
-  },
-  authorName: {
-    ...TEXT_STYLES.small,
   },
 });
