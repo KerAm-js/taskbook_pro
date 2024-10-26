@@ -1,4 +1,5 @@
 import {useTaskActions} from '@/entities/task';
+import {useDateTasksCount} from '@/entities/task/model/hooks';
 import {
   COLORS,
   CustomText,
@@ -22,8 +23,13 @@ const BUTTON_WIDTH = WIDTH * 0.132;
 export const SelectDay: FC<TPropTypes> = React.memo(
   ({day, isSelected}) => {
     const {selectDate} = useTaskActions();
+    const tasksCount = useDateTasksCount(day);
     const {colors} = useThemeColors();
     const isExpired = Date.now() > day;
+
+    const textColor = isSelected ? colors.accent : COLORS.white;
+    // const textColor = COLORS.white
+
     return (
       <Pressable
         disabled={isExpired}
@@ -35,17 +41,20 @@ export const SelectDay: FC<TPropTypes> = React.memo(
             isSelected
               ? styles.selected
               : isToday(day) && styles.todayTitleWrapper,
+            isExpired && {opacity: 0.5},
           ]}>
           <CustomText
             style={[
               styles.dateTitle,
               isSelected && styles.selectedDateTitle,
-              {color: isSelected ? colors.accent : COLORS.white},
-              isExpired && {opacity: 0.5},
+              {color: textColor},
             ]}
             translate={false}>
             {getDate(day)}
           </CustomText>
+          {tasksCount > 0 && (
+            <View style={[styles.circle, {backgroundColor: textColor}]} />
+          )}
         </View>
       </Pressable>
     );
@@ -69,17 +78,26 @@ const styles = StyleSheet.create({
   selected: {
     backgroundColor: COLORS.white,
   },
+  circle: {
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    position: 'absolute',
+    bottom: 3,
+    marginHorizontal: 'auto',
+  },
   titleWrapper: {
-    borderRadius: 7,
+    borderRadius: 8,
     borderCurve: 'continuous',
-    height: 30,
-    width: 30,
-    paddingTop: 3,
+    height: 32,
+    width: 32,
+    paddingTop: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
   dateTitle: {
     color: THEME_COLORS.night.text,
+    textAlign: 'center',
     ...TEXT_STYLES.standart,
   },
   selectedDateTitle: {

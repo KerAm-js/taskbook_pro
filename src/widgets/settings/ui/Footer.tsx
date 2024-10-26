@@ -35,7 +35,7 @@ export const SettingsFooter = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setVersionShown(true);
-    }, 4000);
+    }, 5000);
 
     return () => {
       clearTimeout(timeout);
@@ -51,7 +51,7 @@ export const SettingsFooter = () => {
         Taskbook Pro
       </ThemedText>
       {versionShown && (
-        <Animated.View entering={FadeInDown.delay(200).duration(400)}>
+        <Animated.View entering={FadeInDown.delay(100).duration(400)}>
           <ThemedText colorName="accent" style={styles.subtitle}>
             {t('version', {version: app.version})}
           </ThemedText>

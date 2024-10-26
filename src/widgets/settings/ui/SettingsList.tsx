@@ -23,19 +23,18 @@ import {
 } from 'react-native';
 import {useFastInputMode, useSettingsActions} from '@/entities/settings';
 import {likeSvg} from '@/shared/assets/svg/like';
-import {UserCard, useUser} from '@/entities/user';
 import {TaskbookForever} from './TaskbookForever';
 import {archieveSvg} from '@/shared/assets/svg/archieve';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { SettingsFooter } from './Footer';
+import {SettingsFooter} from './Footer';
+import {UserInfo} from './UserInfo';
 
 export const SettingsList = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<SettingsStackParamsList>>();
   const {toggleFastInputMode} = useSettingsActions();
   const fastInputMode = useFastInputMode();
-  const user = useUser();
 
   const itunesItemId = 1604538068;
   const url = `itms-apps://itunes.apple.com/app/${itunesItemId}`;
@@ -87,18 +86,11 @@ export const SettingsList = () => {
         style={styles.scroll}
         contentContainerStyle={styles.scrollContentContainer}
         showsVerticalScrollIndicator={false}>
+        <UserInfo onPress={goToAccount} />
         <View style={styles.paddingContainer}>
           <TaskbookForever />
         </View>
-        <View
-          style={styles.section}>
-          <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
-            account
-          </CustomText>
-          <UserCard data={user} onPress={goToAccount} />
-        </View>
-        <View
-          style={styles.section}>
+        <View style={styles.section}>
           <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
             general
           </CustomText>
@@ -134,8 +126,7 @@ export const SettingsList = () => {
             xmlGetter={translateSvg}
           />
         </View>
-        <View
-          style={styles.section}>
+        <View style={styles.section}>
           <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
             app
           </CustomText>
@@ -176,9 +167,9 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-    paddingTop: PADDING_TOP,
   },
   scrollContentContainer: {
+    paddingTop: PADDING_TOP,
     paddingBottom: 100,
   },
   premium: {

@@ -26,20 +26,14 @@ export const TaskbookForever = () => {
   return (
     <ThemedPressable
       onPress={onPress}
-      colorName="backgroundSecond"
+      colorName="accent_ultra_opacity"
       style={styles.container}>
       <View style={styles.content}>
         <SvgXml xml={premiumStarsSvg(THEME_ICON_GRADIENTS[theme])} />
-        <CustomText themed style={styles.title}>
-          taskbookForever
+        <CustomText themed colorName="accent" style={styles.title}>
+          unlockTaskbook
         </CustomText>
       </View>
-      <ThemedIcon
-        colorName="grey"
-        xmlGetter={arrowRightSvg}
-        width={16}
-        height={16}
-      />
     </ThemedPressable>
   );
 };
@@ -47,13 +41,14 @@ export const TaskbookForever = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
     paddingRight: 12,
     marginBottom: 10,
     borderRadius: 11,
     borderCurve: 'continuous',
+    marginTop: 12,
   },
   content: {
     flexDirection: 'row',
@@ -61,6 +56,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...TEXT_STYLES.standartSemibold,
-    marginLeft: 8,
+    marginLeft: 5,
   },
 });

@@ -210,6 +210,7 @@ export const TRANSLATIONS = {
       oneTimePayment: 'Разовый платёж',
       unlimitedPrice: '{{price}} ₽/навсегда',
       version: 'Версия {{version}}',
+      unlockTaskbook: "Разблокировать Taskbook"
     },
   },
   en: {
@@ -415,6 +416,7 @@ export const TRANSLATIONS = {
       oneTimePayment: 'One-time payment',
       unlimitedPrice: '{{price}} ₽/forever',
       version: 'Version {{version}}',
+      unlockTaskbook: "Unlock Taskbook"
     },
   },
 };
