@@ -1,5 +1,4 @@
 import {useEffect, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
 import {TRate} from '@/features/choose-rate';
 import {autoAuth, useFirebase} from '@/shared';
 import {TApiMessage, useUser} from '@/entities/user';
@@ -9,7 +8,6 @@ const PRICES_DOCUMENT = 'subscription-rates_v_1';
 type TReturnType = [TRate[] | null, boolean, TApiMessage | null];
 
 export const useSubscriptionRates = (): TReturnType => {
-  const {t} = useTranslation();
   const {auth, firestore} = useFirebase();
   const {email} = useUser();
   const pricesCollection = firestore.collection('SubscriptionRates');

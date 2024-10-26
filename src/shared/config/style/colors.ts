@@ -28,7 +28,7 @@ export const COLORS = {
   darkBlueOpacity: `rgba(64, 72, 101, ${opacity})`,
   darkBlueUltraOpacity: "rgba(64, 72, 101, 0.15)",
   purple: `rgba(112, 109, 229, 1)`,
-  purpleOpacity: "rgba(112, 109, 229, 0.15)",
+  purpleOpacity: `rgba(112, 109, 229, ${opacity})`,
   purpleUltraOpacity: "rgba(112, 109, 229, 0.15)",
   green: `rgba(52, 199, 89, 1)`,
   greenOpacity: "rgba(52, 199, 89, 0.1",

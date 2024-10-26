@@ -12,5 +12,6 @@ const styles = StyleSheet.create({
     ...TEXT_STYLES.standart,
     paddingRight: 15,
     paddingTop: 0,
+    marginBottom: 2,
   },
 });

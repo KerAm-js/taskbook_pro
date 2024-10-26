@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     paddingTop: PADDING_TOP,
   },
   scrollContentContainer: {
-    paddingBottom: 200,
+    paddingBottom: 100,
   },
   premium: {
     flexDirection: 'row',

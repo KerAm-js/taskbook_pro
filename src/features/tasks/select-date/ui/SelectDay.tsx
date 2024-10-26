@@ -6,6 +6,7 @@ import {
   isToday,
   TEXT_STYLES,
   THEME_COLORS,
+  useThemeColors,
 } from '@/shared';
 import React, {FC} from 'react';
 import {Dimensions, Pressable, StyleSheet, View} from 'react-native';
@@ -21,6 +22,7 @@ const BUTTON_WIDTH = WIDTH * 0.132;
 export const SelectDay: FC<TPropTypes> = React.memo(
   ({day, isSelected}) => {
     const {selectDate} = useTaskActions();
+    const {colors} = useThemeColors();
     const isExpired = Date.now() > day;
     return (
       <Pressable
@@ -38,6 +40,7 @@ export const SelectDay: FC<TPropTypes> = React.memo(
             style={[
               styles.dateTitle,
               isSelected && styles.selectedDateTitle,
+              {color: isSelected ? colors.accent : COLORS.white},
               isExpired && {opacity: 0.5},
             ]}
             translate={false}>
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.whiteOpacity,
   },
   selected: {
-    backgroundColor: COLORS.whiteOpacity,
+    backgroundColor: COLORS.white,
   },
   titleWrapper: {
     borderRadius: 7,

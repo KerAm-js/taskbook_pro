@@ -41,7 +41,7 @@ export const AddTask = () => {
     }
   };
 
-  const bottom = paddingBottom < 20 ? 20 : paddingBottom + 30;
+  const bottom = paddingBottom < 20 ? 20 : paddingBottom + 20;
 
   return (
     <Animated.View

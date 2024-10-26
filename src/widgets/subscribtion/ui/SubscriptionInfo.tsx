@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   scroll: {flex: 1},
   content: {
     paddingHorizontal: SCREEN_PADDING,
-    paddingBottom: 200,
+    paddingBottom: 100,
   },
   loadingErrorText: {
     textAlign: 'center',

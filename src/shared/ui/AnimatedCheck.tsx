@@ -36,7 +36,7 @@ export const AnimatedCheck: FC<TPropTypes> = ({
     height: size,
     borderColor: greyWhenInactive ? lineGrey : accent_opacity,
     borderRadius: borderRadius || size / 2,
-    borderWidth: isChecked ? 0 : 1.5,
+    borderWidth: isChecked ? 0 : 2,
   };
 
   const backgroundStyle = {
