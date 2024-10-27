@@ -1,10 +1,5 @@
 import {shieldSvg} from '@/shared/assets/svg/shield';
-import {
-  checkCanUpdate,
-  getNewUpdatedAt,
-  UserUpdates,
-  useUser,
-} from '@/entities/user';
+import {useUser} from '@/entities/user';
 import {
   FormButton,
   FormInput,
@@ -94,6 +89,7 @@ export const ChangePasswordForm = () => {
           error={currentPasswordError}
           maxLength={20}
           textContentType="password"
+          autoComplete="password"
           secureTextEntry
         />
         <FormInput
@@ -104,7 +100,6 @@ export const ChangePasswordForm = () => {
           error={newPasswordError}
           maxLength={20}
           textContentType="password"
-          autoComplete="new-password"
           secureTextEntry
         />
         <FormInput
@@ -116,7 +111,6 @@ export const ChangePasswordForm = () => {
           showErrorForce={showPasswordAgainErrorForce}
           maxLength={20}
           textContentType="password"
-          autoComplete="new-password"
           secureTextEntry
         />
         <InputComment>{t('passwordCanBeChangeNoMoreThan')}</InputComment>

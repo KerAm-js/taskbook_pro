@@ -59,6 +59,7 @@ export const ResetPasswordForm = () => {
           onChangeText={onChangeEmail}
           error={emailError}
           textContentType="emailAddress"
+          keyboardType="email-address"
           editable={!(user.uid && user.email)}
         />
         <InputComment>{t('passwordCanBeResettedNoMoreThan')}</InputComment>

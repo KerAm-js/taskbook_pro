@@ -17,6 +17,7 @@ type TPropTypes = TextInputProps & {
   xmlGetter: (color: string) => string;
   error?: string;
   showErrorForce?: boolean;
+  passValueToInput?: boolean;
 };
 
 export const FormInput: FC<TPropTypes> = ({
@@ -25,6 +26,7 @@ export const FormInput: FC<TPropTypes> = ({
   showErrorForce,
   placeholder,
   multiline,
+  passValueToInput = true,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -84,7 +86,7 @@ export const FormInput: FC<TPropTypes> = ({
 
   return (
     <>
-      <Pressable onPress={onPress} style={containerStyle}>
+      <Pressable onPress={onPress} style={[containerStyle, props.style]}>
         <SvgXml
           xml={xmlGetter(iconColor)}
           width={18}
@@ -92,16 +94,17 @@ export const FormInput: FC<TPropTypes> = ({
           style={multiline && styles.icon}
         />
         <TextInput
+          {...props}
           ref={inputRef}
           onFocus={onFocus}
           onBlur={onBlur}
           placeholder={placeholder ? t(placeholder) : undefined}
           placeholderTextColor={colors.textGrey}
-          style={inputStyle}
           multiline={multiline}
           selectionColor={colors.accent}
           cursorColor={colors.accent}
-          {...props}
+          style={inputStyle}
+          value={passValueToInput ? props.value : undefined}
         />
       </Pressable>
       {isError && (

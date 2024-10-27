@@ -1,14 +1,12 @@
 import {emailSvg} from '@/shared/assets/svg/email';
 import {shieldSvg} from '@/shared/assets/svg/shield';
-import {
-  useUser,
-  useUserActions,
-} from '@/entities/user';
+import {useUser, useUserActions} from '@/entities/user';
 import {
   EMAIL_REGEX,
   FormButton,
   FormInput,
   InputComment,
+  IOSKeyboardFlickeringDisable,
   PADDING_TOP,
   SCREEN_PADDING,
   useFirebase,
@@ -16,7 +14,7 @@ import {
 } from '@/shared';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Alert, ScrollView, StyleSheet, View} from 'react-native';
+import {Alert, ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import {changeEmail} from '../api/changeEmail.api';
 
 export const ChangeEmailForm = () => {
@@ -83,8 +81,7 @@ export const ChangeEmailForm = () => {
           value={email}
           onChangeText={onChangeEmail}
           error={emailError}
-          textContentType="emailAddress"
-          autoComplete="email"
+          keyboardType="email-address"
         />
         <FormInput
           xmlGetter={emailSvg}
@@ -93,9 +90,9 @@ export const ChangeEmailForm = () => {
           onChangeText={onChangeEmailAgain}
           error={emailAgainError}
           showErrorForce={showEmailAgainErrorForce}
-          textContentType="emailAddress"
-          autoComplete="email"
+          keyboardType="email-address"
         />
+        <IOSKeyboardFlickeringDisable />
         <InputComment>{t('emailCanBeChangedNoMoreThan')}</InputComment>
         <FormInput
           xmlGetter={shieldSvg}

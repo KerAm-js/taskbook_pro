@@ -5,6 +5,7 @@ import {
   FormButton,
   FormInput,
   InputComment,
+  IOSKeyboardFlickeringDisable,
   PADDING_TOP,
   SCREEN_PADDING,
   useFirebase,
@@ -70,6 +71,7 @@ export const ChangeNameForm = () => {
           textContentType="name"
           autoComplete="name"
         />
+        <IOSKeyboardFlickeringDisable />
         <InputComment>{t('nameCanBeChangedNoMoreThan')}</InputComment>
         <FormInput
           xmlGetter={shieldSvg}

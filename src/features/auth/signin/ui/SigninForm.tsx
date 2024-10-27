@@ -5,6 +5,7 @@ import {
   EMAIL_REGEX,
   FormButton,
   FormInput,
+  IOSKeyboardFlickeringDisable,
   SCREEN_PADDING,
   ThemedView,
   useFirebase,
@@ -23,7 +24,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useEffect} from 'react';
-import { confirmEmail } from '../api/confirmEmail.api';
+import {confirmEmail} from '../api/confirmEmail.api';
 
 const HEIGHT = Dimensions.get('screen').height;
 
@@ -108,7 +109,9 @@ export const SigninForm = () => {
             error={emailError}
             textContentType="emailAddress"
             autoComplete="email"
+            keyboardType="email-address"
           />
+          <IOSKeyboardFlickeringDisable />
           <FormInput
             placeholder="password"
             xmlGetter={shieldSvg}

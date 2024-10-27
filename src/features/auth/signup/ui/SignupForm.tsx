@@ -80,6 +80,7 @@ export const SignupForm = () => {
           error={emailError}
           textContentType="emailAddress"
           autoComplete="email"
+          keyboardType="email-address"
         />
         <FormInput
           placeholder="nameAndSurname"
@@ -96,7 +97,6 @@ export const SignupForm = () => {
           error={passwordError}
           maxLength={20}
           textContentType="password"
-          autoComplete="password"
           secureTextEntry
         />
         <FormInput
@@ -109,7 +109,6 @@ export const SignupForm = () => {
           maxLength={20}
           textContentType="password"
           secureTextEntry
-          autoComplete="password"
         />
         <View style={styles.buttonsContainer}>
           <FormButton
