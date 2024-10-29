@@ -230,6 +230,7 @@ export const TaskForm = () => {
           onChangeText={onChangeTitle}
           error={titleError}
           maxLength={TASK_TITLE_LENGTH}
+          multiline
         />
         <FormInput
           placeholder="note"
@@ -237,6 +238,7 @@ export const TaskForm = () => {
           xmlGetter={noteSvg}
           value={note}
           onChangeText={text => setNote(text)}
+          isInputArea
         />
         <View style={styles.settings}>
           <Setting

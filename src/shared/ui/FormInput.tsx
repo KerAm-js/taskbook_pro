@@ -18,6 +18,7 @@ type TPropTypes = TextInputProps & {
   error?: string;
   showErrorForce?: boolean;
   passValueToInput?: boolean;
+  isInputArea?: boolean;
 };
 
 export const FormInput: FC<TPropTypes> = ({
@@ -25,7 +26,7 @@ export const FormInput: FC<TPropTypes> = ({
   error,
   showErrorForce,
   placeholder,
-  multiline,
+  isInputArea,
   passValueToInput = true,
   ...props
 }) => {
@@ -61,15 +62,17 @@ export const FormInput: FC<TPropTypes> = ({
         ? colors.destructiveOpacity
         : colors.input,
     },
-    multiline && styles.multilineContainer,
+    props.multiline && styles.multilineContainer,
+    isInputArea && styles.inputAreaContainer,
   ];
 
   const inputStyle: TextInputProps['style'] = [
     styles.input,
     {
       color: colors.text,
-      paddingTop: multiline ? (props.value?.length ? 2 : 1) : 0,
+      paddingTop: isInputArea ? (props.value?.length ? 2 : 1) : 0,
     },
+    props.multiline && styles.multilineInput,
   ];
 
   const iconColor = isError
@@ -91,7 +94,7 @@ export const FormInput: FC<TPropTypes> = ({
           xml={xmlGetter(iconColor)}
           width={18}
           height={18}
-          style={multiline && styles.icon}
+          style={props.multiline && styles.icon}
         />
         <TextInput
           {...props}
@@ -100,7 +103,6 @@ export const FormInput: FC<TPropTypes> = ({
           onBlur={onBlur}
           placeholder={placeholder ? t(placeholder) : undefined}
           placeholderTextColor={colors.textGrey}
-          multiline={multiline}
           selectionColor={colors.accent}
           cursorColor={colors.accent}
           style={inputStyle}
@@ -131,17 +133,24 @@ const styles = StyleSheet.create({
   },
   multilineContainer: {
     paddingVertical: 6,
-    minHeight: 80,
     alignItems: 'flex-start',
     paddingBottom: 0,
   },
+  inputAreaContainer: {
+    minHeight: 80,
+  },
   icon: {
-    marginTop: 4,
+    marginTop: 3,
   },
   input: {
     ...TEXT_STYLES.standart,
     flex: 1,
     marginBottom: 2,
+  },
+  multilineInput: {
+    marginBottom: 0,
+    marginTop: 2,
+    lineHeight: 19
   },
   error: {
     ...TEXT_STYLES.small,

@@ -1,1 +1,1 @@
-export const TASK_TITLE_LENGTH = 100;
+export const TASK_TITLE_LENGTH = 120;
