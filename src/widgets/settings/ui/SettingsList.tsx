@@ -23,7 +23,7 @@ import {
 } from 'react-native';
 import {useFastInputMode, useSettingsActions} from '@/entities/settings';
 import {likeSvg} from '@/shared/assets/svg/like';
-import {TaskbookForever} from './TaskbookForever';
+import {TaskbookForever} from './UnlockTaskbook';
 import {archieveSvg} from '@/shared/assets/svg/archieve';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -148,12 +148,6 @@ export const SettingsList = () => {
             onPress={contactDeveloper}
             xmlGetter={dialogSvg}
           />
-          {/* <Setting
-          type="navigate"
-          title="supportProject"
-          onPress={() => {}}
-          xmlGetter={dollarSvg}
-        /> */}
         </View>
       </ScrollView>
       <SettingsFooter />

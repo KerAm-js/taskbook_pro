@@ -40,7 +40,6 @@ export const updateDailyNotification = (
   const currSettings = state.reminderSettings.dailyReminder[type];
   const length = state.ids[date]?.length;
   if (currSettings.turnedOff || !length) {
-    console.log('deleted', type, getDate(date));
     deleteDailyNotification(date, type);
   } else {
     const completedTasksCount = state.ids[date].reduce((count, id) => {
@@ -62,7 +61,6 @@ export const updateDailyNotification = (
       date,
       ...currSettings,
     });
-    console.log('setted', type, getDate(date));
   }
 };
 
@@ -136,7 +134,6 @@ export const deleteTaskNotifications = (state: ITasksState, id: Task['id']) => {
 
 export const updateTaskNotifications = (state: ITasksState, id: Task['id']) => {
   const {count, interval} = state.reminderSettings;
-  console.log(id, state.ids)
   const task = state.entities[id];
   const {title, remindTime, isCompleted, date} = task;
   if (!task.notificationIds || task.notificationIds.length < count) {

@@ -96,6 +96,7 @@ export const TaskForm = () => {
           return obj;
         }, {})
       : {};
+
   const [repeatingDays, setRepeatingDays] = useState(defaultRepeatingDays);
   const [timePopupVisible, setTimePopupVisible] = useState(false);
   const [calendarPopupVisible, setCalendarPopupVisible] = useState(false);
@@ -121,6 +122,16 @@ export const TaskForm = () => {
 
   const onRepeatingTypePress = (item: RegularTaskDto['repeatingType']) => {
     setRepeatingType(item);
+    if (item === 'weekly') {
+      const day = getWeekDay(selectedDate);
+      setRepeatingDays({
+        [day ? day - 1 : 6]: true,
+      });
+    } else {
+      setRepeatingDays({
+        [getDate(selectedDate)]: true,
+      });
+    }
   };
 
   const onSelectRepeatingDay = (item: number) => {
@@ -193,19 +204,6 @@ export const TaskForm = () => {
     isSubmitted.current = true;
     navigation.goBack();
   };
-
-  useEffect(() => {
-    if (repeatingType === 'weekly') {
-      const day = getWeekDay(selectedDate);
-      setRepeatingDays({
-        [day ? day - 1 : 6]: true,
-      });
-    } else {
-      setRepeatingDays({
-        [getDate(selectedDate)]: true,
-      });
-    }
-  }, [repeatingType]);
 
   useEffect(() => {
     return () => {
