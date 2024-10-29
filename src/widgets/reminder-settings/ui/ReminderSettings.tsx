@@ -1,5 +1,4 @@
-import {useDailyReminder} from '@/entities/settings';
-import {useTaskReminderSettings} from '@/entities/task';
+import {useDailyReminder, useTaskReminderSettings} from '@/entities/task';
 import {
   CustomText,
   getTimeString,

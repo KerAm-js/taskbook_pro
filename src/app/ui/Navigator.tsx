@@ -38,11 +38,12 @@ export const Navigator = () => {
         const timestamp = Date.now();
         const shouldSync = lastBackup ? timestamp - lastBackup >= 180000 : true;
         if (shouldSync) {
-          const {idCounter, ids, entities} = store.getState().tasks;
+          const {idCounter, ids, entities, historyIds} = store.getState().tasks;
           const backup: Omit<Backup, 'currentEmail'> = {
             idCounter,
             ids,
             entities,
+            historyIds,
             createdAt: Date.now(),
           };
 

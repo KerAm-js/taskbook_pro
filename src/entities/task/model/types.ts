@@ -53,6 +53,16 @@ export type TTaskActionType =
 type TaskEntities = {[key: Task['id']]: Task};
 type TaskIds = {[key: number]: Array<Task['id']>};
 
+export type TDailyNotificationIds = {
+  [key: string]: string;
+};
+
+export type TDailyNotificationData = {
+  hour: number;
+  minute: number;
+  turnedOff?: boolean;
+};
+
 export interface ITasksState {
   idCounter: number;
   // generating taks ids
@@ -65,9 +75,6 @@ export interface ITasksState {
 
   historyIds: TaskIds;
   // tasks history
-
-  lastVisit: number;
-  // last date when user launched the app
 
   selectedDate: number;
   // current date on calendar in main screen
@@ -107,6 +114,14 @@ export interface ITasksState {
 
     interval: number;
     // time interval between task remind notifications in minutes
+
+    dailyReminder: {
+      beginning: TDailyNotificationData;
+      // notification about plans for today
+
+      end: TDailyNotificationData;
+      // notification about today results 
+    };
   };
   // this settings are needed in a lot of actions of tasksSlice, that is why they are here
 }

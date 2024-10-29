@@ -3,18 +3,13 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {persistor, store} from '../store';
 import {StatusBar} from 'react-native';
 import {Navigator} from './Navigator';
-import i18n from 'i18next';
-import {LANGUAGE_DETECTOR, TRANSLATIONS} from '@/shared';
-import {initReactI18next} from 'react-i18next';
+import {I18N, TRANSLATIONS} from '@/shared';
 import {
   FirebaseContext,
   firebaseContextDefaultValue,
 } from '../context/firebaseContext';
 
-i18n
-  .use(LANGUAGE_DETECTOR)
-  .use(initReactI18next)
-  .init({
+I18N.init({
     compatibilityJSON: 'v3',
     resources: TRANSLATIONS,
     fallbackLng: 'en',

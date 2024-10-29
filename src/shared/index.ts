@@ -19,7 +19,7 @@ export {FormButton} from './ui/FormButton';
 export {IOSKeyboardFlickeringDisable} from "./ui/IOSKeyboardFlickeringDisable";
 
 //config
-export {LANGUAGE_DETECTOR} from './config/i18n/i18n';
+export {LANGUAGE_DETECTOR, I18N} from './config/i18n/i18n';
 export {TRANSLATIONS, LANGUAGES} from './config/i18n/translations';
 export {
   THEME_COLORS,

@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Task, ITasksState, TaskDto} from './types';
-import {deleteAllNotifications, endOfDay} from '@/shared';
+import {deleteAllNotifications, endOfDay, I18N} from '@/shared';
 import {
   createCommonTask,
   clearCache,
@@ -25,16 +25,18 @@ import {
   setStateDefault,
   rescheduleOverdueTasks,
   rescheduleIfOverdue,
+  updateDailyNotification,
+  updateDailyNotificationsForDate,
 } from './actionHelpers';
 
 const TODAY = endOfDay();
+const now = new Date();
 
 const initialState: ITasksState = {
   idCounter: 1,
   ids: {[TODAY]: []},
   entities: {},
   historyIds: {},
-  lastVisit: TODAY,
   selectedDate: TODAY,
   selectedTasksCount: 0,
   isTasksDateChanging: false,
@@ -43,6 +45,10 @@ const initialState: ITasksState = {
   reminderSettings: {
     count: 1,
     interval: 5,
+    dailyReminder: {
+      beginning: {hour: 9, minute: 0},
+      end: {hour: 18, minute: 0},
+    },
   },
   cache: {
     ids: [],
@@ -62,17 +68,28 @@ export const tasksSlice = createSlice({
     setDataFromBackup: (
       state,
       action: PayloadAction<
-        Pick<ITasksState, 'idCounter' | 'ids' | 'entities'>
+        Pick<ITasksState, 'idCounter' | 'ids' | 'entities' | 'historyIds'>
       >,
     ) => {
       deleteAllNotifications();
-      // need to update notifications for tasks from backup
-      const {ids, idCounter, entities} = action.payload;
+      const {ids, idCounter, entities, historyIds} = action.payload;
       state.idCounter = idCounter;
       state.ids = ids;
       state.entities = entities;
+      state.historyIds = historyIds;
       if (!state.ids[state.selectedDate]) {
         state.ids[state.selectedDate] = [];
+      }
+      rescheduleOverdueTasks(state);
+      for (let item in state.ids) {
+        const date = Number(item);
+        updateDailyNotification(state, 'beginning', date);
+        updateDailyNotification(state, 'end', date);
+      }
+      for (let date in state.ids) {
+        state.ids[date].forEach(id => {
+          updateTaskNotifications(state, Number(id));
+        });
       }
     },
 
@@ -86,6 +103,7 @@ export const tasksSlice = createSlice({
       }
       addTaskToState(state, newTask);
       updateTaskNotifications(state, newTask.id);
+      updateDailyNotificationsForDate(state);
     },
 
     addEmptyTask: state => {
@@ -93,6 +111,7 @@ export const tasksSlice = createSlice({
       const newTask: Task = createEmptyTask(state);
       addTaskToState(state, newTask);
       state.titleEditingTaskId = newTask.id;
+      updateDailyNotificationsForDate(state);
     },
 
     deleteTask: (state, action: PayloadAction<Task['id']>) => {
@@ -103,10 +122,12 @@ export const tasksSlice = createSlice({
       }
       deleteTaskNotifications(state, id);
       deleteTaskById(state, id);
+      updateDailyNotificationsForDate(state);
     },
 
     toggleTask: (state, action: PayloadAction<Task['id']>) => {
-      const task = state.entities[action.payload];
+      const id = action.payload;
+      const task = state.entities[id];
       if (task) {
         task.isCompleted = !task.isCompleted;
         if (task.isCompleted) {
@@ -127,6 +148,7 @@ export const tasksSlice = createSlice({
           }
         }
       }
+      updateDailyNotification(state, 'end', state.selectedDate);
     },
 
     setReminder: (
@@ -230,6 +252,7 @@ export const tasksSlice = createSlice({
       };
       deleteSelectedTasks(state, onDelete);
       stopSelection(state);
+      updateDailyNotificationsForDate(state);
     },
 
     changeSelectedTasksDate: (state, action: PayloadAction<Task['date']>) => {
@@ -238,6 +261,8 @@ export const tasksSlice = createSlice({
       };
       changeSelectedTasksDate(state, action.payload, onChangeDate);
       stopSelection(state);
+      updateDailyNotificationsForDate(state);
+      updateDailyNotificationsForDate(state, action.payload);
     },
 
     copySelectedTasks: state => {
@@ -253,6 +278,7 @@ export const tasksSlice = createSlice({
       }, 0);
       stopSelection(state);
       copies.forEach(task => addTaskToState(state, task));
+      updateDailyNotificationsForDate(state);
     },
 
     undo: state => {
@@ -265,6 +291,7 @@ export const tasksSlice = createSlice({
         //...
       }
       clearCache(state);
+      updateDailyNotificationsForDate(state);
     },
 
     clearCache: state => {
@@ -284,6 +311,24 @@ export const tasksSlice = createSlice({
 
     setRemindersInterval: (state, action: PayloadAction<number>) => {
       state.reminderSettings.interval = action.payload;
+    },
+
+    setDailyReminder: (
+      state,
+      action: PayloadAction<
+        Pick<
+          ITasksState['reminderSettings']['dailyReminder']['beginning'],
+          'hour' | 'minute'
+        > & {type: keyof ITasksState['reminderSettings']['dailyReminder']}
+      >,
+    ) => {
+      const {type} = action.payload;
+      state.reminderSettings.dailyReminder[type] = action.payload;
+
+      for (let item in state.ids) {
+        const date = Number(item);
+        updateDailyNotification(state, type, date);
+      }
     },
   },
 });

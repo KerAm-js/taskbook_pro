@@ -1,8 +1,8 @@
-import {ISettingsState} from '@/entities/settings';
 import {deleteNotification, setNotification} from '@/shared';
+import { ITasksState } from '../model/types';
 
 type TParams = {
-  type: keyof ISettingsState['dailyReminder'];
+  type: keyof ITasksState['reminderSettings']['dailyReminder'];
   title: string;
   body: string;
   date: number;
@@ -22,7 +22,7 @@ export const deleteDailyNotification = (
   deleteNotification(generateDailyNotificationId(date, type));
 };
 
-export const updateDailyNotification = async ({
+export const setDailyNotification = async ({
   type,
   title,
   body,

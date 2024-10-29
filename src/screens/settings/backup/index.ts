@@ -1,1 +1,1 @@
-export { Backup } from "./ui/Backup";
+export {Backup} from './ui/Backup';

@@ -1,7 +1,9 @@
 import {
   deleteNotification,
   endOfDay,
+  getDate,
   getTimeValueFromString,
+  I18N,
   setNotification,
 } from '@/shared';
 import {getNextRegularTaskDate} from '../lib/getNextRegularTaskDate';
@@ -13,6 +15,10 @@ import {
   RegularTaskDto,
   Task,
 } from './types';
+import {
+  deleteDailyNotification,
+  setDailyNotification,
+} from '../lib/setDailyNotifications';
 
 // this action helpers can update only state object argument
 
@@ -24,6 +30,48 @@ const generateNotificationIds = (taskId: Task['id'], count: number) => {
     result.push(taskId + '_' + i);
   }
   return result;
+};
+
+export const updateDailyNotification = (
+  state: ITasksState,
+  type: keyof ITasksState['reminderSettings']['dailyReminder'],
+  date: number,
+) => {
+  const currSettings = state.reminderSettings.dailyReminder[type];
+  const length = state.ids[date]?.length;
+  if (currSettings.turnedOff || !length) {
+    console.log('deleted', type, getDate(date));
+    deleteDailyNotification(date, type);
+  } else {
+    const completedTasksCount = state.ids[date].reduce((count, id) => {
+      return state.entities[id].isCompleted ? count + 1 : count;
+    }, 0);
+    const title =
+      type === 'beginning' ? I18N.t('plansForToday') : I18N.t('reviewOfTheDay');
+    const body =
+      type === 'beginning'
+        ? I18N.t('tasksToDo', {count: length})
+        : I18N.t('tasksCompleted', {
+            count: length,
+            completed: completedTasksCount,
+          });
+    setDailyNotification({
+      type: type,
+      title,
+      body,
+      date,
+      ...currSettings,
+    });
+    console.log('setted', type, getDate(date));
+  }
+};
+
+export const updateDailyNotificationsForDate = (
+  state: ITasksState,
+  date?: number,
+) => {
+  updateDailyNotification(state, 'beginning', date || state.selectedDate);
+  updateDailyNotification(state, 'end', date || state.selectedDate);
 };
 
 export const setStateDefault = (state: ITasksState) => {
@@ -55,29 +103,26 @@ export const rescheduleIfOverdue = (state: ITasksState, id: Task['id']) => {
 
 export const rescheduleOverdueTasks = (state: ITasksState) => {
   const today = endOfDay();
-  if (state.lastVisit === today) {
-    return;
-  }
-  let date = state.lastVisit;
-
-  while (date < today) {
-    if (state.ids[date]) {
-      const overdueTasks: Task['id'][] = [];
-      state.historyIds[date] = state.ids[date].filter(id => {
-        const task = state.entities[id];
-        if (!task.isCompleted) {
-          overdueTasks.push(id);
-          task.date = today;
-        }
-        return task.isCompleted;
-      });
-      delete state.ids[date];
-      state.ids[today] = [...overdueTasks, ...state.ids[today]];
+  for (let item in state.ids) {
+    const date = Number(item);
+    if (date < today) {
+      if (!state.ids[date] || state.ids[date].length === 0) {
+        delete state.ids[date];
+      } else {
+        const overdueTasks: Task['id'][] = [];
+        state.historyIds[date] = state.ids[date].filter(id => {
+          const task = state.entities[id];
+          if (!task.isCompleted) {
+            overdueTasks.push(id);
+            task.date = today;
+          }
+          return task.isCompleted;
+        });
+        delete state.ids[date];
+        state.ids[today] = [...overdueTasks, ...state.ids[today]];
+      }
     }
-
-    date += 86400000;
   }
-  state.lastVisit = today;
 };
 
 export const deleteTaskNotifications = (state: ITasksState, id: Task['id']) => {
@@ -91,6 +136,7 @@ export const deleteTaskNotifications = (state: ITasksState, id: Task['id']) => {
 
 export const updateTaskNotifications = (state: ITasksState, id: Task['id']) => {
   const {count, interval} = state.reminderSettings;
+  console.log(id, state.ids)
   const task = state.entities[id];
   const {title, remindTime, isCompleted, date} = task;
   if (!task.notificationIds || task.notificationIds.length < count) {

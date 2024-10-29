@@ -1,6 +1,8 @@
 import {LanguageDetectorAsyncModule} from 'i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NativeModules, Platform} from 'react-native';
+import i18n from 'i18next';
+import {initReactI18next} from 'react-i18next';
 
 const LANG_STORAGE_KEY = 'LANG';
 
@@ -26,3 +28,9 @@ export const LANGUAGE_DETECTOR: LanguageDetectorAsyncModule = {
     AsyncStorage.setItem(LANG_STORAGE_KEY, language);
   },
 };
+
+i18n
+  .use(LANGUAGE_DETECTOR)
+  .use(initReactI18next)
+
+export const I18N = i18n

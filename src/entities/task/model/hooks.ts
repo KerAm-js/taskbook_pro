@@ -76,7 +76,7 @@ export const useTaskIds = () => {
 export const useHistoryTaskIds = () => {
   const history = useSelector((state: RootState) => state.tasks.historyIds);
   return history;
-}
+};
 
 export const useIsSelection = () => {
   const value = useSelector(
@@ -113,7 +113,7 @@ export const useCompletedTasks = (date?: number) => {
   const ids = useSelector((state: RootState) =>
     selectCompletedTaskEntities(state, date || state.tasks.selectedDate),
   );
-  return ids
+  return ids;
 };
 
 export const useTaskReminderSettings = () => {
@@ -121,4 +121,11 @@ export const useTaskReminderSettings = () => {
     (state: RootState) => state.tasks.reminderSettings,
   );
   return settings;
+};
+
+export const useDailyReminder = () => {
+  const reminders = useSelector(
+    (state: RootState) => state.tasks.reminderSettings.dailyReminder,
+  );
+  return reminders;
 };

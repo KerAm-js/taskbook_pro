@@ -59,7 +59,7 @@ export const SettingsFooter = () => {
       {!versionShown && (
         <Animated.View exiting={Exiting}>
           <ThemedText colorName="accent" style={styles.subtitle}>
-            {t('developedByAmirKerimov')}
+            {t('amirKerimovCopyright')}
           </ThemedText>
         </Animated.View>
       )}

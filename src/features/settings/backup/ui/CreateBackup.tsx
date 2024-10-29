@@ -17,7 +17,7 @@ export const CreateBackup: FC<TPropTypes> = ({
   const {uid, email} = useUser();
   const {firestore} = useFirebase();
   const {t} = useTranslation();
-  const {idCounter, ids, entities} = useTasksState();
+  const {idCounter, ids, entities, historyIds} = useTasksState();
   const backupsCollection = firestore.collection('Backups');
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +28,7 @@ export const CreateBackup: FC<TPropTypes> = ({
         idCounter,
         ids,
         entities,
+        historyIds,
         currentEmail: email,
         createdAt: Date.now(),
       });

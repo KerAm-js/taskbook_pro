@@ -55,5 +55,6 @@ const styles = StyleSheet.create({
   title: {
     ...TEXT_STYLES.standartSemibold,
     marginLeft: 5,
+    marginTop: 1,
   },
 });

@@ -104,8 +104,7 @@ const ListItemComponent: FC<TPropTypes> = ({id, index, isInitialRender}) => {
     <Animated.View
       style={styles.container}
       exiting={FadeOut.duration(150)}
-      entering={entering}
-      layout={LinearTransition}>
+      entering={entering}>
       <AnimatedIcon
         xmlGetter={layersSvg}
         isOverDragged={isOverdraggedRight}

@@ -10,6 +10,7 @@ export const RestoreBackup: FC<Backup & TPropTypes> = ({
   idCounter,
   ids,
   entities,
+  historyIds,
   isSynchronized,
   onSynchronize,
 }) => {
@@ -29,7 +30,7 @@ export const RestoreBackup: FC<Backup & TPropTypes> = ({
         onPress: () => {
           setTitle('copyIsRestored');
           onSynchronize();
-          setDataFromBackup({idCounter, ids, entities});
+          setDataFromBackup({idCounter, ids, entities, historyIds});
         },
         text: 'OK',
       },

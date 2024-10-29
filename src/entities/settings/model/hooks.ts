@@ -22,13 +22,6 @@ export const useFastInputMode = () => {
   return mode;
 };
 
-export const useDailyReminder = () => {
-  const reminders = useSelector(
-    (state: RootState) => state.settings.dailyReminder,
-  );
-  return reminders;
-};
-
 export const useBackupInfo = () => {
   const backup = useSelector((state: RootState) => state.settings.backup);
   return backup;
