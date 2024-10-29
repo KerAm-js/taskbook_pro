@@ -13,7 +13,6 @@ import {StyleSheet} from 'react-native';
 import Animated, {
   FadeIn,
   FadeOut,
-  LinearTransition,
 } from 'react-native-reanimated';
 
 type TPropTypes = Pick<Task, 'id'> & {remove: (id: number) => void};

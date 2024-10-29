@@ -1,5 +1,4 @@
 import {
-  CustomText,
   TEXT_STYLES,
   ThemedText,
   ThemedView,
@@ -44,7 +43,7 @@ export const SettingsFooter = () => {
 
   return (
     <ThemedView
-      style={[styles.copyRightContainer, {paddingBottom}]}
+      style={[styles.copyRightContainer, {paddingBottom: paddingBottom}]}
       borderColorName="lineGrey"
       colorName="background">
       <ThemedText colorName="accent" style={styles.appName}>

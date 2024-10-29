@@ -2,10 +2,17 @@ import {
   ActivityIndicator,
   Dimensions,
   ListRenderItemInfo,
-  ScrollView,
   StyleSheet,
+  View,
 } from 'react-native';
-import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   CustomText,
   endOfDay,
@@ -13,8 +20,9 @@ import {
   TEXT_STYLES,
   ThemedIcon,
   useHeaderHeight,
+  useThemeColors,
 } from '@/shared';
-import {useTaskIds} from '@/entities/task';
+import {useHistoryTaskIds, useTaskIds} from '@/entities/task';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -39,24 +47,27 @@ const animationConfig = {
   duration: 350,
 };
 
+type TListItem = number | string;
+
 type TPropTypes = {
   searchDate: string;
   isSearching: boolean;
 };
 
 export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
-  const taskIds = useTaskIds();
+  const historyIds = useHistoryTaskIds();
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<Array<string | number>>([]);
-  const [filtered, setFiltered] = useState<Array<string | number>>([]);
+  const [data, setData] = useState<Array<TListItem>>([]);
+  const {colors} = useThemeColors();
+  const [filtered, setFiltered] = useState<Array<TListItem>>([]);
   const isInitialRender = useRef(true);
   const headerHeight = useHeaderHeight();
   const {height} = useReanimatedKeyboardAnimation();
   const paddingTop = useSharedValue(0);
 
   const removeTaskFromList = useCallback((id: number) => {
-    setData(value =>
-      value.filter((item, index) => {
+    const callBack: SetStateAction<TListItem[]> = value => {
+      return value.filter((item, index) => {
         if (
           typeof item === 'string' &&
           value[index + 1] === id &&
@@ -68,22 +79,21 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
         } else {
           return true;
         }
-      }),
-    );
+      });
+    };
+    setFiltered(callBack);
+    setData(callBack);
   }, []);
 
-  const renderItem = useCallback(
-    ({item}: ListRenderItemInfo<number | string>) => {
-      if (typeof item === 'number') {
-        return <Card remove={removeTaskFromList} id={item} />;
-      } else if (typeof item === 'string') {
-        return <SectionTitle date={Number(item)} />;
-      } else {
-        return null;
-      }
-    },
-    [],
-  );
+  const renderItem = useCallback(({item}: ListRenderItemInfo<TListItem>) => {
+    if (typeof item === 'number') {
+      return <Card remove={removeTaskFromList} id={item} />;
+    } else if (typeof item === 'string') {
+      return <SectionTitle date={Number(item)} />;
+    } else {
+      return null;
+    }
+  }, []);
 
   const iconStyleAnim = useAnimatedStyle(() => {
     return {
@@ -111,39 +121,39 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
   useEffect(() => {
     if (searchDate.length === 10) {
       const date = getDateFromString(searchDate);
-      if (taskIds[date]) {
-        const ids = [...taskIds[date]].reverse();
-        setFiltered([date.toString(), ...ids]);
+      if (historyIds[date]) {
+        setFiltered([date.toString(), ...historyIds[date]]);
       }
-    } else {
+    } else if (filtered.length > 0) {
       setFiltered([]);
     }
   }, [searchDate]);
 
   useEffect(() => {
-    if (!isSearching) {
+    if (!isSearching && !!filtered.length) {
       setFiltered([]);
     }
   }, [isSearching]);
 
   useEffect(() => {
     isInitialRender.current = false;
+
+    // this operation can take a lot of resources
+    // that's why we do it async
+
     const timeout = setTimeout(() => {
-      const today = endOfDay();
-      const dataToSet: Array<number | string> = [];
-      for (let item in taskIds) {
+      const dataToSet: Array<TListItem> = [];
+      const dates: Array<string> = Object.keys(historyIds).sort().reverse();
+      dates.forEach(item => {
         const date = Number(item);
-        if (date >= today) {
-          break;
-        }
-        if (!!taskIds[date].length) {
-          taskIds[date]?.forEach(id => {
+        if (!!historyIds[date].length) {
+          dataToSet.push(item);
+          historyIds[date]?.forEach(id => {
             dataToSet.push(id);
           });
-          dataToSet.push(item);
         }
-      }
-      setData(dataToSet.reverse());
+      });
+      setData(dataToSet);
       setLoading(false);
     }, 0);
 
@@ -154,7 +164,7 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
 
   const ListEmptyComponent =
     (isSearching && (
-      //enterinig doesn't work with ?-: conditions, i don't know why
+      //enterinig doesn't work with ?/: conditions, i don't know why
       <Animated.View
         entering={FadeIn.duration(300)}
         exiting={FadeOut.duration(150)}>
@@ -190,57 +200,40 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
     return <ActivityIndicator />;
   }
 
-  if ((isSearching && filtered.length === 0) || data.length === 0) {
-    return (
-      <ScrollView style={{minHeight: HEIGHT - headerHeight}}>
-        {isSearching && (
-          //enterinig doesn't work with ?-: conditions, i don't know why
-          <Animated.View
-            entering={FadeIn.duration(300)}
-            exiting={FadeOut.duration(150)}>
-            <Animated.View style={iconStyleAnim}>
-              <ThemedIcon
-                colorName="lineGrey"
-                xmlGetter={searchSvg}
-                style={styles.icon}
-                width={ICON_SIZE}
-                height={ICON_SIZE}
-              />
-            </Animated.View>
-          </Animated.View>
-        )}
-        {!isSearching && (
-          <Animated.View
-            entering={FadeIn.duration(300)}
-            exiting={FadeOut.duration(150)}>
-            <CustomText
-              themed
-              colorName="textGrey"
-              style={[
-                styles.emptyListTitle,
-                {paddingTop: HEIGHT / 2 - headerHeight - 62},
-              ]}>
-              completedTasksStoredHere
-            </CustomText>
-          </Animated.View>
-        )}
-      </ScrollView>
-    );
-  }
-
   return (
-    <Animated.FlatList
-      itemLayoutAnimation={
-        isInitialRender.current ? undefined : LinearTransition
-      }
-      style={{minHeight: HEIGHT - headerHeight}}
-      contentContainerStyle={styles.contentContainer}
-      data={isSearching ? filtered : data}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      maxToRenderPerBatch={1}
-      ListEmptyComponent={ListEmptyComponent}
-    />
+    <View>
+      <Animated.FlatList
+        itemLayoutAnimation={
+          isInitialRender.current ? undefined : LinearTransition
+        }
+        style={{minHeight: HEIGHT - headerHeight}}
+        contentContainerStyle={styles.contentContainer}
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        windowSize={15}
+        ListEmptyComponent={ListEmptyComponent}
+      />
+      {isSearching && (
+        <Animated.FlatList
+          itemLayoutAnimation={
+            isInitialRender.current ? undefined : LinearTransition
+          }
+          style={[
+            styles.filteredList,
+            {
+              minHeight: HEIGHT - headerHeight,
+              backgroundColor: colors.background,
+            },
+          ]}
+          contentContainerStyle={styles.contentContainer}
+          data={filtered}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          ListEmptyComponent={ListEmptyComponent}
+        />
+      )}
+    </View>
   );
 };
 
@@ -249,6 +242,15 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 20,
     paddingHorizontal: SCREEN_PADDING,
+    paddingBottom: 500,
+  },
+  filteredList: {
+    position: 'absolute',
+    zIndex: 100,
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   emptyListIconContainer: {
     alignItems: 'center',

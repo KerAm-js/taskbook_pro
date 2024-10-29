@@ -142,6 +142,9 @@ export const TaskForm = () => {
     isTitleValid &&
     (!isRegular || repeatingType === 'daily' || isRepeatingDaysValid);
 
+  const isHistoryTask =
+    taskToEdit && taskToEdit.date < today && taskToEdit.isCompleted;
+
   const repeatingChangesDisabled =
     taskToEdit && taskToEdit.isRegular && taskToEdit.isCompleted;
 
@@ -244,6 +247,7 @@ export const TaskForm = () => {
             title="reminder"
             value={remindTimeString}
             xmlGetter={alarmSvg}
+            disabled={isHistoryTask}
           />
           <Setting
             onPress={() => setIsRegular(prev => !prev)}
@@ -251,14 +255,14 @@ export const TaskForm = () => {
             title="taskRepeating"
             value={isRegular}
             xmlGetter={repeatFillSvg}
-            disabled={repeatingChangesDisabled}
+            disabled={repeatingChangesDisabled || isHistoryTask}
           />
           {isRegular ? (
             <CheckList
               data={repeatingTypeData}
               checkMethod={checkRepeatingTypeMethod}
               onPress={onRepeatingTypePress}
-              disabled={repeatingChangesDisabled}
+              disabled={repeatingChangesDisabled || isHistoryTask}
               translateTitle
             />
           ) : (
@@ -268,6 +272,7 @@ export const TaskForm = () => {
               title="date"
               value={getDateTitle(date, t)}
               xmlGetter={calendarFillSvg}
+              disabled={isHistoryTask}
             />
           )}
           {isRegular && repeatingType === 'weekly' && (

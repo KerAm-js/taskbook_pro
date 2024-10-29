@@ -26,61 +26,16 @@ import {
   rescheduleOverdueTasks,
   rescheduleIfOverdue,
 } from './actionHelpers';
-import {DATA} from './data.dev';
 
 const TODAY = endOfDay();
-
-// const tasks: Task[] = Array(2000)
-//   .fill(0)
-//   .map((_, i) => {
-//     let date = 1723150799999;
-//     if (i >= 250) {
-//       date = 1723237199999;
-//     } else if (i >= 500) {
-//       date = 1723323599999;
-//     } else if (i >= 800) {
-//       date = 1723409999999;
-//     }
-//     return {
-//       id: i,
-//       title: `Task ${i}`,
-//       note: 'Note',
-//       isCompleted: true,
-//       isRegular: false,
-//       isSelected: false,
-//       isTitleEditing: false,
-//       date,
-//     };
-//   });
-
-// const ids = {
-//   1723150799999: tasks
-//     .filter(task => task.date === 1723150799999)
-//     .map(task => task.id),
-//   1723237199999: tasks
-//     .filter(task => task.date === 1723237199999)
-//     .map(task => task.id),
-//   1723323599999: tasks
-//     .filter(task => task.date === 1723323599999)
-//     .map(task => task.id),
-//   1723409999999: tasks
-//     .filter(task => task.date === 1723409999999)
-//     .map(task => task.id),
-// };
-
-// const entities = tasks.reduce((result: ITasksState['entities'], task) => {
-//   result[task.id] = task;
-//   return result;
-// }, {});
 
 const initialState: ITasksState = {
   idCounter: 1,
   ids: {[TODAY]: []},
   entities: {},
-  // ids: DATA.ids,
-  // entities: DATA.entities,
+  historyIds: {},
+  lastVisit: TODAY,
   selectedDate: TODAY,
-  lastVisit: 1723150799999,
   selectedTasksCount: 0,
   isTasksDateChanging: false,
   titleEditingTaskId: null,
@@ -99,10 +54,6 @@ export const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    setLastVisit: (state, action: PayloadAction<ITasksState['lastVisit']>) => {
-      state.lastVisit = action.payload;
-    },
-
     onAppLoad: state => {
       setStateDefault(state);
       rescheduleOverdueTasks(state);
@@ -120,6 +71,9 @@ export const tasksSlice = createSlice({
       state.idCounter = idCounter;
       state.ids = ids;
       state.entities = entities;
+      if (!state.ids[state.selectedDate]) {
+        state.ids[state.selectedDate] = [];
+      }
     },
 
     addTask: (state, action: PayloadAction<TaskDto>) => {

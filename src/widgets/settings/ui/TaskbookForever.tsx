@@ -1,11 +1,9 @@
-import {arrowRightSvg} from '@/shared/assets/svg/arrowRight';
 import {premiumStarsSvg} from '@/shared/assets/svg/premiumStars';
 import {
   CustomText,
   SettingsStackParamsList,
   TEXT_STYLES,
   THEME_ICON_GRADIENTS,
-  ThemedIcon,
   ThemedPressable,
   useTheme,
 } from '@/shared';

@@ -5,7 +5,7 @@ import {StyleSheet} from 'react-native';
 export const Subscription = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header title="taskbookForever" modalHeader />
+      <Header title="Taskbook Pro" modalHeader />
       <SubscriptionInfo />
     </ThemedView>
   );

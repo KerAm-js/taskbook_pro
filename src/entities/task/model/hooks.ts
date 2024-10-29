@@ -73,6 +73,11 @@ export const useTaskIds = () => {
   return tasks;
 };
 
+export const useHistoryTaskIds = () => {
+  const history = useSelector((state: RootState) => state.tasks.historyIds);
+  return history;
+}
+
 export const useIsSelection = () => {
   const value = useSelector(
     (state: RootState) => state.tasks.selectedTasksCount,

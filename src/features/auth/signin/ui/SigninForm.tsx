@@ -140,7 +140,7 @@ export const SigninForm = () => {
         </View>
       </KeyboardAwareScrollView>
       <ThemedView
-        style={[styles.goToResetPassword, {paddingBottom}]}
+        style={[styles.goToResetPassword, {paddingBottom: paddingBottom - 5}]}
         colorName="background"
         borderColorName="lineGrey">
         <FormButton

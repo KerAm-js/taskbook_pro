@@ -60,8 +60,14 @@ export const userSlice = createSlice({
     builder.addCase(signoutThunk.fulfilled, state => {
       state.email = undefined;
       state.emailVerified = undefined;
+      state.loading = false;
       state.name = undefined;
       state.uid = undefined;
+    });
+    builder.addCase(signoutThunk.rejected, (state, action) => {
+      state.loading = false;
+      state.success = null;
+      state.error = action.payload || null;
     });
     builder.addCase(changeNameThunk.pending, state => {
       state.loading = true;

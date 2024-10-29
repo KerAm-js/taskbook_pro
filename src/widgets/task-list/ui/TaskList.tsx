@@ -141,7 +141,6 @@ export const TaskList = () => {
       itemLayoutAnimation={
         isInitialRender.current ? undefined : LinearTransition
       }
-      initialNumToRender={10}
       maxToRenderPerBatch={isScreenRender.current ? 10 : 1}
       windowSize={15}
       contentContainerStyle={styles.contentContainer}

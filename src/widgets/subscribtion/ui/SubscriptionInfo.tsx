@@ -40,7 +40,7 @@ export const SubscriptionInfo = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.scroll}>
         <Slider />
         <View style={styles.content}>
           {isRatesLoading ? (
@@ -67,7 +67,7 @@ export const SubscriptionInfo = () => {
       <ThemedView
         colorName="background"
         borderColorName="lineGrey"
-        style={[styles.footer, {paddingBottom: paddingBottom + 40}]}>
+        style={[styles.footer, {paddingBottom: paddingBottom + 30}]}>
         <FormButton type="accent" title="continue" onPress={() => {}} />
         <FormButton type="secondary" title="tryForFree" onPress={() => {}} />
       </ThemedView>

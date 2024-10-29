@@ -44,8 +44,10 @@ export const rescheduleIfOverdue = (state: ITasksState, id: Task['id']) => {
   const today = endOfDay();
   const task = state.entities[id];
   if (task.date < today) {
-    const currDate = task.date;
-    state.ids[currDate] = state.ids[currDate].filter(item => item !== id);
+    const currTaskDate = task.date;
+    state.historyIds[currTaskDate] = state.historyIds[currTaskDate].filter(
+      item => item !== id,
+    );
     state.ids[today].unshift(id);
     task.date = today;
   }
@@ -57,10 +59,11 @@ export const rescheduleOverdueTasks = (state: ITasksState) => {
     return;
   }
   let date = state.lastVisit;
+
   while (date < today) {
     if (state.ids[date]) {
       const overdueTasks: Task['id'][] = [];
-      state.ids[date] = state.ids[date].filter(id => {
+      state.historyIds[date] = state.ids[date].filter(id => {
         const task = state.entities[id];
         if (!task.isCompleted) {
           overdueTasks.push(id);
@@ -68,8 +71,10 @@ export const rescheduleOverdueTasks = (state: ITasksState) => {
         }
         return task.isCompleted;
       });
+      delete state.ids[date];
       state.ids[today] = [...overdueTasks, ...state.ids[today]];
     }
+
     date += 86400000;
   }
   state.lastVisit = today;
