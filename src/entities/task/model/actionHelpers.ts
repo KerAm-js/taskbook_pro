@@ -90,8 +90,7 @@ export const rescheduleIfOverdue = (state: ITasksState, id: Task['id']) => {
   const today = endOfDay();
   const task = state.entities[id];
   if (task.date < today) {
-    const currTaskDate = task.date;
-    state.historyIds[currTaskDate] = state.historyIds[currTaskDate].filter(
+    state.historyIds[task.date] = state.historyIds[task.date].filter(
       item => item !== id,
     );
     state.ids[today].unshift(id);

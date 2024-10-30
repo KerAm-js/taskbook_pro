@@ -15,14 +15,13 @@ import React, {
 } from 'react';
 import {
   CustomText,
-  endOfDay,
   SCREEN_PADDING,
   TEXT_STYLES,
   ThemedIcon,
   useHeaderHeight,
   useThemeColors,
 } from '@/shared';
-import {useHistoryTaskIds, useTaskIds} from '@/entities/task';
+import {useHistoryTaskIds} from '@/entities/task';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -37,6 +36,7 @@ import {SectionTitle} from './SectionTitle';
 import {searchSvg} from '@/shared/assets/svg/search';
 import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller';
 import {getDateFromString} from '../../lib/getDateFromString';
+import {getHistoryList, TListItem} from '../../lib/getHistoryList';
 
 const keyExtractor = (item: number | string) => item.toString();
 
@@ -47,8 +47,6 @@ const animationConfig = {
   duration: 350,
 };
 
-type TListItem = number | string;
-
 type TPropTypes = {
   searchDate: string;
   isSearching: boolean;
@@ -56,7 +54,6 @@ type TPropTypes = {
 
 export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
   const historyIds = useHistoryTaskIds();
-  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Array<TListItem>>([]);
   const {colors} = useThemeColors();
   const [filtered, setFiltered] = useState<Array<TListItem>>([]);
@@ -137,29 +134,8 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
 
   useEffect(() => {
     isInitialRender.current = false;
-
-    // this operation can take a lot of resources
-    // that's why we do it async
-
-    const timeout = setTimeout(() => {
-      const dataToSet: Array<TListItem> = [];
-      const dates: Array<string> = Object.keys(historyIds).sort().reverse();
-      dates.forEach(item => {
-        const date = Number(item);
-        if (!!historyIds[date].length) {
-          dataToSet.push(item);
-          historyIds[date]?.forEach(id => {
-            dataToSet.push(id);
-          });
-        }
-      });
-      setData(dataToSet);
-      setLoading(false);
-    }, 0);
-
-    return () => {
-      clearTimeout(timeout);
-    };
+    const dataToSet = getHistoryList(historyIds);
+    setData(dataToSet);
   }, []);
 
   const ListEmptyComponent =
@@ -196,10 +172,6 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
     )) ||
     null;
 
-  if (loading) {
-    return <ActivityIndicator />;
-  }
-
   return (
     <View>
       <Animated.FlatList
@@ -211,7 +183,7 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
         data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        windowSize={15}
+        windowSize={13}
         ListEmptyComponent={ListEmptyComponent}
       />
       {isSearching && (
