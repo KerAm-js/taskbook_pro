@@ -1,12 +1,12 @@
 import {Header, ThemedView} from '@/shared';
-import {AccountSettings} from '@/widgets/account-settings';
+import {ReminderSettings} from '@/widgets/reminder-settings';
 import {StyleSheet} from 'react-native';
 
-export const AccountRoot = () => {
+export const Reminders = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
       <Header title="reminders" />
-      <AccountSettings />
+      <ReminderSettings />
     </ThemedView>
   );
 };

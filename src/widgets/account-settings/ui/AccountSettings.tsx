@@ -1,7 +1,7 @@
 import {Alert, ScrollView, StyleSheet} from 'react-native';
 import {NavButton} from './NavButton';
 import {
-  AccountSettingsStackParamsList,
+  AppStackParamsList,
   FormButton,
   PADDING_TOP,
   SCREEN_PADDING,
@@ -20,7 +20,7 @@ export const AccountSettings = () => {
   const {error, loading, email, name} = useUser();
   const {signoutThunk, clearMessages} = useUserActions();
   const navigation =
-    useNavigation<NativeStackNavigationProp<AccountSettingsStackParamsList>>();
+    useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const {t} = useTranslation();
   const goToChangePassword = () => {
     navigation.navigate('Password');

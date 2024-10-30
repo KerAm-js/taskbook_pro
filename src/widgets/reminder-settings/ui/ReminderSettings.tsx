@@ -1,9 +1,9 @@
 import {useDailyReminder, useTaskReminderSettings} from '@/entities/task';
 import {
+  AppStackParamsList,
   CustomText,
   getTimeString,
   PADDING_TOP,
-  ReminderSettingsStackParamsList,
   SCREEN_PADDING,
   Setting,
   TEXT_STYLES,
@@ -16,7 +16,7 @@ import {ScrollView, StyleSheet} from 'react-native';
 export const ReminderSettings = () => {
   const {t} = useTranslation();
   const navigation =
-    useNavigation<NativeStackNavigationProp<ReminderSettingsStackParamsList>>();
+    useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const {count, interval} = useTaskReminderSettings();
   const {beginning, end} = useDailyReminder();
 

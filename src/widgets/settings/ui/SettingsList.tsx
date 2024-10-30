@@ -5,11 +5,11 @@ import {shareSvg} from '@/shared/assets/svg/share';
 import {keyboardSvg} from '@/shared/assets/svg/keyboard';
 import {paletteSvg} from '@/shared/assets/svg/palette';
 import {
+  AppStackParamsList,
   CustomText,
   PADDING_TOP,
   SCREEN_PADDING,
   Setting,
-  SettingsStackParamsList,
   TEXT_STYLES,
 } from '@/shared';
 import {
@@ -32,7 +32,7 @@ import {UserInfo} from './UserInfo';
 
 export const SettingsList = () => {
   const navigation =
-    useNavigation<NativeStackNavigationProp<SettingsStackParamsList>>();
+    useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const {toggleFastInputMode} = useSettingsActions();
   const fastInputMode = useFastInputMode();
 

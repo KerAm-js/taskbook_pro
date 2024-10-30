@@ -16,7 +16,7 @@ export {InputComment} from './ui/InputComment';
 export {TimePopup} from './ui/Popups';
 export {CalendarPopup} from './ui/Popups';
 export {FormButton} from './ui/FormButton';
-export {IOSKeyboardFlickeringDisable} from "./ui/IOSKeyboardFlickeringDisable";
+export {IOSKeyboardFlickeringDisable} from './ui/IOSKeyboardFlickeringDisable';
 
 //config
 export {LANGUAGE_DETECTOR, I18N} from './config/i18n/i18n';
@@ -91,8 +91,4 @@ export type {
   RootStackParamsList,
   AuthStackParamsList,
   AppStackParamsList,
-  SettingsStackParamsList,
-  AccountSettingsStackParamsList,
-  PasswordStackParamsList,
-  ReminderSettingsStackParamsList,
 } from './config/navigation/navigation.types';

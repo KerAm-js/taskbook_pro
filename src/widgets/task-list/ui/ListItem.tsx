@@ -66,7 +66,7 @@ const ListItemComponent: FC<TPropTypes> = ({id, index, isInitialRender}) => {
 
   const pan = Gesture.Pan()
     .enabled(!isTitleEditing)
-    .minDistance(50)
+    .minDistance(45)
     .onUpdate(event =>
       onPanGestureUpdate(event, {
         keyboardHeight,

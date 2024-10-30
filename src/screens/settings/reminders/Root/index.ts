@@ -1,1 +1,0 @@
-export { RemindersRoot } from "./ui/RemindersRoot";

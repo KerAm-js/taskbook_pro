@@ -1,11 +1,11 @@
 import {shieldSvg} from '@/shared/assets/svg/shield';
 import {useUser} from '@/entities/user';
 import {
+  AppStackParamsList,
   FormButton,
   FormInput,
   InputComment,
   PADDING_TOP,
-  PasswordStackParamsList,
   SCREEN_PADDING,
   useFirebase,
   useInputValidator,
@@ -25,7 +25,7 @@ export const ChangePasswordForm = () => {
   const usersCollection = firestore.collection('Users');
   const user = useUser();
   const navigation =
-    useNavigation<NativeStackNavigationProp<PasswordStackParamsList>>();
+    useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const [
     currentPassword,
     onChangeCurrentPassword,

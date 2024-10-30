@@ -1,7 +1,7 @@
 import {premiumStarsSvg} from '@/shared/assets/svg/premiumStars';
 import {
+  AppStackParamsList,
   CustomText,
-  SettingsStackParamsList,
   TEXT_STYLES,
   THEME_ICON_GRADIENTS,
   ThemedPressable,
@@ -15,7 +15,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 export const TaskbookForever = () => {
   const theme = useTheme();
   const navigation =
-    useNavigation<NativeStackNavigationProp<SettingsStackParamsList>>();
+    useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
 
   const onPress = () => {
     navigation.navigate('Subscription');

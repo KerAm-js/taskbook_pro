@@ -1,7 +1,7 @@
 import {useUser} from '@/entities/user';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { AppStack } from './Navigators/AppStack';
 import {AuthStack} from './Navigators/AuthStack';
-import {AppStack} from './Navigators/App/AppStack';
 import {RootStackParamsList, useFirebase} from '@/shared';
 import {NavigationContainer} from '@react-navigation/native';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
