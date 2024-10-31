@@ -17,7 +17,9 @@ export const AuthStack = () => {
           backgroundColor: colors.header,
         },
       }}>
-      <Stack.Screen name="signin" component={Signin} />
+      <Stack.Screen name="signin" component={Signin} options={{
+        headerLeft: undefined,
+      }} />
       <Stack.Screen name="signup" component={Signup} />
       <Stack.Screen name="passwordReset" component={PasswordReset} />
     </Stack.Navigator>

@@ -1,6 +1,5 @@
 //ui
 export {Setting} from './ui/Setting';
-export {Header} from './ui/Header';
 export {ThemedGradient} from './ui/Theme';
 export {ThemedText} from './ui/Theme';
 export {ThemedInput} from './ui/Theme';
