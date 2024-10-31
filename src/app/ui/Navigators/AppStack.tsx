@@ -22,7 +22,7 @@ import {Language} from '@/screens/settings/language';
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 
 export const AppStack = () => {
-  const {colors, theme} = useThemeColors();
+  const {colors} = useThemeColors();
 
   return (
     <Stack.Navigator initialRouteName="main">
@@ -31,8 +31,7 @@ export const AppStack = () => {
           headerTitle: CustomHeader.Title,
           headerLeft: CustomHeader.BackButton,
           headerStyle: {
-            backgroundColor:
-              theme === 'night' ? colors.backgroundSecond : colors.accent,
+            backgroundColor: colors.header,
           },
         }}>
         <Stack.Screen
@@ -65,8 +64,7 @@ export const AppStack = () => {
           headerTitle: CustomHeader.Title,
           headerLeft: CustomHeader.BackButton,
           headerStyle: {
-            backgroundColor:
-              theme === 'night' ? colors.backgroundSecond : colors.accent,
+            backgroundColor: colors.header,
           },
         }}>
         <Stack.Screen name="settings" component={Settings} />
