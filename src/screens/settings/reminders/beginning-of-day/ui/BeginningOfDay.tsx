@@ -1,11 +1,10 @@
 import {SetDailyReminder} from '@/features/settings/daily-reminder';
-import {Header, PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
+import {PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
 import {ScrollView, StyleSheet} from 'react-native';
 
 export const BeginningOfDay = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header modalHeader title="beginningOfDay" />
       <ScrollView
         style={styles.scroll}
         showsVerticalScrollIndicator={false}

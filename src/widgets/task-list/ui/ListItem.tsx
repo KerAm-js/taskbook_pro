@@ -54,7 +54,7 @@ const ListItemComponent: FC<TPropTypes> = ({id, index, isInitialRender}) => {
         () => {
           setVisible(true);
         },
-        index < 9 ? index * 50 : 450,
+        index < 12 ? index * 50 : 600,
       );
       return () => clearTimeout(timer);
     }
@@ -89,11 +89,8 @@ const ListItemComponent: FC<TPropTypes> = ({id, index, isInitialRender}) => {
 
   const entering = title
     ? isInitialRender.current
-      ? // ? FadeInDown.delay(index * 50).withInitialValues({
-        //     transform: [{translateY: 10}],
-        //   })
-        FadeInDown.withInitialValues({
-          transform: [{translateY: 10}],
+      ? FadeInDown.withInitialValues({
+          transform: [{translateY: 7}],
         })
       : FadeIn
     : FadeInRight.withInitialValues({

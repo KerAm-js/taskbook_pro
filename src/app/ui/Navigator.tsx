@@ -78,11 +78,11 @@ export const Navigator = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
-        initialRouteName="Auth">
+        initialRouteName="auth">
         {isAuthorized ? (
-          <Stack.Screen name="App" component={AppStack} />
+          <Stack.Screen name="app" component={AppStack} />
         ) : (
-          <Stack.Screen name="Auth" component={AuthStack} />
+          <Stack.Screen name="auth" component={AuthStack} />
         )}
       </Stack.Navigator>
     </NavigationContainer>

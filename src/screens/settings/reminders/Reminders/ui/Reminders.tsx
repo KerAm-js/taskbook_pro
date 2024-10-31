@@ -1,11 +1,10 @@
-import {Header, ThemedView} from '@/shared';
+import {ThemedView} from '@/shared';
 import {ReminderSettings} from '@/widgets/reminder-settings';
 import {StyleSheet} from 'react-native';
 
 export const Reminders = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header title="reminders" />
       <ReminderSettings />
     </ThemedView>
   );

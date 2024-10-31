@@ -1,11 +1,10 @@
-import {Header, ThemedView} from '@/shared';
+import {ThemedView} from '@/shared';
 import {SubscriptionInfo} from '@/widgets/subscribtion';
 import {StyleSheet} from 'react-native';
 
 export const Subscription = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header title="Taskbook Pro" modalHeader />
       <SubscriptionInfo />
     </ThemedView>
   );

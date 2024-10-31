@@ -23,13 +23,13 @@ export const AccountSettings = () => {
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const {t} = useTranslation();
   const goToChangePassword = () => {
-    navigation.navigate('Password');
+    navigation.navigate('password');
   };
   const goToChangeEmail = () => {
-    navigation.navigate('Email');
+    navigation.navigate('email');
   };
   const goToChangeName = () => {
-    navigation.navigate('Name');
+    navigation.navigate('name');
   };
 
   const signOut = () => {

@@ -31,7 +31,7 @@ export const useAnimatedThemeStyle = (
     setFColor(sColor);
     colorProgress.value = 0;
     setSColor(newColor);
-    colorProgress.value = withTiming(1);
+    colorProgress.value = withTiming(1, {duration: 150});
   };
 
   useEffect(() => {

@@ -1,11 +1,10 @@
 import {ListRenderItemInfo, StyleSheet} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {PADDING_TOP, SCREEN_PADDING} from '@/shared';
 import {EmptyListImage} from './EmptyListImage';
 import {useSelectedDate, useTaskIds} from '@/entities/task';
 import {ListItem} from './ListItem';
 import Animated, {LinearTransition} from 'react-native-reanimated';
-import {useFocusEffect} from '@react-navigation/native';
 
 const keyExtractor = (item: number) => item.toString();
 
@@ -48,8 +47,9 @@ export const TaskList = () => {
       itemLayoutAnimation={
         isInitialRender.current ? undefined : LinearTransition
       }
-      maxToRenderPerBatch={isScreenRender.current ? 10 : 1}
-      windowSize={11}
+      // maxToRenderPerBatch={isScreenRender.current ? 10 : 1}
+      maxToRenderPerBatch={1}
+      windowSize={13}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
       data={taskIds[selectedDate]}

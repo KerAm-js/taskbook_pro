@@ -1,19 +1,17 @@
 import {ThemeCard} from '@/features/settings/theme';
-import {
-  Header,
-  PADDING_TOP,
-  SCREEN_PADDING,
-  useAnimatedThemeStyle,
-} from '@/shared';
+import {PADDING_TOP, SCREEN_PADDING, useAnimatedThemeStyle} from '@/shared';
 import {ScrollView, StyleSheet} from 'react-native';
 import Animated from 'react-native-reanimated';
+import {useHeaderHeight} from '@react-navigation/elements';
 
 export const Theme = () => {
   const colorStyleAnim = useAnimatedThemeStyle('background');
+  const headerColorStyleAnim = useAnimatedThemeStyle('header');
+  const height = useHeaderHeight();
 
   return (
     <Animated.View style={[styles.container, colorStyleAnim]}>
-      <Header title={'theme'} />
+      <Animated.View style={[{height}, headerColorStyleAnim]} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.container}

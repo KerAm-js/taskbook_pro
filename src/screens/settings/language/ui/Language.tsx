@@ -1,11 +1,10 @@
 import {SetLanguage} from '@/features/settings/language';
-import {Header, PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
+import {PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
 import {ScrollView, StyleSheet} from 'react-native';
 
 export const Language = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header title="language" modalHeader />
       <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
         <SetLanguage />
       </ScrollView>

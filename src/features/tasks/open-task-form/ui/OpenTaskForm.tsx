@@ -11,7 +11,7 @@ export const OpenTaskForm = () => {
 
   const onPress = () => {
     continueTaskEditingWithTaskForm();
-    navigation.navigate('Task');
+    navigation.navigate('task');
   };
   
   return (

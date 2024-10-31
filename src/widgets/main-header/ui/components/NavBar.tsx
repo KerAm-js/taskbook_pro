@@ -21,7 +21,7 @@ const NavBar: FC<{
       <IconButton
         xmlGetter={settingsSvg}
         staticColor={COLORS.white}
-        onPress={() => navigation.navigate('Settings')}
+        onPress={() => navigation.navigate('settings')}
         width={iconSize}
         height={iconSize}
       />
@@ -29,7 +29,7 @@ const NavBar: FC<{
         <IconButton
           xmlGetter={taskHistorySvg}
           staticColor={COLORS.white}
-          onPress={() => navigation.navigate('History')}
+          onPress={() => navigation.navigate('history')}
           width={iconSize}
           height={iconSize}
         />

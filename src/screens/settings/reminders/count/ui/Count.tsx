@@ -1,11 +1,10 @@
 import {SetReminderCount} from '@/features/settings/reminder-count';
-import {Header, PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
+import {PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
 import {ScrollView, StyleSheet} from 'react-native';
 
 export const Count = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header modalHeader title="count" />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scroll}

@@ -1,11 +1,10 @@
 import {SetReminderInterval} from '@/features/settings/reminder-interval';
-import {Header, PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
+import {PADDING_TOP, SCREEN_PADDING, ThemedView} from '@/shared';
 import {ScrollView, StyleSheet} from 'react-native';
 
 export const Interval = () => {
   return (
     <ThemedView colorName="background" style={styles.container}>
-      <Header modalHeader title="interval" />
       <ScrollView
         style={styles.scroll}
         showsVerticalScrollIndicator={false}

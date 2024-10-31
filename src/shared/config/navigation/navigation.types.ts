@@ -1,31 +1,31 @@
 export type RootStackParamsList = {
-  App: undefined;
-  Auth: undefined;
+  app: undefined;
+  auth: undefined;
 };
 
 export type AuthStackParamsList = {
-  Signin: undefined;
-  Signup: undefined;
-  PasswordReset: undefined;
+  signin: undefined;
+  signup: undefined;
+  passwordReset: undefined;
 };
 
 export type AppStackParamsList = {
-  Main: undefined;
-  Task: undefined;
-  History: undefined;
-  Settings: undefined;
-  Subscription: undefined;
-  Account: undefined;
-  Email: undefined;
-  Name: undefined;
-  Password: undefined;
-  PasswordReset: undefined;
-  Backup: undefined;
-  Reminders: undefined;
-  Count: undefined;
-  Interval: undefined;
-  BeginningOfDay: undefined;
-  EndOfDay: undefined;
-  Theme: undefined;
-  Language: undefined;
+  main: undefined;
+  task: undefined;
+  history: undefined;
+  settings: undefined;
+  subscription: undefined;
+  account: undefined;
+  email: undefined;
+  name: undefined;
+  password: undefined;
+  passwordReset: undefined;
+  backup: undefined;
+  reminders: undefined;
+  count: undefined;
+  interval: undefined;
+  beginningOfDay: undefined;
+  endOfDay: undefined;
+  theme: undefined;
+  language: undefined;
 };

@@ -40,20 +40,11 @@ export const AnimatedIcon: FC<TPropTypes> = ({
         easing,
       }),
     };
-  }, [translationX.value, isOverDragged.value]);
-
-  const greyIconStyleAnim = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(isOverDragged.value ? 0 : 1, {
-        duration: 150,
-        easing,
-      }),
-    };
-  }, [translationX.value, isOverDragged.value]);
+  }, [isOverDragged.value]);
 
   useAnimatedReaction(
     () => translationX.value,
-    (curr, prev) => {
+    (curr, _) => {
       const isDragged = side === 'right' ? curr > 0 : curr < 0;
       if (isDragged) {
         runOnJS(setVisible)(false);
@@ -63,7 +54,7 @@ export const AnimatedIcon: FC<TPropTypes> = ({
         runOnJS(setVisible)(true);
       }
     },
-  )
+  );
 
   if (!visible) {
     return null;
@@ -72,16 +63,16 @@ export const AnimatedIcon: FC<TPropTypes> = ({
   return (
     <View style={[styles.container, {[side]: 0}]}>
       <Animated.View
-        style={[styles.iconContainer, {[side]: 20}, mainIconStyleAnim]}>
+        style={[
+          styles.iconContainer,
+          mainIconStyleAnim,
+          side === 'right' && styles.rightIconContainer,
+        ]}>
         <SvgXml
           width={26}
           height={26}
           xml={xmlGetter(colorName ? colors[colorName] : COLORS[color])}
         />
-      </Animated.View>
-      <Animated.View
-        style={[styles.iconContainer, {[side]: 20}, greyIconStyleAnim]}>
-        <SvgXml width={26} height={26} xml={xmlGetter(colors.grey)} />
       </Animated.View>
     </View>
   );
@@ -95,8 +86,12 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   iconContainer: {
-    position: 'absolute',
-    height: '100%',
     justifyContent: 'center',
+    flex: 1,
+    paddingLeft: 20,
+  },
+  rightIconContainer: {
+    paddingRight: 20,
+    alignItems: 'flex-end',
   },
 });

@@ -77,7 +77,7 @@ export const SettingsList = () => {
   };
 
   const goToAccount = () => {
-    navigation.navigate('Account');
+    navigation.navigate('account');
   };
 
   return (
@@ -104,25 +104,25 @@ export const SettingsList = () => {
           <Setting
             type="navigate"
             title="backupCopy"
-            onPress={() => navigation.navigate('Backup')}
+            onPress={() => navigation.navigate('backup')}
             xmlGetter={archieveSvg}
           />
           <Setting
             type="navigate"
             title="notifications"
-            onPress={() => navigation.navigate('Reminders')}
+            onPress={() => navigation.navigate('reminders')}
             xmlGetter={bellSvg}
           />
           <Setting
             type="navigate"
             title="theme"
-            onPress={() => navigation.navigate('Theme')}
+            onPress={() => navigation.navigate('theme')}
             xmlGetter={paletteSvg}
           />
           <Setting
             type="navigate"
             title="language"
-            onPress={() => navigation.navigate('Language')}
+            onPress={() => navigation.navigate('language')}
             xmlGetter={translateSvg}
           />
         </View>

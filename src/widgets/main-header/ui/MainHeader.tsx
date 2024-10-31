@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -21,13 +22,14 @@ import {Title} from './components/Title';
 import {KeyboardBackdrop} from '@/features/keyboard-backdrop';
 
 const springAnimationConfig = {
-  damping: 20,
-  stiffness: 300,
-  mass: 1
+  damping: 18,
+  stiffness: 330,
+  mass: 1,
 };
 
 export const MainHeader = () => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
+  const calendarOpacity = useSharedValue(0);
   const {paddingTop} = useSafeAreaPadding();
 
   const TRANSLATE = MAX_H - MIN_H;
@@ -51,11 +53,9 @@ export const MainHeader = () => {
       zIndex: -100,
       transform: [{translateY: calendarTranslate.value}],
       display: calendarTranslate.value === -TRANSLATE ? 'none' : 'flex',
-      opacity: withTiming(isCalendarOpened ? 1 : 0, {
-        duration: isCalendarOpened ? 250 : 80,
-      }),
+      opacity: calendarOpacity.value,
     };
-  }, [isCalendarOpened]);
+  }, [calendarOpacity]);
 
   const contentStyleAnim = useAnimatedStyle(() => {
     return {
@@ -64,6 +64,14 @@ export const MainHeader = () => {
         springAnimationConfig,
       ),
     };
+  }, [isCalendarOpened]);
+
+  useEffect(() => {
+    if (isCalendarOpened) {
+      calendarOpacity.value = withDelay(50, withTiming(1, {duration: 100}));
+    } else {
+      calendarOpacity.value = withTiming(0, {duration: 70});
+    }
   }, [isCalendarOpened]);
 
   return (

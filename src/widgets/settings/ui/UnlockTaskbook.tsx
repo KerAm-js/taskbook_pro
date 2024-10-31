@@ -18,7 +18,7 @@ export const TaskbookForever = () => {
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
 
   const onPress = () => {
-    navigation.navigate('Subscription');
+    navigation.navigate('subscription');
   };
 
   return (

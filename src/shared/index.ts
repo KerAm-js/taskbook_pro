@@ -10,6 +10,7 @@ export {ThemedPressable} from './ui/Theme';
 export {AnimatedCheck} from './ui/AnimatedCheck';
 export {IconButton} from './ui/IconButton';
 export {CustomText} from './ui/CustomText';
+export {CustomHeader} from './ui/CustomHeader';
 export {CheckList} from './ui/CheckList';
 export {FormInput} from './ui/FormInput';
 export {InputComment} from './ui/InputComment';

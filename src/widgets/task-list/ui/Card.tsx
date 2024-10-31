@@ -77,7 +77,7 @@ const CardComponent: FC<TPropTypes> = ({id, translationX}) => {
       });
     } else {
       setTaskToUpdateId(id);
-      navigation.navigate('Task');
+      navigation.navigate('task');
     }
   };
 

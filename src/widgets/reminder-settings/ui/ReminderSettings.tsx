@@ -40,13 +40,13 @@ export const ReminderSettings = () => {
       </CustomText>
       <Setting
         type="value"
-        onPress={() => navigation.navigate('Count')}
+        onPress={() => navigation.navigate('count')}
         value={count}
         title="count"
       />
       <Setting
         type="value"
-        onPress={() => navigation.navigate('Interval')}
+        onPress={() => navigation.navigate('interval')}
         value={intervalStr}
         disabled={count === 1}
         title="interval"
@@ -56,7 +56,7 @@ export const ReminderSettings = () => {
       </CustomText>
       <Setting
         type="value"
-        onPress={() => navigation.navigate('BeginningOfDay')}
+        onPress={() => navigation.navigate('beginningOfDay')}
         value={beginningOfDayStr}
         title="beginningOfDay"
       />
@@ -65,7 +65,7 @@ export const ReminderSettings = () => {
       </CustomText>
       <Setting
         type="value"
-        onPress={() => navigation.navigate('EndOfDay')}
+        onPress={() => navigation.navigate('endOfDay')}
         value={endOfDayStr}
         title="endOfDay"
       />

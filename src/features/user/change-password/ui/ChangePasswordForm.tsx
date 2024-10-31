@@ -72,7 +72,7 @@ export const ChangePasswordForm = () => {
   };
 
   const resetPassword = () => {
-    navigation.navigate('PasswordReset');
+    navigation.navigate('passwordReset');
   };
 
   return (

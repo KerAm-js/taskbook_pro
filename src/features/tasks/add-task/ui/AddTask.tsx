@@ -37,7 +37,7 @@ export const AddTask = () => {
     if (fastInputMode) {
       addEmptyTask();
     } else {
-      navigation.navigate('Task');
+      navigation.navigate('task');
     }
   };
 

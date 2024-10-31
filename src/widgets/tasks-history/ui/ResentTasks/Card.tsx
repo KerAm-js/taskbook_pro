@@ -26,7 +26,7 @@ export const Card: FC<TPropTypes> = React.memo(({id, remove}) => {
 
   const onPress = () => {
     setTaskToUpdateId(id);
-    navigation.navigate('Task');
+    navigation.navigate('task');
   };
 
   useEffect(() => {

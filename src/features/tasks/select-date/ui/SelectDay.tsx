@@ -27,8 +27,7 @@ export const SelectDay: FC<TPropTypes> = React.memo(
     const {colors} = useThemeColors();
     const isExpired = Date.now() > day;
 
-    const textColor = isSelected ? colors.accent : COLORS.white;
-    // const textColor = COLORS.white
+    const textColor = isSelected ? colors.header : COLORS.white;
 
     return (
       <Pressable

@@ -217,9 +217,14 @@ export const TaskForm = () => {
     }
   }, [taskToEdit.title]);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: id && taskToEdit ? 'editing' : 'newTask'
+    })
+  }, [])
+
   return (
     <>
-      <Header modalHeader title={id ? 'editing' : 'newTask'} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contianer}>

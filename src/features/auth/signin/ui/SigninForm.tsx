@@ -47,7 +47,7 @@ export const SigninForm = () => {
   const isFocused = useIsFocused();
 
   const goToRegistration = () => {
-    navigation.push('Signup');
+    navigation.push('signup');
   };
 
   const onSubmit = async () => {
@@ -57,7 +57,7 @@ export const SigninForm = () => {
   const isFormValid = isEmailValid && isPasswordValid;
 
   const goToPasswordReset = () => {
-    navigation.navigate('PasswordReset');
+    navigation.navigate('passwordReset');
   };
 
   useEffect(() => {
