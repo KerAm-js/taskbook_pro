@@ -10,15 +10,8 @@ import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
-import SplashScreen from 'react-native-splash-screen';
 
 function App(): React.JSX.Element {
-  useEffect(() => {
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 100);
-  }, []);
-
   return (
     <GestureHandlerRootView>
       <KeyboardProvider>

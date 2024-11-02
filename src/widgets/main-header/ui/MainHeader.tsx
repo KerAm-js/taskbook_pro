@@ -7,18 +7,18 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import ProgressBar from './components/ProgressBar';
+import ProgressBar from './ProgressBar';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import NavBar from './components/NavBar';
+import NavBar from './NavBar';
 import {
   HEADER_SHADOW,
   ThemedGradient,
   ThemedView,
   useSafeAreaPadding,
 } from '@/shared';
-import Calendar from './components/Calendar';
+import Calendar from './Calendar/Calendar';
 import {MAX_H, MIN_H} from '../config/headerHeight';
-import {Title} from './components/Title';
+import {Title} from './Calendar/Title';
 import {KeyboardBackdrop} from '@/features/keyboard-backdrop';
 
 const springAnimationConfig = {

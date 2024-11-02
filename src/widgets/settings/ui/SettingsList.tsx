@@ -21,7 +21,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {useFastInputMode, useSettingsActions} from '@/entities/settings';
 import {likeSvg} from '@/shared/assets/svg/like';
 import {TaskbookForever} from './UnlockTaskbook';
 import {archieveSvg} from '@/shared/assets/svg/archieve';
@@ -29,6 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SettingsFooter} from './Footer';
 import {UserInfo} from './UserInfo';
+import {useFastInputMode, useSettingsActions} from '@/entities/settings';
 
 export const SettingsList = () => {
   const navigation =

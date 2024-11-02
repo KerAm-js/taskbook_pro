@@ -31,7 +31,7 @@ type TToBackgroundProps = {
 
 export const toBackground = ({ opacity, translationY }: TToBackgroundProps) => {
   "worklet";
-  opacity.value = withTiming(0.3);
+  opacity.value = withTiming(0.1);
   translationY.value = withTiming(0);
 };
 

@@ -1,6 +1,6 @@
 import {useUser} from '@/entities/user';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import { AppStack } from './Navigators/AppStack';
+import {AppStack} from './Navigators/AppStack';
 import {AuthStack} from './Navigators/AuthStack';
 import {RootStackParamsList, useFirebase} from '@/shared';
 import {NavigationContainer} from '@react-navigation/native';
@@ -10,6 +10,7 @@ import {useBackupInfo, useSettingsActions} from '@/entities/settings';
 import {store} from '../store';
 import {Backup} from '@/features/settings/backup';
 import {useTaskActions} from '@/entities/task';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -62,6 +63,10 @@ export const Navigator = () => {
     };
 
     const subscription = AppState.addEventListener('change', onAppStateChange);
+
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 200);
 
     return () => {
       subscription.remove();

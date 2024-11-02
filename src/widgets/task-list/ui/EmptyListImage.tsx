@@ -1,5 +1,6 @@
 import {emptyTaskListSvg} from '@/shared/assets/svg/emptyTaskList';
-import {useHeaderHeight, useThemeColors} from '@/shared';
+import {useHeaderHeight} from '@react-navigation/elements';
+import {useThemeColors} from '@/shared';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
 import {SvgXml} from 'react-native-svg';

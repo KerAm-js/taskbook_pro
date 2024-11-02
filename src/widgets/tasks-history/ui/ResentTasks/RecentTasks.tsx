@@ -1,10 +1,4 @@
-import {
-  ActivityIndicator,
-  Dimensions,
-  ListRenderItemInfo,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {Dimensions, ListRenderItemInfo, StyleSheet, View} from 'react-native';
 import React, {
   FC,
   SetStateAction,
@@ -59,7 +53,7 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
   const [filtered, setFiltered] = useState<Array<TListItem>>([]);
   const isInitialRender = useRef(true);
   const headerHeight = useHeaderHeight();
-  const {height} = useReanimatedKeyboardAnimation();
+  const {height: keyboardHeight} = useReanimatedKeyboardAnimation();
   const paddingTop = useSharedValue(0);
 
   const removeTaskFromList = useCallback((id: number) => {
@@ -99,11 +93,13 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
   }, [paddingTop.value]);
 
   useAnimatedReaction(
-    () => height.value,
+    () => keyboardHeight.value,
     curr => {
       if (curr !== 0) {
         paddingTop.value = withTiming(
-          (HEIGHT - headerHeight - -height.value) / 2 - ICON_SIZE / 2 - 20,
+          (HEIGHT - headerHeight - -keyboardHeight.value) / 2 -
+            ICON_SIZE / 2 -
+            20,
           animationConfig,
         );
       } else {
@@ -140,7 +136,7 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
 
   const ListEmptyComponent =
     (isSearching && (
-      //enterinig doesn't work with ?/: conditions, i don't know why
+      //enterinig doesn't work with ?/: conditions
       <Animated.View
         entering={FadeIn.duration(300)}
         exiting={FadeOut.duration(150)}>
@@ -183,7 +179,7 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
         data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        windowSize={13}
+        windowSize={11}
         ListEmptyComponent={ListEmptyComponent}
       />
       {isSearching && (

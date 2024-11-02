@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useMemo, useRef} from 'react';
 import {PADDING_TOP, SCREEN_PADDING} from '@/shared';
 import {EmptyListImage} from './EmptyListImage';
 import {useSelectedDate, useTaskIds} from '@/entities/task';
-import {ListItem} from './ListItem';
+import {Card} from './Card';
 import Animated, {LinearTransition} from 'react-native-reanimated';
 
 const keyExtractor = (item: number) => item.toString();
@@ -13,7 +13,6 @@ export const TaskList = () => {
   const selectedDate = useSelectedDate();
   const prevDate = useRef<null | number>(null);
   const isInitialRender = useRef(true);
-  const isScreenRender = useRef(true);
 
   useMemo(() => {
     if (!prevDate.current) {
@@ -28,15 +27,9 @@ export const TaskList = () => {
     }
   }, [taskIds, selectedDate]);
 
-  useEffect(() => {
-    isScreenRender.current = false;
-  }, []);
-
   const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<number>) => {
-      return (
-        <ListItem isInitialRender={isInitialRender} index={index} id={item} />
-      );
+      return <Card isInitialRender={isInitialRender} index={index} id={item} />;
     },
     [],
   );
@@ -47,15 +40,18 @@ export const TaskList = () => {
       itemLayoutAnimation={
         isInitialRender.current ? undefined : LinearTransition
       }
-      // maxToRenderPerBatch={isScreenRender.current ? 10 : 1}
       maxToRenderPerBatch={1}
-      windowSize={13}
+      initialNumToRender={12}
+      windowSize={11}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
       data={taskIds[selectedDate]}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       ListEmptyComponent={EmptyListImage}
+      onScroll={() => {
+        isInitialRender.current = false;
+      }}
     />
   );
 };
@@ -63,7 +59,7 @@ export const TaskList = () => {
 const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: PADDING_TOP,
-    paddingBottom: 200,
+    paddingBottom: 100,
     paddingHorizontal: SCREEN_PADDING,
   },
   scroll: {

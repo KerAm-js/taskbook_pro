@@ -1,18 +1,16 @@
 import {COLORS, TColorName, useThemeColors} from '@/shared';
 import React, {FC, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Animated, {
-  Easing,
+  FadeIn,
+  FadeOut,
   runOnJS,
   SharedValue,
   useAnimatedReaction,
-  useAnimatedStyle,
-  withTiming,
 } from 'react-native-reanimated';
 import {SvgXml} from 'react-native-svg';
 
 type TPropTypes = {
-  translationX: SharedValue<number>;
   isOverDragged: SharedValue<boolean>;
   xmlGetter: (color: string) => string;
   colorName?: TColorName;
@@ -20,10 +18,7 @@ type TPropTypes = {
   side?: 'left' | 'right';
 };
 
-const easing = Easing.out(Easing.quad);
-
 export const AnimatedIcon: FC<TPropTypes> = ({
-  translationX,
   isOverDragged,
   xmlGetter,
   colorName,
@@ -33,25 +28,13 @@ export const AnimatedIcon: FC<TPropTypes> = ({
   const {colors} = useThemeColors();
   const [visible, setVisible] = useState(false); //performance optimization
 
-  const mainIconStyleAnim = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(isOverDragged.value ? 1 : 0, {
-        duration: 150,
-        easing,
-      }),
-    };
-  }, [isOverDragged.value]);
-
   useAnimatedReaction(
-    () => translationX.value,
+    () => isOverDragged.value,
     (curr, _) => {
-      const isDragged = side === 'right' ? curr > 0 : curr < 0;
-      if (isDragged) {
-        runOnJS(setVisible)(false);
-      } else if (curr === 0) {
-        runOnJS(setVisible)(false);
-      } else {
+      if (curr) {
         runOnJS(setVisible)(true);
+      } else {
+        runOnJS(setVisible)(false);
       }
     },
   );
@@ -61,20 +44,20 @@ export const AnimatedIcon: FC<TPropTypes> = ({
   }
 
   return (
-    <View style={[styles.container, {[side]: 0}]}>
-      <Animated.View
-        style={[
-          styles.iconContainer,
-          mainIconStyleAnim,
-          side === 'right' && styles.rightIconContainer,
-        ]}>
-        <SvgXml
-          width={26}
-          height={26}
-          xml={xmlGetter(colorName ? colors[colorName] : COLORS[color])}
-        />
-      </Animated.View>
-    </View>
+    <Animated.View
+      entering={FadeIn}
+      exiting={FadeOut}
+      style={[
+        styles.container,
+        {[side]: 0},
+        side === 'right' && styles.rightContainer,
+      ]}>
+      <SvgXml
+        width={26}
+        height={26}
+        xml={xmlGetter(colorName ? colors[colorName] : COLORS[color])}
+      />
+    </Animated.View>
   );
 };
 
@@ -84,13 +67,10 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 100,
     zIndex: -1,
-  },
-  iconContainer: {
     justifyContent: 'center',
-    flex: 1,
     paddingLeft: 20,
   },
-  rightIconContainer: {
+  rightContainer: {
     paddingRight: 20,
     alignItems: 'flex-end',
   },

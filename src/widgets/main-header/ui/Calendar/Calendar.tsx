@@ -9,7 +9,7 @@ import {
 } from '@/shared';
 import {SCREEN_PADDING} from '@/shared/config/style/views';
 import {MONTHS, WEEK_DAYS} from '@/shared/config/consts/datetime';
-import {getDateLater} from '@/shared/lib/dates';
+import {getDateLater, getMonth, getYear} from '@/shared/lib/dates';
 import React, {FC, useCallback, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {
@@ -27,6 +27,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import {WeekDays} from './WeekDays';
+import {useSelectedDate} from '@/entities/task';
 
 const WIDTH = Dimensions.get('screen').width;
 
@@ -37,6 +38,7 @@ const Calendar = () => {
   const listRef = useRef<Animated.FlatList<TCalendarWeek> | null>(null);
   const {t} = useTranslation();
   const [weeks, setWeeks] = useState(getCalendarWeeks());
+  const selectedDate = useSelectedDate();
   const [titleData, setTitleData] = useState({
     month: weeks[0].month,
     year: new Date().getFullYear(),
@@ -88,9 +90,23 @@ const Calendar = () => {
     };
   }, [scrollToStartBtnOpacity.value]);
 
+  const isSelectedDateOnCurrentPage = weeks[index.value].days.find(
+    item => item === selectedDate,
+  );
+
+  const titleMonthNumber = isSelectedDateOnCurrentPage
+    ? getMonth(selectedDate)
+    : titleData.month;
+
+  const titleYear = isSelectedDateOnCurrentPage
+    ? getYear(selectedDate)
+    : titleData.year;
+
+  const shouldShowYear =
+    titleYear != new Date().getFullYear();
+
   const monthName =
-    t(MONTHS[titleData.month]) +
-    (titleData.year != new Date().getFullYear() ? ' ' + titleData.year : '');
+    t(MONTHS[titleMonthNumber]) + (shouldShowYear ? ' ' + titleYear : '');
 
   const renderItem = useCallback(
     ({item}: ListRenderItemInfo<TCalendarWeek>) => {

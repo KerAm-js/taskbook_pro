@@ -31,42 +31,40 @@ export const AnimatedCheck: FC<TPropTypes> = ({
     };
   }, [isChecked]);
 
-  const containerStyle = {
+  const backgroundStyle = {
     width: size,
     height: size,
     borderColor: greyWhenInactive ? lineGrey : accent_opacity,
     borderRadius: borderRadius || size / 2,
     borderWidth: isChecked ? 0 : 2,
-  };
-
-  const backgroundStyle = {
-    borderRadius: borderRadius || size / 2,
     backgroundColor: isChecked ? accent_opacity : 'rgba(0, 0, 0, 0)',
   };
 
   return (
-    <View style={[containerStyle, styles.container]}>
-      <View style={[backgroundStyle, styles.background]}>
-        <View style={{width: 14, height: 14}}>
-          <Animated.View style={[{overflow: 'hidden'}, containerStyleAnim]}>
-            {isChecked && (
-              <SvgXml xml={checkSvg(accent)} width={14} height={14} />
-            )}
-          </Animated.View>
-        </View>
+    <View style={[backgroundStyle, styles.background]}>
+      <View style={styles.iconContianer}>
+        <Animated.View
+          style={[styles.iconAnimatedContainer, containerStyleAnim]}>
+          {isChecked && (
+            <SvgXml xml={checkSvg(accent)} width={14} height={14} />
+          )}
+        </Animated.View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    borderCurve: 'continuous',
-  },
   background: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderCurve: 'continuous',
+  },
+  iconContianer: {
+    width: 14,
+    height: 14,
+  },
+  iconAnimatedContainer: {
+    overflow: 'hidden',
   },
 });

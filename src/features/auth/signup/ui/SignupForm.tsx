@@ -1,12 +1,12 @@
 import {emailSvg} from '@/shared/assets/svg/email';
 import {shieldSvg} from '@/shared/assets/svg/shield';
+import {useHeaderHeight} from '@react-navigation/elements';
 import {
   EMAIL_REGEX,
   FormButton,
   FormInput,
   SCREEN_PADDING,
   useFirebase,
-  useHeaderHeight,
   useInputValidator,
 } from '@/shared';
 import {Alert, Dimensions, StyleSheet, View} from 'react-native';

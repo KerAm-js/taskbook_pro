@@ -2,7 +2,7 @@ import {FC, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Task} from '../model/types';
 import {TextInput} from 'react-native-gesture-handler';
-import {TEXT_STYLES, ThemedInput} from '@/shared';
+import {TEXT_STYLES, useThemeColors} from '@/shared';
 import {useTranslation} from 'react-i18next';
 import {findAndDeleteTime} from '../lib/findAndDeleteTime';
 import {useTaskActions, useTaskToUpdateId} from '../model/hooks';
@@ -12,6 +12,7 @@ export const TaskInputTitle: FC<{task: Task}> = ({task}) => {
   const {id, title, isTitleEditing} = task;
   const inputRef = useRef<TextInput | null>(null);
   const {t} = useTranslation();
+  const {colors, theme} = useThemeColors();
   const {endTaskTitleEditing, setReminder, deleteTask} = useTaskActions();
   const taskToUpdateId = useTaskToUpdateId();
   const [text, setText] = useState(title);
@@ -54,9 +55,9 @@ export const TaskInputTitle: FC<{task: Task}> = ({task}) => {
   }, [title]);
 
   return (
-    <ThemedInput
-      inputRef={inputRef}
-      style={styles.input}
+    <TextInput
+      ref={inputRef}
+      style={[styles.input, {color: text}]}
       autoCorrect={false}
       multiline
       placeholder={t('enterText')}
@@ -67,6 +68,10 @@ export const TaskInputTitle: FC<{task: Task}> = ({task}) => {
       maxLength={TASK_TITLE_LENGTH}
       scrollEnabled={false}
       blurOnSubmit
+      placeholderTextColor={colors.textGrey}
+      selectionColor={colors.accent}
+      cursorColor={colors.accent}
+      keyboardAppearance={theme === 'night' ? 'dark' : 'light'}
     />
   );
 };

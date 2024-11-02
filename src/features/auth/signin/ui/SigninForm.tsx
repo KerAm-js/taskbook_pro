@@ -1,5 +1,6 @@
 import {emailSvg} from '@/shared/assets/svg/email';
 import {shieldSvg} from '@/shared/assets/svg/shield';
+import {useHeaderHeight} from '@react-navigation/elements';
 import {
   AuthStackParamsList,
   EMAIL_REGEX,
@@ -9,7 +10,6 @@ import {
   SCREEN_PADDING,
   ThemedView,
   useFirebase,
-  useHeaderHeight,
   useInputValidator,
   useSafeAreaPadding,
 } from '@/shared';
