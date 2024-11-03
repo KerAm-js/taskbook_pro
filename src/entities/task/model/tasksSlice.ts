@@ -27,7 +27,11 @@ import {
   rescheduleIfOverdue,
   updateDailyNotification,
   updateDailyNotificationsForDate,
+  generateId,
+  updateRegularTask,
+  updateCommonTask,
 } from './actionHelpers';
+import {getNextRegularTaskDate} from '../lib/getNextRegularTaskDate';
 
 const TODAY = endOfDay();
 const now = new Date();
@@ -168,14 +172,17 @@ export const tasksSlice = createSlice({
     updateTask: (state, action: PayloadAction<Partial<Omit<Task, 'id'>>>) => {
       const id = state.taskToUpdateId;
       if (id) {
-        const {...newData} = action.payload;
-        const task = state.entities[id];
-        const newTask = {...task, ...newData} as Task;
-        if (task.date !== newTask.date) {
-          changeTaskDate(state, task, newTask.date);
+        const prevDateOfTask = state.entities[id].date;
+        if (action.payload.isRegular) {
+          updateRegularTask(state, id, action.payload);
+        } else {
+          updateCommonTask(state, id, action.payload);
         }
-        state.entities[id] = newTask;
-        updateTaskNotifications(state, newTask.id);
+        const task = state.entities[id];
+        if (task.date !== prevDateOfTask) {
+          changeTaskDate(state, task, prevDateOfTask);
+        }
+        updateTaskNotifications(state, task.id);
         clearTaskToUpdate(state);
       }
     },

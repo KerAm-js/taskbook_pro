@@ -1,7 +1,6 @@
 import {
   deleteNotification,
   endOfDay,
-  getDate,
   getTimeValueFromString,
   I18N,
   setNotification,
@@ -298,6 +297,43 @@ export const createTaskCopy = (state: ITasksState, task: Task) => {
   return taskCopy;
 };
 
+export const updateCommonTask = (
+  state: ITasksState,
+  id: Task['id'],
+  newData: Partial<Omit<Task, 'id'>>,
+) => {
+  const task = state.entities[id];
+  const newTask = {...state.entities[id], ...newData} as Task;
+  if (task.isRegular) {
+    newTask.isRegular = false;
+    delete newTask.regularTaskId;
+    delete newTask.repeatingDays;
+    delete newTask.repeatingType;
+  }
+  state.entities[id] = newTask;
+};
+
+export const updateRegularTask = (
+  state: ITasksState,
+  id: Task['id'],
+  newData: Partial<Omit<Task, 'id'>>,
+) => {
+  const task = state.entities[id];
+  const newTask = {...state.entities[id], ...newData} as Task;
+  if (!task.isRegular) {
+    newTask.regularTaskId = generateId(state);
+  }
+  const {repeatingDays, repeatingType} = newTask;
+  if (repeatingDays && repeatingType) {
+    newTask.date = getNextRegularTaskDate({
+      repeatingDays,
+      repeatingType,
+      includeToday: true,
+    });
+  }
+  state.entities[id] = newTask;
+};
+
 export const deleteTaskById = (state: ITasksState, id: Task['id']) => {
   state.ids[state.selectedDate] = state.ids[state.selectedDate].filter(item => {
     if (item === id) {
@@ -329,8 +365,10 @@ export const deleteNextRegularTask = (
 ) => {
   if (task.nextDate) {
     state.ids[task.nextDate] = state.ids[task.nextDate].filter(id => {
-      const {regularTaskId, isCompleted} = state.entities[id];
-      if (regularTaskId === task.regularTaskId && !isCompleted) {
+      const {regularTaskId, isCompleted, isRegular, title} = state.entities[id];
+      console.log(title, regularTaskId);
+      if (isRegular && regularTaskId === task.regularTaskId && !isCompleted) {
+        console.log('yes');
         deleteNotifications(id);
         delete state.entities[id];
         delete task.nextDate;
@@ -360,11 +398,11 @@ export const cacheTask = (
 export const changeTaskDate = (
   state: ITasksState,
   task: Task,
-  newDate: number,
+  prevDate: number,
 ) => {
-  state.ids[task.date] = state.ids[task.date].filter(item => item !== task.id);
-  if (!state.ids[newDate]) state.ids[newDate] = [];
-  state.ids[newDate].unshift(task.id);
+  state.ids[prevDate] = state.ids[prevDate].filter(item => item !== task.id);
+  if (!state.ids[task.date]) state.ids[task.date] = [];
+  state.ids[task.date].unshift(task.id);
 };
 
 export const changeSelectedTasksDate = (

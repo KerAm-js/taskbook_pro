@@ -13,7 +13,6 @@ import {
   getTimeString,
   getTimeValueFromString,
   getWeekDay,
-  Header,
   PADDING_TOP,
   SCREEN_PADDING,
   Setting,
