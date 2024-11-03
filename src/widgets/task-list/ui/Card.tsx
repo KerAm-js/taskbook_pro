@@ -42,6 +42,7 @@ import {
 } from '../lib/taskTransitions';
 import {ToggleTask} from '@/features/tasks/toggle-task';
 import {useFastInputMode} from '@/entities/settings';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 type TPropTypes = Pick<Task, 'id'> & {
   index: number;
@@ -153,7 +154,8 @@ const Component: FC<TPropTypes> = ({id, index, isInitialRender}) => {
 
   const pan = Gesture.Pan()
     .enabled(!isTitleEditing)
-    .minDistance(45)
+    .activeOffsetX([-30, 30])
+    .failOffsetY([-30, 30])
     .onUpdate(event =>
       onPanGestureUpdate(event, {
         keyboardHeight,

@@ -93,6 +93,9 @@ export const rescheduleIfOverdue = (state: ITasksState, id: Task['id']) => {
       item => item !== id,
     );
     state.ids[today].unshift(id);
+    if (state.historyIds[task.date].length === 0) {
+      delete state.historyIds[task.date];
+    }
     task.date = today;
   }
 };
