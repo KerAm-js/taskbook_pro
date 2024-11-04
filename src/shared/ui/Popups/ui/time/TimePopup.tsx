@@ -24,7 +24,8 @@ export const TimePopup: FC<TPropTypes> = ({
   const minuteIndex = Math.ceil(value.minute / 5);
   const minuteInitIndex = minuteIndex === minutes.length ? 0 : minuteIndex;
 
-  const hourIndex = minuteInitIndex === 0 ? value.hour + 1 : value.hour;
+  const hourIndex =
+    minuteIndex === minutes.length ? value.hour + 1 : value.hour;
   const hourInitIndex = hourIndex === hours.length ? 0 : hourIndex;
 
   const hour = useRef(Number(hours[hourInitIndex]));
