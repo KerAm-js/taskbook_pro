@@ -12,7 +12,8 @@ export const TaskList = () => {
   const taskIds = useTaskIds();
   const selectedDate = useSelectedDate();
   const prevDate = useRef<null | number>(null);
-  const isInitialRender = useRef(true);
+  const isInitialRender = useRef(false);
+  const isScreenRender = useRef(true);
 
   useMemo(() => {
     if (!prevDate.current) {
@@ -20,6 +21,7 @@ export const TaskList = () => {
       return;
     }
     if (prevDate.current !== selectedDate) {
+      console.log('ok');
       prevDate.current = selectedDate;
       isInitialRender.current = true;
     } else {
@@ -34,15 +36,19 @@ export const TaskList = () => {
     [],
   );
 
+  useEffect(() => {
+    if (isScreenRender.current) isScreenRender.current = false;
+  }, []);
+
   return (
     <Animated.FlatList
       style={styles.scroll}
       itemLayoutAnimation={
-        isInitialRender.current ? undefined : LinearTransition
+        isScreenRender.current || isInitialRender.current
+          ? undefined
+          : LinearTransition
       }
       maxToRenderPerBatch={1}
-      initialNumToRender={12}
-      windowSize={11}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
       data={taskIds[selectedDate]}

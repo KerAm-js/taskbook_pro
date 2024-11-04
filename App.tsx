@@ -6,8 +6,7 @@
  */
 
 import {Root} from './src/app';
-import React, {useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React from 'react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 
@@ -20,7 +19,5 @@ function App(): React.JSX.Element {
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({});
 
 export default App;

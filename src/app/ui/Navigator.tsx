@@ -2,7 +2,7 @@ import {useUser} from '@/entities/user';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AppStack} from './Navigators/AppStack';
 import {AuthStack} from './Navigators/AuthStack';
-import {RootStackParamsList, useFirebase} from '@/shared';
+import {endOfDay, RootStackParamsList, useFirebase} from '@/shared';
 import {NavigationContainer} from '@react-navigation/native';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
@@ -23,11 +23,22 @@ export const Navigator = () => {
   const backupsCollection = firestore.collection('Backups');
   const {isAutoSync, lastBackup} = useBackupInfo();
   const appState = useRef(AppState.currentState);
+  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const interval = useRef<NodeJS.Timeout | null>(null);
 
-  useLayoutEffect(() => {
-    onAppLoad();
-    setLoading(false);
-  }, []);
+  const setOnDayEndHanlder = () => {
+    timeout.current = setTimeout(() => {
+      onAppLoad();
+      interval.current = setInterval(() => {
+        onAppLoad();
+      }, 86400000);
+    }, endOfDay() - Date.now());
+  };
+
+  const clearOnDayEndHandler = () => {
+    if (timeout.current) clearTimeout(timeout.current);
+    if (interval.current) clearInterval(interval.current);
+  };
 
   useEffect(() => {
     const onAppStateChange = (nextAppState: AppStateStatus) => {
@@ -63,14 +74,21 @@ export const Navigator = () => {
     };
 
     const subscription = AppState.addEventListener('change', onAppStateChange);
+    setOnDayEndHanlder();
 
     setTimeout(() => {
       SplashScreen.hide();
-    }, 200);
+    }, 300);
 
     return () => {
       subscription.remove();
+      clearOnDayEndHandler();
     };
+  }, []);
+
+  useLayoutEffect(() => {
+    onAppLoad();
+    setLoading(false);
   }, []);
 
   const isAuthorized = email && emailVerified;

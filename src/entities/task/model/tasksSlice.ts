@@ -27,14 +27,11 @@ import {
   rescheduleIfOverdue,
   updateDailyNotification,
   updateDailyNotificationsForDate,
-  generateId,
   updateRegularTask,
   updateCommonTask,
 } from './actionHelpers';
-import {getNextRegularTaskDate} from '../lib/getRegularTaskDate';
 
 const TODAY = endOfDay();
-const now = new Date();
 
 const initialState: ITasksState = {
   idCounter: 1,

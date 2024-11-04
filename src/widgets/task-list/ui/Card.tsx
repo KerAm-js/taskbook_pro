@@ -42,7 +42,6 @@ import {
 } from '../lib/taskTransitions';
 import {ToggleTask} from '@/features/tasks/toggle-task';
 import {useFastInputMode} from '@/entities/settings';
-import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 type TPropTypes = Pick<Task, 'id'> & {
   index: number;
@@ -113,7 +112,7 @@ const Component: FC<TPropTypes> = ({id, index, isInitialRender}) => {
         () => {
           setVisible(true);
         },
-        index < 12 ? index * 50 : 600,
+        index < 11 ? index * 40 : 440 + index * 10,
       );
     }
     return () => {
@@ -176,11 +175,12 @@ const Component: FC<TPropTypes> = ({id, index, isInitialRender}) => {
       }),
     );
 
+  const enteringDelay =
+    isInitialRender.current && index < 15 ? index * (60 - index * 4) : 0;
+
   const entering = title
     ? isInitialRender.current && index <= 10
-      ? FadeInDown.withInitialValues({
-          transform: [{translateY: 7}],
-        })
+      ? FadeInDown.delay(enteringDelay).withInitialValues([{translationY: 15}])
       : FadeIn
     : FadeInRight.withInitialValues({
         transform: [{translateX: 30}],

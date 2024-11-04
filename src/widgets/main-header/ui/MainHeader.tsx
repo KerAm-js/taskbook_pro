@@ -27,12 +27,12 @@ const springAnimationConfig = {
   mass: 1,
 };
 
+const TRANSLATE = MAX_H - MIN_H;
+
 export const MainHeader = () => {
   const [isCalendarOpened, setCalendarOpened] = useState<boolean>(false);
   const calendarOpacity = useSharedValue(0);
   const {paddingTop} = useSafeAreaPadding();
-
-  const TRANSLATE = MAX_H - MIN_H;
 
   const calendarTranslate = useSharedValue(isCalendarOpened ? 0 : -TRANSLATE);
 
