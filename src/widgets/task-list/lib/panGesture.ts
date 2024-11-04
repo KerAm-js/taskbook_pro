@@ -79,9 +79,11 @@ export const onPanGestureEnd = ({
     translationX.value = withTiming(-WIDTH, undefined, isFinished => {
       if (isFinished) runOnJS(onDelete)(taskId);
     });
+    isOverdraggedLeft.value = false;
   } else if (isOverdraggedRight.value) {
     translationX.value = withTiming(0);
     runOnJS(onSelect)(taskId);
+    isOverdraggedRight.value = false;
   } else {
     translationX.value = withTiming(0);
   }
