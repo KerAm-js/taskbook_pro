@@ -5,7 +5,7 @@ import {
   I18N,
   setNotification,
 } from '@/shared';
-import {getNextRegularTaskDate} from '../lib/getNextRegularTaskDate';
+import {getNextRegularTaskDate} from '../lib/getRegularTaskDate';
 import {
   CommonTask,
   CommonTaskDto,
@@ -240,7 +240,8 @@ export const createRegularTask = (state: ITasksState, dto: RegularTaskDto) => {
   const date = getNextRegularTaskDate({
     repeatingDays,
     repeatingType,
-    includeToday: true,
+    isFirstDate: true,
+    defaultBaseDate: state.selectedDate,
   });
   const task: RegularTask = {
     ...dto,
@@ -275,7 +276,7 @@ export const createNextRegularTask = (
   const date = getNextRegularTaskDate({
     repeatingDays,
     repeatingType,
-    startDate: prevTask.date,
+    defaultBaseDate: prevTask.date,
   });
   const nextTask: Task = {
     ...prevTask,
@@ -331,7 +332,8 @@ export const updateRegularTask = (
     newTask.date = getNextRegularTaskDate({
       repeatingDays,
       repeatingType,
-      includeToday: true,
+      isFirstDate: true,
+      defaultBaseDate: task.date,
     });
   }
   state.entities[id] = newTask;
@@ -369,9 +371,7 @@ export const deleteNextRegularTask = (
   if (task.nextDate) {
     state.ids[task.nextDate] = state.ids[task.nextDate].filter(id => {
       const {regularTaskId, isCompleted, isRegular, title} = state.entities[id];
-      console.log(title, regularTaskId);
       if (isRegular && regularTaskId === task.regularTaskId && !isCompleted) {
-        console.log('yes');
         deleteNotifications(id);
         delete state.entities[id];
         delete task.nextDate;

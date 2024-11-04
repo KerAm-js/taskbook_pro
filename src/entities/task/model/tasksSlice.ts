@@ -31,7 +31,7 @@ import {
   updateRegularTask,
   updateCommonTask,
 } from './actionHelpers';
-import {getNextRegularTaskDate} from '../lib/getNextRegularTaskDate';
+import {getNextRegularTaskDate} from '../lib/getRegularTaskDate';
 
 const TODAY = endOfDay();
 const now = new Date();
