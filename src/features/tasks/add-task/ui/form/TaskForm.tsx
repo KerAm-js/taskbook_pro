@@ -11,7 +11,6 @@ import {
   getDateTitle,
   getTime,
   getTimeString,
-  getTimeValueFromString,
   getWeekDay,
   PADDING_TOP,
   SCREEN_PADDING,
@@ -73,7 +72,7 @@ export const TaskForm = () => {
     id ? taskToEdit.isRegular : false,
   );
   const {minute, hour} = taskToEdit.remindTime
-    ? getTimeValueFromString(taskToEdit.remindTime)
+    ? taskToEdit.remindTime
     : getTime(Date.now());
 
   const initRemindTime = {
@@ -159,7 +158,6 @@ export const TaskForm = () => {
     taskToEdit && taskToEdit.isRegular && taskToEdit.isCompleted;
 
   const onSubmit = () => {
-    const remindTimeValue = remindTime ? getTimeString(remindTime) : undefined;
     let taskData: TaskDto;
     if (isRegular) {
       let newTaskRepeatDays = [];
@@ -171,7 +169,7 @@ export const TaskForm = () => {
       taskData = {
         title,
         note,
-        remindTime: remindTimeValue,
+        remindTime,
         date,
         isRegular: true,
         repeatingType,
@@ -181,7 +179,7 @@ export const TaskForm = () => {
       taskData = {
         title,
         note,
-        remindTime: remindTimeValue,
+        remindTime,
         date,
         isRegular: false,
       };
@@ -218,9 +216,9 @@ export const TaskForm = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: id && taskToEdit ? 'editing' : 'newTask'
-    })
-  }, [])
+      title: id && taskToEdit ? 'editing' : 'newTask',
+    });
+  }, []);
 
   return (
     <>

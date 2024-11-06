@@ -17,7 +17,6 @@ import {
   changeTaskDate,
   deleteNextRegularTask,
   cacheTask,
-  setTaskReminder,
   changeSelectedTasksDate,
   updateTaskNotifications,
   deleteTaskNotifications,
@@ -29,6 +28,7 @@ import {
   updateDailyNotificationsForDate,
   updateRegularTask,
   updateCommonTask,
+  sortTasksByReminder,
 } from './actionHelpers';
 
 const TODAY = endOfDay();
@@ -64,6 +64,7 @@ export const tasksSlice = createSlice({
     onAppLoad: state => {
       setStateDefault(state);
       rescheduleOverdueTasks(state);
+      sortTasksByReminder(state, state.selectedDate);
     },
 
     setDataFromBackup: (
@@ -78,10 +79,12 @@ export const tasksSlice = createSlice({
       state.ids = ids;
       state.entities = entities;
       state.historyIds = historyIds;
+      state.selectedDate = endOfDay();
       if (!state.ids[state.selectedDate]) {
         state.ids[state.selectedDate] = [];
       }
       rescheduleOverdueTasks(state);
+      sortTasksByReminder(state, state.selectedDate);
       for (let item in state.ids) {
         const date = Number(item);
         updateDailyNotification(state, 'beginning', date);
@@ -103,6 +106,7 @@ export const tasksSlice = createSlice({
         newTask = createCommonTask(state, action.payload);
       }
       addTaskToState(state, newTask);
+      sortTasksByReminder(state, newTask.date);
       updateTaskNotifications(state, newTask.id);
       updateDailyNotificationsForDate(state);
     },
@@ -158,7 +162,7 @@ export const tasksSlice = createSlice({
     ) => {
       const {id, time} = action.payload;
       if (state.entities[id]) {
-        setTaskReminder(state, id, time);
+        state.entities[id].remindTime = time;
       }
     },
 
@@ -170,6 +174,9 @@ export const tasksSlice = createSlice({
       const id = state.taskToUpdateId;
       if (id) {
         const prevDateOfTask = state.entities[id].date;
+        const prevRemindTime = state.entities[id].remindTime
+          ? {...state.entities[id].remindTime}
+          : undefined;
         if (action.payload.isRegular) {
           updateRegularTask(state, id, action.payload);
         } else {
@@ -178,6 +185,13 @@ export const tasksSlice = createSlice({
         const task = state.entities[id];
         if (task.date !== prevDateOfTask) {
           changeTaskDate(state, task, prevDateOfTask);
+        }
+        if (
+          task.date !== prevDateOfTask ||
+          prevRemindTime?.hour !== task.remindTime?.hour ||
+          prevRemindTime?.minute !== task.remindTime?.minute
+        ) {
+          sortTasksByReminder(state, task.date);
         }
         updateTaskNotifications(state, task.id);
         clearTaskToUpdate(state);
@@ -206,6 +220,7 @@ export const tasksSlice = createSlice({
       } else {
         task.isTitleEditing = false;
       }
+      sortTasksByReminder(state, state.entities[id].date);
     },
 
     continueTaskEditingWithTaskForm: state => {
@@ -267,6 +282,7 @@ export const tasksSlice = createSlice({
       stopSelection(state);
       updateDailyNotificationsForDate(state);
       updateDailyNotificationsForDate(state, action.payload);
+      sortTasksByReminder(state, action.payload);
     },
 
     copySelectedTasks: state => {
@@ -283,6 +299,7 @@ export const tasksSlice = createSlice({
       stopSelection(state);
       copies.forEach(task => addTaskToState(state, task));
       updateDailyNotificationsForDate(state);
+      sortTasksByReminder(state, state.selectedDate);
     },
 
     undo: state => {

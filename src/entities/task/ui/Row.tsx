@@ -14,6 +14,7 @@ import {noteSvg} from '@/shared/assets/svg/note';
 import {TaskInputTitle} from './InputTitle';
 import {useTaskData} from '../model/hooks';
 import {TaskTitle} from './Title';
+import {getTimeString} from '@/shared';
 
 type TPropTypes = {
   id: Task['id'];
@@ -43,7 +44,10 @@ export const TaskRow: FC<TPropTypes> = ({
       {withInput ? <TaskInputTitle task={task} /> : <TaskTitle task={task} />}
       <View style={styles.infoContainer}>
         {remindTime && (
-          <TaskInfo xmlGetter={bellOutlineSvg} title={remindTime} />
+          <TaskInfo
+            xmlGetter={bellOutlineSvg}
+            title={getTimeString(remindTime)}
+          />
         )}
         {isRegular && (
           <TaskInfo

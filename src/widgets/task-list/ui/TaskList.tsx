@@ -55,9 +55,6 @@ export const TaskList = () => {
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       ListEmptyComponent={EmptyListImage}
-      onScroll={() => {
-        isInitialRender.current = false;
-      }}
     />
   );
 };

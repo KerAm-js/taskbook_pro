@@ -1,7 +1,9 @@
+import { TTimeValue } from "@/shared";
+
 type BaseTaskDto = {
   title: string;
   note?: string;
-  remindTime?: string;
+  remindTime?: TTimeValue;
   date: number;
   isRegular: boolean;
 };

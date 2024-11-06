@@ -32,7 +32,10 @@ export const TaskInputTitle: FC<{task: Task}> = ({task}) => {
     if (hour && minute) {
       setReminder({
         id,
-        time: hour + ':' + minute,
+        time: {
+          hour: Number(hour),
+          minute: Number(minute),
+        },
       });
       setText(newText);
     }

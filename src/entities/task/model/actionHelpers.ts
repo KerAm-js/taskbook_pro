@@ -31,6 +31,28 @@ const generateNotificationIds = (taskId: Task['id'], count: number) => {
   return result;
 };
 
+export const sortTasksByReminder = (state: ITasksState, date: number) => {
+  const ids = state.ids[date];
+  ids.sort((first, second) => {
+    const fRemindTime = state.entities[first].remindTime;
+    const sRemindTime = state.entities[second].remindTime;
+
+    if (fRemindTime && sRemindTime) {
+      if (fRemindTime.hour !== sRemindTime.hour) {
+        return fRemindTime.hour - sRemindTime.hour;
+      } else {
+        return fRemindTime.minute - sRemindTime.minute;
+      }
+    } else if (fRemindTime && !sRemindTime) {
+      return -1;
+    } else if (!fRemindTime && sRemindTime) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+};
+
 export const updateDailyNotification = (
   state: ITasksState,
   type: keyof ITasksState['reminderSettings']['dailyReminder'],
@@ -141,12 +163,11 @@ export const updateTaskNotifications = (state: ITasksState, id: Task['id']) => {
     task.notificationIds = generateNotificationIds(id, count);
   }
   if (remindTime && !isCompleted) {
-    const time = getTimeValueFromString(remindTime);
     const now = Date.now();
     task.notificationIds.forEach((notificationId, i) => {
       const notificationDate = new Date(date).setHours(
-        time.hour,
-        time.minute + i * interval,
+        remindTime.hour,
+        remindTime.minute + i * interval,
         0,
         0,
       );
@@ -427,12 +448,4 @@ export const changeSelectedTasksDate = (
   });
   if (!ids[newDate]) ids[newDate] = [];
   ids[newDate] = [...selectedIds, ...ids[newDate]];
-};
-
-export const setTaskReminder = (
-  state: ITasksState,
-  id: Task['id'],
-  time: Task['remindTime'],
-) => {
-  state.entities[id].remindTime = time;
 };

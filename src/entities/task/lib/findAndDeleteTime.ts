@@ -1,7 +1,7 @@
-import { TIME_IN_TASK_REGEX } from "../consts/regex";
+import {TIME_IN_TASK_REGEX} from '../consts/regex';
 
 export const findAndDeleteTime = (
-  value: string
+  value: string,
 ): {
   newText: string;
   hour?: string;
@@ -20,7 +20,7 @@ export const findAndDeleteTime = (
   const timeStr = TIME_IN_TASK_REGEX.exec(strToCheck);
 
   if (timeStr) {
-    [hour, minute] = timeStr[0].trim().split(":");
+    [hour, minute] = timeStr[0].trim().split(':');
     if (value.length === 5) {
       newText = value.slice(5);
     } else if (value.length === 6) {
