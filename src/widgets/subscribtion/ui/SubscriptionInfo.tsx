@@ -18,23 +18,26 @@ import {
 import {Slider} from './Slider';
 import {useSubscriptionRates} from '../api/subscription.api';
 import {useTranslation} from 'react-i18next';
-import {useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {useUserActions} from '@/entities/user';
 
 export const SubscriptionInfo = () => {
   const {t} = useTranslation();
-  const navigation = useNavigation();
+  const {setSubscriptionRate} = useUserActions();
   const {paddingBottom} = useSafeAreaPadding();
   const [rate, setRate] = useState(0);
   const [rates, isRatesLoading, error] = useSubscriptionRates();
 
   const onSelectRate = (id: number) => setRate(id);
 
+  const continueWithSelectedRate = () => {
+    const selectedRate = rates?.find(item => item.id === rate);
+    if (selectedRate) setSubscriptionRate(selectedRate);
+  };
+
   useEffect(() => {
     if (error) {
-      Alert.alert(t(error.title), t(error.message), [
-        {onPress: () => navigation.goBack()},
-      ]);
+      Alert.alert(t(error.title), t(error.message));
     }
   }, [error]);
 
@@ -68,8 +71,12 @@ export const SubscriptionInfo = () => {
         colorName="background"
         borderColorName="lineGrey"
         style={[styles.footer, {paddingBottom: paddingBottom + 30}]}>
-        <FormButton type="accent" title="continue" onPress={() => {}} />
-        <FormButton type="secondary" title="tryForFree" onPress={() => {}} />
+        <FormButton
+          type="accent"
+          title="continue"
+          onPress={continueWithSelectedRate}
+        />
+        {/* <FormButton type="secondary" title="tryForFree" onPress={() => {}} /> */}
       </ThemedView>
     </View>
   );
@@ -79,7 +86,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scroll: {flex: 1},
+  scroll: {
+    flex: 1,
+  },
   content: {
     paddingHorizontal: SCREEN_PADDING,
     paddingBottom: 100,

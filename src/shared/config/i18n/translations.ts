@@ -210,8 +210,10 @@ export const TRANSLATIONS = {
       oneTimePayment: 'Разовый платёж',
       unlimitedPrice: '{{price}} ₽/навсегда',
       version: 'Версия {{version}}',
-      unlockTaskbook: "Разблокировать Taskbook",
-      amirKerimovCopyright: "© Амир Керимов"
+      unlockTaskbook: 'Разблокировать Taskbook',
+      amirKerimovCopyright: '© Амир Керимов',
+      guest: 'гость',
+      youDontHaveAccount: 'У вас нет аккаунта',
     },
   },
   en: {
@@ -417,8 +419,10 @@ export const TRANSLATIONS = {
       oneTimePayment: 'One-time payment',
       unlimitedPrice: '{{price}} ₽/forever',
       version: 'Version {{version}}',
-      unlockTaskbook: "Unlock Taskbook",
-      amirKerimovCopyright: "© Amir Kerimov"
+      unlockTaskbook: 'Unlock Taskbook',
+      amirKerimovCopyright: '© Amir Kerimov',
+      guest: 'guest',
+      youDontHaveAccount: "You don't have an account",
     },
   },
 };

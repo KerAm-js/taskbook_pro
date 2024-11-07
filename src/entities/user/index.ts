@@ -3,4 +3,4 @@ export {checkCanUpdate, getNewUpdatedAt} from './lib/checkCanUpdate';
 export {UserCard} from './ui/Card';
 export {useUser, useUserActions} from './model/hooks';
 export {userSlice} from './model/userSlice';
-export type {User, UserUpdates, IUserState, TUserUpdates, TApiMessage} from './model/types';
+export type {User, UserUpdates, IUserState, TUserUpdates, TApiMessage, Rate} from './model/types';

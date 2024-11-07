@@ -14,7 +14,7 @@ export const CreateBackup: FC<TPropTypes> = ({
   isSynchronized,
   onSynchronize,
 }) => {
-  const {uid, email} = useUser();
+  const {data: user} = useUser();
   const {firestore} = useFirebase();
   const {t} = useTranslation();
   const {idCounter, ids, entities, historyIds} = useTasksState();
@@ -22,17 +22,18 @@ export const CreateBackup: FC<TPropTypes> = ({
   const [loading, setLoading] = useState(false);
 
   const createBackup = async () => {
+    if (!user) return;
     setLoading(true);
     try {
-      await backupsCollection.doc(uid).set({
+      await backupsCollection.doc(user.uid).set({
         idCounter,
         ids,
         entities,
         historyIds,
-        currentEmail: email,
+        currentEmail: user.email,
         createdAt: Date.now(),
       });
-      const response = await backupsCollection.doc(uid).get();
+      const response = await backupsCollection.doc(user.uid).get();
       if (response) {
         onSynchronize();
         Alert.alert(t('success'), t('backupSaved'));

@@ -1,5 +1,6 @@
 import {useUser} from '@/entities/user';
 import {
+  AppStackParamsList,
   SCREEN_PADDING,
   TEXT_STYLES,
   ThemedIcon,
@@ -8,37 +9,57 @@ import {
   ThemedView,
 } from '@/shared';
 import {penFillSvg} from '@/shared/assets/svg/penFill';
+import {userPlusFilledSvg} from '@/shared/assets/svg/userPlusFilled';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {FC} from 'react';
+import {useTranslation} from 'react-i18next';
 import {StyleSheet, View} from 'react-native';
 
-type TPropTypes = {
-  onPress: () => void;
-};
+export const UserInfo: FC = () => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
+  const {t} = useTranslation();
+  const {data: user} = useUser();
 
-export const UserInfo: FC<TPropTypes> = ({onPress}) => {
-  const {email, name} = useUser();
+  const isUserAuthorized = user?.email && user?.emailVerified;
+  const title = isUserAuthorized ? user.name : '#' + t('guest');
+  const subTitle = isUserAuthorized ? user.email : t('youDontHaveAccount');
+
+  const goToAccount = () => {
+    navigation.navigate('account');
+  };
+
+  const goSignIn = () => {
+    navigation.navigate('signin');
+  };
+
   return (
     <ThemedView
       colorName="background"
       borderColorName="lineGrey"
       style={styles.container}>
       <View>
-        <ThemedText style={styles.name}>{name}</ThemedText>
+        <ThemedText style={styles.name}>{title}</ThemedText>
         <ThemedText colorName="textGrey" style={styles.email}>
-          {email}
+          {subTitle}
         </ThemedText>
       </View>
       <ThemedPressable
         style={styles.button}
         colorName="accent_ultra_opacity"
-        onPress={onPress}
+        onPress={isUserAuthorized ? goToAccount : goSignIn}
         hitSlop={10}>
-        <ThemedIcon
-          colorName="accent"
-          width={16}
-          height={16}
-          xmlGetter={penFillSvg}
-        />
+        {isUserAuthorized ? (
+          <ThemedIcon
+            colorName="accent"
+            width={16}
+            height={16}
+            xmlGetter={penFillSvg}
+          />
+        ) : (
+          <ThemedIcon colorName="accent" xmlGetter={userPlusFilledSvg} />
+        )}
       </ThemedPressable>
     </ThemedView>
   );

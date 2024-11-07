@@ -1,4 +1,4 @@
-import {useUser} from '@/entities/user';
+import {useUser, useUserActions} from '@/entities/user';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AppStack} from './Navigators/AppStack';
 import {AuthStack} from './Navigators/AuthStack';
@@ -11,17 +11,19 @@ import {store} from '../store';
 import {Backup} from '@/features/settings/backup';
 import {useTaskActions} from '@/entities/task';
 import SplashScreen from 'react-native-splash-screen';
+import {TRIAL_PERIOD_IN_MILLIS_SECONDS} from '../config/consts';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
 export const Navigator = () => {
   const [loading, setLoading] = useState(true);
   const {firestore} = useFirebase();
+  const {data: user, subscription} = useUser();
   const {onAppLoad} = useTaskActions();
-  const {email, emailVerified, uid} = useUser();
+  const {endTrialPeriod} = useUserActions();
   const {setLastBackup} = useSettingsActions();
-  const backupsCollection = firestore.collection('Backups');
   const {isAutoSync, lastBackup} = useBackupInfo();
+  const backupsCollection = firestore.collection('Backups');
   const appState = useRef(AppState.currentState);
   const timeout = useRef<NodeJS.Timeout | null>(null);
   const interval = useRef<NodeJS.Timeout | null>(null);
@@ -40,45 +42,59 @@ export const Navigator = () => {
     if (interval.current) clearInterval(interval.current);
   };
 
-  useEffect(() => {
-    const onAppStateChange = (nextAppState: AppStateStatus) => {
-      if (
-        appState.current === 'active' &&
-        nextAppState === 'inactive' &&
-        isAutoSync
-      ) {
-        const timestamp = Date.now();
-        const shouldSync = lastBackup ? timestamp - lastBackup >= 180000 : true;
-        if (shouldSync) {
-          const {idCounter, ids, entities, historyIds} = store.getState().tasks;
-          const backup: Omit<Backup, 'currentEmail'> = {
-            idCounter,
-            ids,
-            entities,
-            historyIds,
-            createdAt: Date.now(),
-          };
-
-          backupsCollection
-            .doc(uid)
-            .set(backup)
-            .then(() => {
-              setLastBackup(timestamp);
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        }
+  const checkTrialPeriod = () => {
+    if (!subscription.isTrialPeriodExpired) {
+      const timeUntilTrialPeriodEnd =
+        Date.now() - subscription.trialPeriodStartDate;
+      if (timeUntilTrialPeriodEnd <= TRIAL_PERIOD_IN_MILLIS_SECONDS) {
+        endTrialPeriod();
+      } else {
+        setTimeout(() => {
+          endTrialPeriod();
+        }, timeUntilTrialPeriodEnd);
       }
-      appState.current = nextAppState;
-    };
+    }
+  };
 
+  const onAppStateChange = (nextAppState: AppStateStatus) => {
+    if (
+      user &&
+      appState.current === 'active' &&
+      nextAppState === 'inactive' &&
+      isAutoSync
+    ) {
+      const timestamp = Date.now();
+      const shouldSync = lastBackup ? timestamp - lastBackup >= 180000 : true;
+      if (shouldSync) {
+        const {idCounter, ids, entities, historyIds} = store.getState().tasks;
+        const backup: Omit<Backup, 'currentEmail'> = {
+          idCounter,
+          ids,
+          entities,
+          historyIds,
+          createdAt: Date.now(),
+        };
+
+        backupsCollection
+          .doc(user.uid)
+          .set(backup)
+          .then(() => {
+            setLastBackup(timestamp);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    }
+    appState.current = nextAppState;
+  };
+
+  useEffect(() => {
     const subscription = AppState.addEventListener('change', onAppStateChange);
     setOnDayEndHanlder();
-
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 300);
+    onAppLoad();
+    checkTrialPeriod();
+    setLoading(false);
 
     return () => {
       subscription.remove();
@@ -86,14 +102,17 @@ export const Navigator = () => {
     };
   }, []);
 
-  useLayoutEffect(() => {
-    onAppLoad();
-    setLoading(false);
-  }, []);
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        SplashScreen.hide();
+      }, 200);
+    }
+  }, [loading]);
 
-  const isAuthorized = email && emailVerified;
+  const isAuthorized = user?.email && user?.emailVerified;
 
-  if (isAuthorized && loading) {
+  if (loading) {
     return null;
   }
 
@@ -102,7 +121,7 @@ export const Navigator = () => {
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName="auth">
-        {isAuthorized ? (
+        {isAuthorized || !subscription.isTrialPeriodExpired ? (
           <Stack.Screen name="app" component={AppStack} />
         ) : (
           <Stack.Screen name="auth" component={AuthStack} />

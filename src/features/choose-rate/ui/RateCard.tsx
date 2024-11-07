@@ -1,3 +1,4 @@
+import { Rate } from '@/entities/user';
 import {
   AnimatedCheck,
   COLORS,
@@ -12,18 +13,10 @@ import {useTranslation} from 'react-i18next';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 
-export type TRate = {
-  id: number;
-  title: string;
-  type: 'monthly' | 'yearly' | 'unlimited';
-  price: number;
-  discount?: number;
-};
-
 type TPropTypes = {
-  data: TRate;
+  data: Rate;
   isSelected: boolean;
-  onPress: (id: TRate['id']) => void;
+  onPress: (id: Rate['id']) => void;
 };
 
 export const RateCard: FC<TPropTypes> = ({
@@ -36,7 +29,7 @@ export const RateCard: FC<TPropTypes> = ({
   const containerStyleAnim = useAnimatedStyle(() => {
     return {
       transform: [{scale: withTiming(isSelected ? 1 : 0.95)}],
-      shadowOpacity: withTiming(isSelected ? VIEW_SHADOW.shadowOpacity : 0),
+      shadowOpacity: withTiming(isSelected ? 1 : VIEW_SHADOW.shadowOpacity),
     };
   }, [isSelected]);
 
@@ -44,8 +37,7 @@ export const RateCard: FC<TPropTypes> = ({
     <Pressable onPress={() => onPress(id)}>
       <ThemedView
         animated
-        colorName="background"
-        borderColorName={isSelected ? 'accent_ultra_opacity' : 'lineGrey'}
+        colorName={'background'}
         style={[styles.container, containerStyleAnim]}
         nightStyle={styles.nightContainer}>
         {discount ? (
@@ -56,7 +48,10 @@ export const RateCard: FC<TPropTypes> = ({
           <View />
         )}
         <View style={styles.general}>
-          <CustomText themed style={styles.title}>
+          <CustomText
+            colorName={isSelected ? 'accent' : 'text'}
+            themed
+            style={styles.title}>
             {title}
           </CustomText>
           <View style={styles.priceContainer}>
@@ -72,7 +67,7 @@ export const RateCard: FC<TPropTypes> = ({
             )}
           </View>
         </View>
-        <AnimatedCheck size={20} isChecked={isSelected} greyWhenInactive />
+        <AnimatedCheck size={22} isChecked={isSelected} greyWhenInactive />
       </ThemedView>
     </Pressable>
   );
@@ -83,7 +78,6 @@ const styles = StyleSheet.create({
     padding: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderWidth: 1,
     borderRadius: 12,
     borderCurve: 'continuous',
     minHeight: 84,

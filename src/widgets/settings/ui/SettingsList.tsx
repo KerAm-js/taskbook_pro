@@ -76,9 +76,6 @@ export const SettingsList = () => {
     Linking.openURL(url);
   };
 
-  const goToAccount = () => {
-    navigation.navigate('account');
-  };
 
   return (
     <View style={styles.container}>
@@ -86,7 +83,7 @@ export const SettingsList = () => {
         style={styles.scroll}
         contentContainerStyle={styles.scrollContentContainer}
         showsVerticalScrollIndicator={false}>
-        <UserInfo onPress={goToAccount} />
+        <UserInfo />
         <View style={styles.paddingContainer}>
           <TaskbookForever />
         </View>

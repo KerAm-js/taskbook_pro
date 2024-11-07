@@ -17,7 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useEffect} from 'react';
 
 export const ChangeNameForm = () => {
-  const {loading, success, error, ...user} = useUser();
+  const {loading, success, error, data: user} = useUser();
   const {auth, firestore} = useFirebase();
   const usersCollection = firestore.collection('Users');
   const {changeNameThunk, clearMessages} = useUserActions();
@@ -25,7 +25,7 @@ export const ChangeNameForm = () => {
   const [name, onChangeName, isNameValid, nameError] = useInputValidator({
     required: true,
     minLength: 2,
-    initValue: user.name,
+    initValue: user?.name,
   });
   const [password, onChangePassword, isPasswordValid, passwordError] =
     useInputValidator({
@@ -35,10 +35,11 @@ export const ChangeNameForm = () => {
   const {t} = useTranslation();
 
   const onSubmit = () => {
+    if (!user) return;
     changeNameThunk({user, usersCollection, auth, password, name});
   };
 
-  const isFormValid = name !== user.name && isNameValid && isPasswordValid;
+  const isFormValid = name !== user?.name && isNameValid && isPasswordValid;
 
   useEffect(() => {
     if (success) {

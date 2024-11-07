@@ -41,7 +41,7 @@ export const SigninForm = () => {
   const [password, onChangePassword, isPasswordValid, passwordError] =
     useInputValidator({minLength: 6});
   const {signinThunk, clearMessages} = useUserActions();
-  const {loading, error, success} = useUser();
+  const {loading, error, success, subscription, data} = useUser();
   const headerHeight = useHeaderHeight();
   const {paddingBottom} = useSafeAreaPadding();
   const isFocused = useIsFocused();
@@ -61,13 +61,15 @@ export const SigninForm = () => {
   };
 
   useEffect(() => {
-    if (success && isFocused) {
-      Alert.alert(t(success.title), t(success.message));
-      clearMessages();
+    if (data && isFocused) {
+      if (!subscription.isTrialPeriodExpired && navigation.canGoBack()) {
+        navigation.goBack();
+      }
     }
-  }, [success, isFocused]);
+  }, [data, isFocused]);
 
   useEffect(() => {
+    console.log(error, isFocused);
     if (error && isFocused) {
       Alert.alert(
         t(error.title),

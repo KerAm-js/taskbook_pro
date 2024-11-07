@@ -3,11 +3,13 @@ import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {userSlice} from './userSlice';
 import {RootState} from '@/app/store';
-import * as apiActions from '../api/auth.api';
+import * as apiAuthActions from '../api/auth.api';
+import * as apiUserActions from '../api/userInfo.api';
 
 const actions = {
   ...userSlice.actions,
-  ...apiActions,
+  ...apiAuthActions,
+  ...apiUserActions,
 };
 
 export const useUserActions = () => {

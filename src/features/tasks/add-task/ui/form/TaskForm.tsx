@@ -23,7 +23,6 @@ import {
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {StyleSheet, ScrollView, View} from 'react-native';
 import {FormButton} from '@/shared';
-import {alarmSvg} from '@/shared/assets/svg/alarm';
 import {useTranslation} from 'react-i18next';
 import {
   RegularTaskDto,
@@ -37,6 +36,7 @@ import {
 import {RepeatingDaysPicker, TSelectedItemObj} from './RepeatingDaysPicker';
 import {useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {bellSvg} from '@/shared/assets/svg/bell';
 
 const repeatingTypeData: Array<{
   title: string;
@@ -248,7 +248,7 @@ export const TaskForm = () => {
             type="value"
             title="reminder"
             value={remindTimeString}
-            xmlGetter={alarmSvg}
+            xmlGetter={bellSvg}
             disabled={isHistoryTask}
           />
           <Setting

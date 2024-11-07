@@ -21,12 +21,12 @@ export const ResetPasswordForm = () => {
   const {auth, firestore} = useFirebase();
   const passwordResetsCollection = firestore.collection('PasswordResets');
   const navigation = useNavigation();
-  const user = useUser();
+  const {data: user} = useUser();
   const [email, onChangeEmail, isEmailValid, emailError] = useInputValidator({
     pattern: EMAIL_REGEX,
     patternErrorMessage: t('incorrectEmail'),
     required: true,
-    initValue: user.email,
+    initValue: user?.email,
   });
   const [loading, setLoading] = useState(false);
 
@@ -60,7 +60,7 @@ export const ResetPasswordForm = () => {
           error={emailError}
           textContentType="emailAddress"
           keyboardType="email-address"
-          editable={!(user.uid && user.email)}
+          editable={!(user?.uid && user?.email)}
         />
         <InputComment>{t('passwordCanBeResettedNoMoreThan')}</InputComment>
       </View>

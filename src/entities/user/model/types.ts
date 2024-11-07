@@ -22,8 +22,32 @@ export type TApiMessage = {
   status?: 'rejected' | 'resolved';
 };
 
-export interface IUserState extends User {
+export type Rate = {
+  id: number;
+  title: string;
+  type: 'monthly' | 'yearly' | 'unlimited';
+  price: number;
+  discount?: number;
+};
+
+export type Subscription = {
+  trialPeriodStartDate: number;
+  isTrialPeriodExpired: boolean;
+} & (
+  | {
+      rate?: never;
+      lastSubscriptionCheckDate?: never;
+    }
+  | {
+      rate: Rate;
+      lastSubscriptionCheckDate: number;
+    }
+);
+
+export interface IUserState {
   loading: boolean;
   error: TApiMessage | null;
   success: TApiMessage | null;
+  data?: User;
+  subscription: Subscription;
 }

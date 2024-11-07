@@ -23,7 +23,7 @@ export const ChangePasswordForm = () => {
   const {t} = useTranslation();
   const {auth, firestore} = useFirebase();
   const usersCollection = firestore.collection('Users');
-  const user = useUser();
+  const {data: user} = useUser();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const [
@@ -55,6 +55,7 @@ export const ChangePasswordForm = () => {
     isCurrentPasswordValid && isPasswordAgainValid && isNewPasswordValid;
 
   const onSubmit = async () => {
+    if (!user) return;
     setLoading(true);
     const result = await changePassword({
       auth,

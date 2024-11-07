@@ -18,123 +18,150 @@ import {BeginningOfDay} from '@/screens/settings/reminders/beginning-of-day';
 import {EndOfDay} from '@/screens/settings/reminders/end-of-day';
 import {Theme} from '@/screens/settings/theme';
 import {Language} from '@/screens/settings/language';
+import React from 'react';
+import {useUser} from '@/entities/user';
+import {Signin} from '@/screens/auth/signin';
+import {Signup} from '@/screens/auth/signup';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 
 export const AppStack = () => {
   const {colors} = useThemeColors();
+  const {subscription} = useUser();
 
   return (
-    <Stack.Navigator initialRouteName="main">
-      <Stack.Group
-        screenOptions={{
-          headerTitle: CustomHeader.Title,
-          headerLeft: CustomHeader.BackButton,
-          headerStyle: {
-            backgroundColor: colors.header,
-          },
-        }}>
-        <Stack.Screen
-          name="main"
-          component={MainRoot}
-          options={{headerShown: false}}
-        />
-
-        <Stack.Screen
-          name="task"
-          component={Task}
-          options={{
-            presentation: 'modal',
-            headerLeft: CustomHeader.CloseButton,
-          }}
-        />
-
-        <Stack.Screen
-          name="history"
-          component={History}
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack.Group>
-
-      <Stack.Group
-        navigationKey="settings"
-        screenOptions={{
-          headerTitle: CustomHeader.Title,
-          headerLeft: CustomHeader.BackButton,
-          headerStyle: {
-            backgroundColor: colors.header,
-          },
-        }}>
-        <Stack.Screen name="settings" component={Settings} />
+    <Stack.Navigator>
+      {subscription.isTrialPeriodExpired && !subscription?.rate ? (
         <Stack.Screen
           name="subscription"
           component={Subscription}
           options={{
-            presentation: 'modal',
             title: 'Taskbook Pro',
-            headerLeft: CustomHeader.CloseButton,
+            headerTitle: CustomHeader.Title,
+            headerBackVisible: false,
+            headerStyle: {
+              backgroundColor: colors.header,
+            },
           }}
         />
-        <Stack.Screen name="account" component={Account} />
-        <Stack.Screen name="email" component={Email} />
-        <Stack.Screen name="name" component={Name} />
-        <Stack.Screen name="password" component={Password} />
-        <Stack.Screen name="passwordReset" component={PasswordReset} />
-        <Stack.Screen name="backup" component={Backup} />
-        <Stack.Screen name="reminders" component={Reminders} />
-        <Stack.Screen
-          name="count"
-          component={Count}
-          options={{
-            presentation: 'modal',
-            headerLeft: CustomHeader.CloseButton,
-          }}
-        />
-        <Stack.Screen
-          name="interval"
-          component={Interval}
-          options={{
-            presentation: 'modal',
-            headerLeft: CustomHeader.CloseButton,
-          }}
-        />
-        <Stack.Screen
-          name="beginningOfDay"
-          component={BeginningOfDay}
-          options={{
-            presentation: 'modal',
-            headerLeft: CustomHeader.CloseButton,
-          }}
-        />
-        <Stack.Screen
-          name="endOfDay"
-          component={EndOfDay}
-          options={{
-            presentation: 'modal',
-            headerLeft: CustomHeader.CloseButton,
-          }}
-        />
-        <Stack.Screen
-          name="theme"
-          component={Theme}
-          options={{
-            headerTransparent: true,
-            headerStyle: {backgroundColor: 'rgba(0, 0, 0, 0)'},
-            presentation: 'modal',
-            headerLeft: CustomHeader.CloseButton,
-          }}
-        />
-        <Stack.Screen
-          name="language"
-          component={Language}
-          options={{
-            presentation: 'modal',
-            headerLeft: CustomHeader.CloseButton,
-          }}
-        />
-      </Stack.Group>
+      ) : (
+        <>
+          <Stack.Group
+            screenOptions={{
+              headerTitle: CustomHeader.Title,
+              headerLeft: CustomHeader.BackButton,
+              headerStyle: {
+                backgroundColor: colors.header,
+              },
+            }}>
+            <Stack.Screen
+              name="main"
+              component={MainRoot}
+              options={{headerShown: false}}
+            />
+
+            <Stack.Screen
+              name="task"
+              component={Task}
+              options={{
+                presentation: 'modal',
+                headerLeft: CustomHeader.CloseButton,
+              }}
+            />
+
+            <Stack.Screen
+              name="history"
+              component={History}
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack.Group>
+
+          <Stack.Group
+            navigationKey="settings"
+            screenOptions={{
+              headerTitle: CustomHeader.Title,
+              headerLeft: CustomHeader.BackButton,
+              headerStyle: {
+                backgroundColor: colors.header,
+              },
+            }}>
+            <Stack.Screen name="settings" component={Settings} />
+            <Stack.Screen
+              name="subscription"
+              component={Subscription}
+              options={{
+                title: 'Taskbook Pro',
+              }}
+            />
+            <Stack.Screen name="account" component={Account} />
+            <Stack.Screen
+              name="signin"
+              component={Signin}
+              options={{
+              }}
+            />
+            <Stack.Screen name="signup" component={Signup} />
+            <Stack.Screen name="email" component={Email} />
+            <Stack.Screen name="name" component={Name} />
+            <Stack.Screen name="password" component={Password} />
+            <Stack.Screen name="passwordReset" component={PasswordReset} />
+            <Stack.Screen name="backup" component={Backup} />
+            <Stack.Screen name="reminders" component={Reminders} />
+            <Stack.Screen
+              name="count"
+              component={Count}
+              options={{
+                presentation: 'modal',
+                headerLeft: CustomHeader.CloseButton,
+              }}
+            />
+            <Stack.Screen
+              name="interval"
+              component={Interval}
+              options={{
+                presentation: 'modal',
+                headerLeft: CustomHeader.CloseButton,
+              }}
+            />
+            <Stack.Screen
+              name="beginningOfDay"
+              component={BeginningOfDay}
+              options={{
+                presentation: 'modal',
+                headerLeft: CustomHeader.CloseButton,
+              }}
+            />
+            <Stack.Screen
+              name="endOfDay"
+              component={EndOfDay}
+              options={{
+                presentation: 'modal',
+                headerLeft: CustomHeader.CloseButton,
+              }}
+            />
+            <Stack.Screen
+              name="theme"
+              component={Theme}
+              options={{
+                headerTransparent: true,
+                headerStyle: {backgroundColor: 'rgba(0, 0, 0, 0)'},
+                presentation: 'modal',
+                headerLeft: CustomHeader.CloseButton,
+              }}
+            />
+            <Stack.Screen
+              name="language"
+              component={Language}
+              options={{
+                presentation: 'modal',
+                headerLeft: CustomHeader.CloseButton,
+              }}
+            />
+          </Stack.Group>
+        </>
+      )}
     </Stack.Navigator>
   );
 };

@@ -6,7 +6,7 @@ import {Alert} from 'react-native';
 import {autoAuth, useFirebase} from '@/shared';
 
 export const useStoredBackup = (): [Backup | null, boolean] => {
-  const {uid, email} = useUser();
+  const {data: user} = useUser();
   const {t} = useTranslation();
   const {auth, firestore} = useFirebase();
   const backupsCollection = firestore.collection('Backups');
@@ -16,12 +16,12 @@ export const useStoredBackup = (): [Backup | null, boolean] => {
 
   useEffect(() => {
     let unsubscribe: () => void;
-    autoAuth(auth, email)
+    autoAuth(auth, user?.email)
       .then(() => {
         if (!isMounted.current) {
           return;
         }
-        unsubscribe = backupsCollection.doc(uid).onSnapshot(
+        unsubscribe = backupsCollection.doc(user?.uid).onSnapshot(
           snapshot => {
             if (isMounted.current) {
               const backup = snapshot.data() as Backup;

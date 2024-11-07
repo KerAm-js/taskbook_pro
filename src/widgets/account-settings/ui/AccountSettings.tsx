@@ -17,7 +17,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 export const AccountSettings = () => {
   const {auth} = useFirebase();
-  const {error, loading, email, name} = useUser();
+  const {error, loading, data: user} = useUser();
   const {signoutThunk, clearMessages} = useUserActions();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
@@ -50,6 +50,12 @@ export const AccountSettings = () => {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (!user && navigation.canGoBack()) {
+      navigation.goBack();
+    }
+  }, [user]);
+
   return (
     <ScrollView
       style={styles.container}
@@ -57,10 +63,14 @@ export const AccountSettings = () => {
       showsVerticalScrollIndicator={false}>
       <NavButton
         title="emailAddress"
-        value={email || ''}
+        value={user?.email || ''}
         onPress={goToChangeEmail}
       />
-      <NavButton title="fullName" value={name || ''} onPress={goToChangeName} />
+      <NavButton
+        title="fullName"
+        value={user?.name || ''}
+        onPress={goToChangeName}
+      />
       <Setting
         type="navigate"
         xmlGetter={keySvg}

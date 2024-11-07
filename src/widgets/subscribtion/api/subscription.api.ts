@@ -1,26 +1,25 @@
 import {useEffect, useRef, useState} from 'react';
-import {TRate} from '@/features/choose-rate';
 import {autoAuth, useFirebase} from '@/shared';
-import {TApiMessage, useUser} from '@/entities/user';
+import {Rate, TApiMessage, useUser} from '@/entities/user';
 
 const PRICES_DOCUMENT = 'subscription-rates_v_1';
 
-type TReturnType = [TRate[] | null, boolean, TApiMessage | null];
+type TReturnType = [Rate[] | null, boolean, TApiMessage | null];
 
 export const useSubscriptionRates = (): TReturnType => {
   const {auth, firestore} = useFirebase();
-  const {email} = useUser();
+  const {data: user} = useUser();
   const pricesCollection = firestore.collection('SubscriptionRates');
-  const [rates, setRates] = useState<TRate[] | null>(null);
+  const [rates, setRates] = useState<Rate[] | null>(null);
   const [error, setError] = useState<TApiMessage | null>(null);
   const [loading, setLoading] = useState(true);
   const isMounted = useRef(true);
 
   const loadRates = async () => {
     try {
-      await autoAuth(auth, email);
+      await autoAuth(auth, user?.email);
       const response = await pricesCollection.doc(PRICES_DOCUMENT).get();
-      const data = response.data() as {rates: TRate[]} | undefined | null;
+      const data = response.data() as {rates: Rate[]} | undefined | null;
       if (isMounted.current && data) {
         setRates(data.rates);
         setLoading(false);

@@ -22,7 +22,7 @@ export const ChangeEmailForm = () => {
   const {auth, firestore} = useFirebase();
   const usersCollection = firestore.collection('Users');
   const {signoutThunk} = useUserActions();
-  const user = useUser();
+  const { data: user } = useUser();
   const [email, onChangeEmail, isEmailValid, emailError] = useInputValidator({
     pattern: EMAIL_REGEX,
     patternErrorMessage: t('incorrectEmail'),
@@ -47,9 +47,10 @@ export const ChangeEmailForm = () => {
     isEmailValid &&
     isEmailAgainValid &&
     isPasswordValid &&
-    email !== user.email;
+    email !== user?.email;
 
   const onSubmit = async () => {
+    if (!user) return;
     setLoading(true);
     const result = await changeEmail({
       auth,
@@ -74,7 +75,7 @@ export const ChangeEmailForm = () => {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.content}>
       <View style={styles.inputs}>
-        <InputComment>{t('currentEmail', {email: user.email})}</InputComment>
+        <InputComment>{t('currentEmail', {email: user?.email})}</InputComment>
         <FormInput
           xmlGetter={emailSvg}
           placeholder="newEmail"

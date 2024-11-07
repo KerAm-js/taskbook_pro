@@ -1,6 +1,7 @@
 export type RootStackParamsList = {
   app: undefined;
   auth: undefined;
+  subscription: undefined;
 };
 
 export type AuthStackParamsList = {
@@ -19,6 +20,8 @@ export type AppStackParamsList = {
   email: undefined;
   name: undefined;
   password: undefined;
+  signin: undefined;
+  signup: undefined;
   passwordReset: undefined;
   backup: undefined;
   reminders: undefined;
