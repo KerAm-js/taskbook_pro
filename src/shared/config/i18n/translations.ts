@@ -214,6 +214,9 @@ export const TRANSLATIONS = {
       amirKerimovCopyright: '© Амир Керимов',
       guest: 'гость',
       youDontHaveAccount: 'У вас нет аккаунта',
+      signinToYourAccount: 'Войдите в аккаунт',
+      toCreateBackupsYouNeedToSigninOrRegister:
+        'Для создания резервных копий вам необходимо войти в аккаунт или зарегистрироваться',
     },
   },
   en: {
@@ -423,6 +426,9 @@ export const TRANSLATIONS = {
       amirKerimovCopyright: '© Amir Kerimov',
       guest: 'guest',
       youDontHaveAccount: "You don't have an account",
+      signinToYourAccount: 'Sign in to your account',
+      toCreateBackupsYouNeedToSigninOrRegister:
+        'To create backups you need to sign in or register',
     },
   },
 };

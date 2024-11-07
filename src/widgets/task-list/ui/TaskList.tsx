@@ -21,7 +21,6 @@ export const TaskList = () => {
       return;
     }
     if (prevDate.current !== selectedDate) {
-      console.log('ok');
       prevDate.current = selectedDate;
       isInitialRender.current = true;
     } else {

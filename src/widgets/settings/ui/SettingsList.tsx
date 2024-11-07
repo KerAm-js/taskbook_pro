@@ -29,11 +29,15 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {SettingsFooter} from './Footer';
 import {UserInfo} from './UserInfo';
 import {useFastInputMode, useSettingsActions} from '@/entities/settings';
+import {useUser} from '@/entities/user';
+import { useTranslation } from 'react-i18next';
 
 export const SettingsList = () => {
+  const {t} = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const {toggleFastInputMode} = useSettingsActions();
+  const {data: user} = useUser();
   const fastInputMode = useFastInputMode();
 
   const itunesItemId = 1604538068;
@@ -76,6 +80,16 @@ export const SettingsList = () => {
     Linking.openURL(url);
   };
 
+  const goToBackupScreen = () => {
+    if (!user) {
+      Alert.alert(
+        t('signinToYourAccount'),
+        t('toCreateBackupsYouNeedToSigninOrRegister'),
+      );
+    } else {
+      navigation.navigate('backup');
+    };
+  };
 
   return (
     <View style={styles.container}>
@@ -101,7 +115,7 @@ export const SettingsList = () => {
           <Setting
             type="navigate"
             title="backupCopy"
-            onPress={() => navigation.navigate('backup')}
+            onPress={goToBackupScreen}
             xmlGetter={archieveSvg}
           />
           <Setting

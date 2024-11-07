@@ -4,7 +4,7 @@ import {AppStack} from './Navigators/AppStack';
 import {AuthStack} from './Navigators/AuthStack';
 import {endOfDay, RootStackParamsList, useFirebase} from '@/shared';
 import {NavigationContainer} from '@react-navigation/native';
-import {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import {useBackupInfo, useSettingsActions} from '@/entities/settings';
 import {store} from '../store';
@@ -64,7 +64,7 @@ export const Navigator = () => {
       isAutoSync
     ) {
       const timestamp = Date.now();
-      const shouldSync = lastBackup ? timestamp - lastBackup >= 180000 : true;
+      const shouldSync = lastBackup ? timestamp - lastBackup >= 60000 : true;
       if (shouldSync) {
         const {idCounter, ids, entities, historyIds} = store.getState().tasks;
         const backup: Omit<Backup, 'currentEmail'> = {
@@ -91,13 +91,18 @@ export const Navigator = () => {
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', onAppStateChange);
+    return () => {
+      subscription.remove();
+    };
+  }, [user, isAutoSync]);
+
+  useEffect(() => {
     setOnDayEndHanlder();
     onAppLoad();
     checkTrialPeriod();
     setLoading(false);
 
     return () => {
-      subscription.remove();
       clearOnDayEndHandler();
     };
   }, []);

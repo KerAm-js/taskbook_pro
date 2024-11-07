@@ -69,7 +69,6 @@ export const SigninForm = () => {
   }, [data, isFocused]);
 
   useEffect(() => {
-    console.log(error, isFocused);
     if (error && isFocused) {
       Alert.alert(
         t(error.title),

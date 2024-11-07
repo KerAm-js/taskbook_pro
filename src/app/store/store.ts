@@ -17,7 +17,7 @@ import {
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['user']
+  //blacklist: ['user']
 };
 
 const persistedReducer = persistCombineReducers(persistConfig, {
