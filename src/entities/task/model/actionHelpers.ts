@@ -33,7 +33,9 @@ const generateNotificationIds = (taskId: Task['id'], count: number) => {
 
 export const sortTasksByReminder = (state: ITasksState, date: number) => {
   const ids = state.ids[date];
-  ids.sort((first, second) => {
+  if (!ids || ids.length === 1) return;
+  
+  ids?.sort((first, second) => {
     const fRemindTime = state.entities[first].remindTime;
     const sRemindTime = state.entities[second].remindTime;
 
@@ -93,8 +95,7 @@ export const updateDailyNotificationsForDate = (
   updateDailyNotification(state, 'end', date || state.selectedDate);
 };
 
-export const setStateDefault = (state: ITasksState) => {
-  const today = endOfDay();
+export const setStateDefault = (state: ITasksState, today: number) => {
   state.selectedDate = today;
   if (!state.ids[today]) state.ids[today] = [];
   state.selectedTasksCount = 0;
@@ -122,8 +123,7 @@ export const rescheduleIfOverdue = (state: ITasksState, id: Task['id']) => {
   }
 };
 
-export const rescheduleOverdueTasks = (state: ITasksState) => {
-  const today = endOfDay();
+export const rescheduleOverdueTasks = (state: ITasksState, today: number) => {
   for (let item in state.ids) {
     const date = Number(item);
     if (date < today) {

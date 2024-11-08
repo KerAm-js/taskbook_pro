@@ -20,6 +20,8 @@ export {IOSKeyboardFlickeringDisable} from './ui/IOSKeyboardFlickeringDisable';
 
 //config
 export {LANGUAGE_DETECTOR, I18N} from './config/i18n/i18n';
+export {languageEmojis, languageTitles} from './config/i18n/languages';
+export {countryEmojis, countryTitles} from './config/i18n/countries';
 export {TRANSLATIONS, LANGUAGES} from './config/i18n/translations';
 export {
   THEME_COLORS,

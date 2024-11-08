@@ -30,10 +30,11 @@ import {SettingsFooter} from './Footer';
 import {UserInfo} from './UserInfo';
 import {useFastInputMode, useSettingsActions} from '@/entities/settings';
 import {useUser} from '@/entities/user';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {sendMessage} from '@/features/send-support-message';
 
 export const SettingsList = () => {
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const {toggleFastInputMode} = useSettingsActions();
@@ -76,8 +77,16 @@ export const SettingsList = () => {
   };
 
   const contactDeveloper = () => {
-    const url = 'https://t.me/Amir_Kerimov';
-    Linking.openURL(url);
+    // const url = 'https://t.me/Amir_Kerimov';
+    // Linking.openURL(url);
+    if (user) {
+      sendMessage({
+        userInfo: user,
+        thread: 'ideas',
+        message: 'This is message text',
+        locale: i18n.language
+      });
+    }
   };
 
   const goToBackupScreen = () => {
@@ -88,7 +97,7 @@ export const SettingsList = () => {
       );
     } else {
       navigation.navigate('backup');
-    };
+    }
   };
 
   return (

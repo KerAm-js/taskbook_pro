@@ -62,9 +62,10 @@ export const tasksSlice = createSlice({
   initialState,
   reducers: {
     onAppLoad: state => {
-      setStateDefault(state);
-      rescheduleOverdueTasks(state);
-      sortTasksByReminder(state, state.selectedDate);
+      const today = endOfDay()
+      setStateDefault(state, today);
+      rescheduleOverdueTasks(state, today);
+      sortTasksByReminder(state, today);
     },
 
     setDataFromBackup: (
@@ -83,7 +84,7 @@ export const tasksSlice = createSlice({
       if (!state.ids[state.selectedDate]) {
         state.ids[state.selectedDate] = [];
       }
-      rescheduleOverdueTasks(state);
+      rescheduleOverdueTasks(state, state.selectedDate);
       sortTasksByReminder(state, state.selectedDate);
       for (let item in state.ids) {
         const date = Number(item);
