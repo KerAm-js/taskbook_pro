@@ -31,4 +31,6 @@ export type AppStackParamsList = {
   endOfDay: undefined;
   theme: undefined;
   language: undefined;
+  idea: undefined;
+  problem: undefined;
 };

@@ -31,7 +31,9 @@ import {UserInfo} from './UserInfo';
 import {useFastInputMode, useSettingsActions} from '@/entities/settings';
 import {useUser} from '@/entities/user';
 import {useTranslation} from 'react-i18next';
-import {sendMessage} from '@/features/send-support-message';
+import {telegramSvg} from '@/shared/assets/svg/telegram';
+import {lightBulbFillSvg} from '@/shared/assets/svg/lightBulbFill';
+import {dangerFillSvg} from '@/shared/assets/svg/dangerFill';
 
 export const SettingsList = () => {
   const {t, i18n} = useTranslation();
@@ -76,18 +78,12 @@ export const SettingsList = () => {
     );
   };
 
-  const contactDeveloper = () => {
-    // const url = 'https://t.me/Amir_Kerimov';
-    // Linking.openURL(url);
-    if (user) {
-      sendMessage({
-        userInfo: user,
-        thread: 'ideas',
-        message: 'This is message text',
-        locale: i18n.language
-      });
-    }
+
+  const goToCommunity = () => {
+    const url = 'https://t.me/Amir_Kerimov';
+    Linking.openURL(url);
   };
+
 
   const goToBackupScreen = () => {
     if (!user) {
@@ -164,9 +160,26 @@ export const SettingsList = () => {
           />
           <Setting
             type="navigate"
-            title="contactDeveloper"
-            onPress={contactDeveloper}
-            xmlGetter={dialogSvg}
+            title="suggestIdea"
+            onPress={() => navigation.navigate('idea')}
+            xmlGetter={lightBulbFillSvg}
+          />
+          <Setting
+            type="navigate"
+            title="reportProblem"
+            onPress={() => navigation.navigate('problem')}
+            xmlGetter={dangerFillSvg}
+          />
+        </View>
+        <View style={styles.section}>
+          <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
+            community
+          </CustomText>
+          <Setting
+            type="navigate"
+            title="whatIsNew"
+            onPress={goToCommunity}
+            xmlGetter={telegramSvg}
           />
         </View>
       </ScrollView>

@@ -217,6 +217,22 @@ export const TRANSLATIONS = {
       signinToYourAccount: 'Войдите в аккаунт',
       toCreateBackupsYouNeedToSigninOrRegister:
         'Для создания резервных копий вам необходимо войти в аккаунт или зарегистрироваться',
+      reportProblem: 'Сообщить о проблеме',
+      suggestIdea: 'Предложить идею',
+      community: 'Сообщество',
+      whatIsNew: 'Что нового',
+      idea: 'Идея',
+      problem: 'Проблема',
+      howToImproveApp: 'Как улучшить приложение?',
+      describeProblem: 'Опишите проблему',
+      messageSent: 'Сообщение отправлено',
+      thanksForYourIdeas: 'Спасибо, что поддерживаете Taskbook своими идеями! ',
+      thanksForReportingProblem:
+        'Спасибо, что сообщили о проблеме! Это помогает Taskbook становится лучше',
+      ifYouHaveIdeasWriteAboutIt:
+        'Если у вас есть идеи, которые помогут сделать Taskbook лучше, напишите об этом',
+      writeAboutProblemYouHaveUsingTaskbook:
+        'Напишите о проблеме, с которой вы сталкиваетесь, когда пользуетесь Taskbook',
     },
   },
   en: {
@@ -429,6 +445,22 @@ export const TRANSLATIONS = {
       signinToYourAccount: 'Sign in to your account',
       toCreateBackupsYouNeedToSigninOrRegister:
         'To create backups you need to sign in or register',
+      reportProblem: 'Report a problem',
+      suggestIdea: 'Suggest an idea',
+      community: 'Community',
+      whatIsNew: "What's new",
+      idea: 'Idea',
+      problem: 'Problem',
+      howToImproveApp: 'How to improve the app?',
+      describeProblem: 'Describe the problem',
+      messageSent: 'Message is sent',
+      thanksForYourIdeas: 'Thank you for supporting Taskbook with your ideas!',
+      thanksForReportingProblem:
+        'Thank you for reporting the problem! It helps Taskbook get better',
+      ifYouHaveIdeasWriteAboutIt:
+        'If have any ideas that will help make Taskbook better, write about it',
+      writeAboutProblemYouHaveUsingTaskbook:
+        'Write about the problem you have when using Taskbook',
     },
   },
 };

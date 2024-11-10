@@ -22,6 +22,7 @@ import React from 'react';
 import {useUser} from '@/entities/user';
 import {Signin} from '@/screens/auth/signin';
 import {Signup} from '@/screens/auth/signup';
+import { IdeaMessage, ProblemMessage } from '@/screens/settings/support';
 
 const Stack = createNativeStackNavigator<AppStackParamsList>();
 
@@ -109,6 +110,8 @@ export const AppStack = () => {
             <Stack.Screen name="passwordReset" component={PasswordReset} />
             <Stack.Screen name="backup" component={Backup} />
             <Stack.Screen name="reminders" component={Reminders} />
+            <Stack.Screen name="idea" component={IdeaMessage} />
+            <Stack.Screen name="problem" component={ProblemMessage} />
             <Stack.Screen
               name="count"
               component={Count}
