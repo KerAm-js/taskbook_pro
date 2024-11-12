@@ -1,5 +1,6 @@
-import { TApiMessage } from '@/entities/user';
+import {TApiMessage} from '@/entities/user';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import analytics from '@react-native-firebase/analytics';
 
 type TSignupCredentials = {
   auth: FirebaseAuthTypes.Module;
@@ -15,6 +16,7 @@ export const signup = async (
     const {email, name, password, auth} = credentials;
     const response = await auth.createUserWithEmailAndPassword(email, password);
     await response.user.updateProfile({displayName: name});
+    await analytics().logSignUp({method: response.user.providerId});
     await response.user.sendEmailVerification();
     return {
       title: 'emailConfirmationTitle',

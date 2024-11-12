@@ -1,5 +1,4 @@
 import {bellSvg} from '@/shared/assets/svg/bell';
-import {dialogSvg} from '@/shared/assets/svg/dialog';
 import {translateSvg} from '@/shared/assets/svg/translate';
 import {shareSvg} from '@/shared/assets/svg/share';
 import {keyboardSvg} from '@/shared/assets/svg/keyboard';
@@ -7,6 +6,7 @@ import {paletteSvg} from '@/shared/assets/svg/palette';
 import {
   AppStackParamsList,
   CustomText,
+  logEvent,
   PADDING_TOP,
   SCREEN_PADDING,
   Setting,
@@ -36,7 +36,7 @@ import {lightBulbFillSvg} from '@/shared/assets/svg/lightBulbFill';
 import {dangerFillSvg} from '@/shared/assets/svg/dangerFill';
 
 export const SettingsList = () => {
-  const {t, i18n} = useTranslation();
+  const {t} = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamsList>>();
   const {toggleFastInputMode} = useSettingsActions();
@@ -45,6 +45,11 @@ export const SettingsList = () => {
 
   const itunesItemId = 1604538068;
   const url = `itms-apps://itunes.apple.com/app/${itunesItemId}`;
+
+  const onToggleFastInputMode = () => {
+    toggleFastInputMode();
+    logEvent('toggle_quick_addition', {value: !fastInputMode});
+  };
 
   const shareApp = async () => {
     try {
@@ -78,12 +83,10 @@ export const SettingsList = () => {
     );
   };
 
-
   const goToCommunity = () => {
-    const url = 'https://t.me/Amir_Kerimov';
+    const url = 'https://t.me/taskbook_community';
     Linking.openURL(url);
   };
-
 
   const goToBackupScreen = () => {
     if (!user) {
@@ -114,7 +117,7 @@ export const SettingsList = () => {
             type="toggle"
             title="fastInputMode"
             value={fastInputMode}
-            onPress={() => toggleFastInputMode()}
+            onPress={onToggleFastInputMode}
             xmlGetter={keyboardSvg}
           />
           <Setting

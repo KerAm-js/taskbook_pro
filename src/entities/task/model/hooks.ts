@@ -1,3 +1,4 @@
+import {Root} from './../../../app/ui/Root';
 import {bindActionCreators} from '@reduxjs/toolkit';
 import {useMemo} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -7,6 +8,7 @@ import {
   selectCompletedTaskEntities,
   selectCompletedTasksCount,
   selectTaskById,
+  selectTaskRepeatingInfo,
 } from './selectors';
 
 export const useTaskActions = () => {
@@ -46,6 +48,13 @@ export const useIsTaskCompleted = (id: number) => {
     (state: RootState) => state.tasks.entities[id]?.isCompleted,
   );
   return isCompleted;
+};
+
+export const useTaskRepeatingInfo = (id: number) => {
+  const isRegular = useSelector((state: RootState) =>
+    selectTaskRepeatingInfo(state, id),
+  );
+  return isRegular;
 };
 
 export const useTaskEntities = () => {

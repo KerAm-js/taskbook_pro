@@ -1,32 +1,39 @@
-import {useUser, useUserActions} from '@/entities/user';
+import {useUser} from '@/entities/user';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AppStack} from './Navigators/AppStack';
 import {AuthStack} from './Navigators/AuthStack';
-import {endOfDay, RootStackParamsList, useFirebase} from '@/shared';
-import {NavigationContainer} from '@react-navigation/native';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {endOfDay, RootStackParamsList} from '@/shared';
+import {
+  NavigationContainer,
+  NavigationContainerRef,
+} from '@react-navigation/native';
+import {useEffect, useRef, useState} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
-import {useBackupInfo, useSettingsActions} from '@/entities/settings';
-import {store} from '../store';
-import {Backup} from '@/features/settings/backup';
 import {useTaskActions} from '@/entities/task';
 import SplashScreen from 'react-native-splash-screen';
-import {TRIAL_PERIOD_IN_MILLIS_SECONDS} from '../config/consts';
+import {useAutoSyncCallback} from '../api/useAutoSyncCallback.api';
+import {useBackupInfo} from '@/entities/settings';
+import {useCheckTrialPeriodCallback} from '../model/useCheckTrialPeriodCallback';
+import {useLogScreenChangeCallback} from '../api/useLogScreenChangeCallback';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
 export const Navigator = () => {
+  const routeNameRef = useRef<string | undefined>();
+  const navigationRef =
+    useRef<NavigationContainerRef<RootStackParamsList> | null>(null);
   const [loading, setLoading] = useState(true);
-  const {firestore} = useFirebase();
   const {data: user, subscription} = useUser();
   const {onAppLoad} = useTaskActions();
-  const {endTrialPeriod} = useUserActions();
-  const {setLastBackup} = useSettingsActions();
-  const {isAutoSync, lastBackup} = useBackupInfo();
-  const backupsCollection = firestore.collection('Backups');
+  const backupInfo = useBackupInfo();
   const appState = useRef(AppState.currentState);
   const timeout = useRef<NodeJS.Timeout | null>(null);
   const interval = useRef<NodeJS.Timeout | null>(null);
+
+  const autoSyncCallback = useAutoSyncCallback(backupInfo);
+  const checkTrialPeriodCallback = useCheckTrialPeriodCallback(subscription);
+  const {setFirstScreen, logScreenChange} =
+    useLogScreenChangeCallback(navigationRef);
 
   const setOnDayEndHanlder = () => {
     timeout.current = setTimeout(() => {
@@ -42,49 +49,9 @@ export const Navigator = () => {
     if (interval.current) clearInterval(interval.current);
   };
 
-  const checkTrialPeriod = () => {
-    if (!subscription.isTrialPeriodExpired) {
-      const timeUntilTrialPeriodEnd =
-        Date.now() - subscription.trialPeriodStartDate;
-      if (timeUntilTrialPeriodEnd <= TRIAL_PERIOD_IN_MILLIS_SECONDS) {
-        endTrialPeriod();
-      } else {
-        setTimeout(() => {
-          endTrialPeriod();
-        }, timeUntilTrialPeriodEnd);
-      }
-    }
-  };
-
   const onAppStateChange = (nextAppState: AppStateStatus) => {
-    if (
-      user &&
-      appState.current === 'active' &&
-      nextAppState === 'inactive' &&
-      isAutoSync
-    ) {
-      const timestamp = Date.now();
-      const shouldSync = lastBackup ? timestamp - lastBackup >= 60000 : true;
-      if (shouldSync) {
-        const {idCounter, ids, entities, historyIds} = store.getState().tasks;
-        const backup: Omit<Backup, 'currentEmail'> = {
-          idCounter,
-          ids,
-          entities,
-          historyIds,
-          createdAt: Date.now(),
-        };
-
-        backupsCollection
-          .doc(user.uid)
-          .set(backup)
-          .then(() => {
-            setLastBackup(timestamp);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }
+    if (appState.current === 'active' && nextAppState === 'inactive') {
+      autoSyncCallback();
     }
     appState.current = nextAppState;
   };
@@ -94,14 +61,13 @@ export const Navigator = () => {
     return () => {
       subscription.remove();
     };
-  }, [user, isAutoSync]);
+  }, [user, backupInfo.isAutoSync]);
 
   useEffect(() => {
     setOnDayEndHanlder();
     onAppLoad();
-    checkTrialPeriod();
+    checkTrialPeriodCallback();
     setLoading(false);
-
     return () => {
       clearOnDayEndHandler();
     };
@@ -122,7 +88,10 @@ export const Navigator = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={setFirstScreen}
+      onStateChange={logScreenChange}>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName="auth">

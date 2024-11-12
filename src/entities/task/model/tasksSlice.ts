@@ -62,7 +62,7 @@ export const tasksSlice = createSlice({
   initialState,
   reducers: {
     onAppLoad: state => {
-      const today = endOfDay()
+      const today = endOfDay();
       setStateDefault(state, today);
       rescheduleOverdueTasks(state, today);
       sortTasksByReminder(state, today);
@@ -218,10 +218,10 @@ export const tasksSlice = createSlice({
       if (state.titleEditingTaskId === id) {
         //it can be false during addNextTask action;
         clearTitleEditingTask(state);
+        sortTasksByReminder(state, state.entities[id].date);
       } else {
         task.isTitleEditing = false;
       }
-      sortTasksByReminder(state, state.entities[id].date);
     },
 
     continueTaskEditingWithTaskForm: state => {

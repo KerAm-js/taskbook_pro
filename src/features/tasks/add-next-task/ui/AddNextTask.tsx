@@ -1,12 +1,13 @@
-import { plusCircleSvg } from "@/shared/assets/svg/plusCircle";
-import { useTaskActions } from "@/entities/task";
-import { IconButton } from "@/shared";
+import {plusCircleSvg} from '@/shared/assets/svg/plusCircle';
+import {useTaskActions} from '@/entities/task';
+import {IconButton, logEvent} from '@/shared';
 
 export const AddNextTask = () => {
-  const { addEmptyTask } = useTaskActions();
+  const {addEmptyTask} = useTaskActions();
 
   const onPress = () => {
     addEmptyTask();
+    logEvent('add_next_task');
   };
 
   return (

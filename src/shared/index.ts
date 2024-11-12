@@ -44,6 +44,10 @@ export {WEEK_DAYS} from './config/consts/datetime';
 export {TIME_REGEX, EMAIL_REGEX} from './config/consts/regex';
 export {USER_UPDATES_PERIOD} from './config/consts/api';
 
+//api
+export {autoAuth} from './api/autoAuth';
+export {logEvent} from './api/logEvent';
+
 //hooks
 export {useSafeAreaPadding} from './hooks/useSafeAreaPadding';
 export {useKeyboard} from './hooks/useKeyboard';
@@ -73,7 +77,6 @@ export {
   getDateTitle,
   getCalendarMonths,
 } from './lib/dates';
-export {autoAuth} from './api/autoAuth';
 export {getTimeString, getTime} from './lib/time';
 export {
   setNotification,

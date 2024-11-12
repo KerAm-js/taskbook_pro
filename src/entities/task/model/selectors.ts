@@ -1,5 +1,16 @@
 import { RootState } from "@/app/store";
 import { createSelector } from "@reduxjs/toolkit";
+import { Task } from "./types";
+
+export const selectTaskRepeatingInfo = createSelector(
+  [
+    (state: RootState, id: Task['id']) => state.tasks.entities[id].isRegular,
+    (state: RootState, id: Task['id']) => state.tasks.entities[id].repeatingType,
+  ],
+  (isRegular, repeatingType) => {
+    return {isRegular, repeatingType};
+  }
+)
 
 export const selectTaskById = createSelector(
   [(state: RootState) => state.tasks.entities, (_, taskId: number) => taskId],

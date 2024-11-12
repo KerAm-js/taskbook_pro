@@ -3,6 +3,8 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {TApiMessage, User} from '../model/types';
 import * as Keychain from 'react-native-keychain';
 import {SEND_EMAIL_VERIFICATION_ACTION} from '../config/consts';
+import analytics from '@react-native-firebase/analytics';
+import { logEvent } from '@/shared';
 
 type TSigninCredentials = {
   auth: FirebaseAuthTypes.Module;
@@ -16,7 +18,13 @@ export const signoutThunk = createAsyncThunk<
   {rejectValue: TApiMessage}
 >('auth/signout', async ({auth}, thunkApi) => {
   try {
+    const email = auth.currentUser?.email;
+    const uid = auth.currentUser?.uid;
     await auth.signOut();
+    logEvent('signout', {
+      email,
+      uid,
+    });
   } catch (error: any) {
     let message;
     if (error.code === 'auth/network-request-failed') {
@@ -50,6 +58,9 @@ export const signinThunk = createAsyncThunk<
         emailVerified,
         name: displayName,
       };
+      await analytics().logLogin({
+        method: response.user.providerId,
+      });
       return thunkApi.fulfillWithValue(user);
     } else {
       return thunkApi.rejectWithValue({

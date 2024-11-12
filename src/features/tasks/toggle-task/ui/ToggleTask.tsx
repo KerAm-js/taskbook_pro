@@ -1,9 +1,14 @@
-import {AnimatedCheck} from '@/shared';
+import {AnimatedCheck, logEvent} from '@/shared';
 import {FC} from 'react';
 import {Pressable, StyleSheet} from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import Sound from 'react-native-sound';
-import {Task, useIsTaskCompleted, useTaskActions} from '@/entities/task';
+import {
+  Task,
+  useIsTaskCompleted,
+  useTaskActions,
+  useTaskRepeatingInfo,
+} from '@/entities/task';
 
 const hapticOptions = {
   enableVibrateFallback: true,
@@ -12,6 +17,7 @@ const hapticOptions = {
 
 export const ToggleTask: FC<Pick<Task, 'id'>> = ({id}) => {
   const isCompleted = useIsTaskCompleted(id);
+  const {repeatingType, isRegular} = useTaskRepeatingInfo(id);
   const {toggleTask} = useTaskActions();
 
   const loadSound = async () => {
@@ -31,6 +37,11 @@ export const ToggleTask: FC<Pick<Task, 'id'>> = ({id}) => {
       ReactNativeHapticFeedback.trigger('soft', hapticOptions);
     }
     toggleTask(id);
+    logEvent('toggle_task', {
+      isCompleted: !isCompleted,
+      isRegular,
+      repeatingType,
+    });
   };
 
   return (

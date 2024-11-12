@@ -1,5 +1,5 @@
 import {useBackupInfo, useSettingsActions} from '@/entities/settings';
-import {InputComment, Setting} from '@/shared';
+import {InputComment, logEvent, Setting} from '@/shared';
 import {useTranslation} from 'react-i18next';
 import {StyleSheet, View} from 'react-native';
 
@@ -8,13 +8,18 @@ export const SetAutoSync = () => {
   const {isAutoSync} = useBackupInfo();
   const {t} = useTranslation();
 
+  const onPress = () => {
+    toggleAutoSync();
+    logEvent('toggle_auto_async', {value: !isAutoSync});
+  };
+
   return (
     <View style={styles.container}>
       <Setting
         type="toggle"
         title="autoSync"
         value={isAutoSync}
-        onPress={() => toggleAutoSync()}
+        onPress={onPress}
       />
       <InputComment>{t('autoSyncComment')}</InputComment>
     </View>
