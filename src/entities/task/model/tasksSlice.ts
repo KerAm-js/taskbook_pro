@@ -143,6 +143,7 @@ export const tasksSlice = createSlice({
             task.nextDate = nextTask.date;
             addTaskToState(state, nextTask);
             updateTaskNotifications(state, nextTask.id);
+            sortTasksByReminder(state, nextTask.date);
           }
         } else {
           rescheduleIfOverdue(state, task.id);

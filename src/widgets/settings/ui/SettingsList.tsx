@@ -15,7 +15,6 @@ import {
 import {
   Alert,
   Linking,
-  Platform,
   ScrollView,
   Share,
   StyleSheet,
@@ -54,13 +53,11 @@ export const SettingsList = () => {
   const shareApp = async () => {
     try {
       const result = await Share.share(
-        Platform.OS === 'ios'
-          ? {
-              url,
-            }
-          : {
-              message: url,
-            },
+          {
+            url,
+            message: `${t('appSharingMessage')}\n\n${url}`,
+            title: 'Taskbook'
+          }
       );
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

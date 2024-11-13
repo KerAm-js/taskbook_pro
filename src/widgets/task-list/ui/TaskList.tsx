@@ -1,32 +1,20 @@
 import {ListRenderItemInfo, StyleSheet} from 'react-native';
-import React, {useCallback, useEffect, useMemo, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {PADDING_TOP, SCREEN_PADDING} from '@/shared';
 import {EmptyListImage} from './EmptyListImage';
-import {useSelectedDate, useTaskIds} from '@/entities/task';
+import {useSelectedDate, useTaskIdsForDate} from '@/entities/task';
 import {Card} from './Card';
 import Animated, {LinearTransition} from 'react-native-reanimated';
+import {useIsInitialTaskListRender} from '../lib/useFifteenTasksAddedForOneDayLogger';
+import {useFifteenTasksAddedForOneDayLogger} from '../lib/useIsAddedMoreThanTwentyTasks';
 
 const keyExtractor = (item: number) => item.toString();
 
 export const TaskList = () => {
-  const taskIds = useTaskIds();
   const selectedDate = useSelectedDate();
-  const prevDate = useRef<null | number>(null);
-  const isInitialRender = useRef(false);
-  const isScreenRender = useRef(true);
-
-  useMemo(() => {
-    if (!prevDate.current) {
-      prevDate.current = selectedDate;
-      return;
-    }
-    if (prevDate.current !== selectedDate) {
-      prevDate.current = selectedDate;
-      isInitialRender.current = true;
-    } else {
-      isInitialRender.current = false;
-    }
-  }, [taskIds, selectedDate]);
+  const taskIds = useTaskIdsForDate(selectedDate);
+  const isFirstAppRender = useRef(true);
+  const isInitialRender = useIsInitialTaskListRender(selectedDate);
 
   const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<number>) => {
@@ -36,21 +24,27 @@ export const TaskList = () => {
   );
 
   useEffect(() => {
-    if (isScreenRender.current) isScreenRender.current = false;
+    if (isFirstAppRender.current) isFirstAppRender.current = false;
   }, []);
+
+  useFifteenTasksAddedForOneDayLogger(
+    isInitialRender.current || isFirstAppRender.current,
+    selectedDate,
+    taskIds,
+  );
 
   return (
     <Animated.FlatList
       style={styles.scroll}
       itemLayoutAnimation={
-        isScreenRender.current || isInitialRender.current
+        isFirstAppRender.current || isInitialRender.current
           ? undefined
           : LinearTransition
       }
       maxToRenderPerBatch={1}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
-      data={taskIds[selectedDate]}
+      data={taskIds}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       ListEmptyComponent={EmptyListImage}

@@ -4,8 +4,8 @@ import { Task } from "./types";
 
 export const selectTaskRepeatingInfo = createSelector(
   [
-    (state: RootState, id: Task['id']) => state.tasks.entities[id].isRegular,
-    (state: RootState, id: Task['id']) => state.tasks.entities[id].repeatingType,
+    (state: RootState, id: Task['id']) => state.tasks.entities[id]?.isRegular,
+    (state: RootState, id: Task['id']) => state.tasks.entities[id]?.repeatingType,
   ],
   (isRegular, repeatingType) => {
     return {isRegular, repeatingType};

@@ -82,6 +82,11 @@ export const useTaskIds = () => {
   return tasks;
 };
 
+export const useTaskIdsForDate = (date: number) => {
+  const ids = useSelector((state: RootState) => state.tasks.ids[date]);
+  return ids;
+};
+
 export const useHistoryTaskIds = () => {
   const history = useSelector((state: RootState) => state.tasks.historyIds);
   return history;

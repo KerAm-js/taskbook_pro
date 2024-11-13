@@ -19,6 +19,7 @@ export {
   useHistoryTaskIds,
   useDailyReminder,
   useTaskRepeatingInfo,
+  useTaskIdsForDate,
 } from "./model/hooks";
 export { tasksSlice } from "./model/tasksSlice";
 export type { Task, TTaskActionType, TaskDto, RegularTaskDto, ITasksState } from "./model/types";
