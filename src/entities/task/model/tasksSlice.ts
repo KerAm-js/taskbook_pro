@@ -93,6 +93,7 @@ export const tasksSlice = createSlice({
       }
       for (let date in state.ids) {
         state.ids[date].forEach(id => {
+          delete state.entities[id].notificationIds;
           updateTaskNotifications(state, Number(id));
         });
       }

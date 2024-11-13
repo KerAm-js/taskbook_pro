@@ -14,6 +14,7 @@ export const SetReminderInterval = () => {
   const { t } = useTranslation();
 
   const data: TDataType = [
+    { title: t("min", { count: 1 }), value: 1 },
     { title: t("min", { count: 5 }), value: 5 },
     { title: t("min", { count: 10 }), value: 10 },
     { title: t("min", { count: 15 }), value: 15 },

@@ -180,7 +180,6 @@ export const updateTaskNotifications = (state: ITasksState, id: Task['id']) => {
         });
       }
     });
-
     return;
   }
   deleteTaskNotifications(state, id);
