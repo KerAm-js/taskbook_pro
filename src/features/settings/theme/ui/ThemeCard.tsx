@@ -59,8 +59,8 @@ export const ThemeCard: FC<{ theme: TTheme }> = ({ theme }) => {
             <CustomText style={styles.title}>{theme}</CustomText>
             <AnimatedCheck
               defaultTheme="night"
-              size={22}
               isChecked={currentTheme === theme}
+              size={22}
             />
           </View>
           <View style={styles.body}>

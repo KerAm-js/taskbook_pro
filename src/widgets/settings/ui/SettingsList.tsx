@@ -80,6 +80,8 @@ export const SettingsList = () => {
     );
   };
 
+  // TODO FOR RELEASE - correct app page link
+
   const goToCommunity = () => {
     const url = 'https://t.me/taskbook_community';
     Linking.openURL(url);

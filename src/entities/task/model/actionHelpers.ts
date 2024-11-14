@@ -174,7 +174,7 @@ export const updateTaskNotifications = (state: ITasksState, id: Task['id']) => {
       if (notificationDate > now) {
         setNotification({
           id: notificationId,
-          title: 'Taskbook Pro',
+          title: 'Taskbook',
           body: title,
           date: notificationDate,
         });

@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet } from "react-native";
 import { TEXT_STYLES } from "../config/style/texts";
 import { FC } from "react";
-import { AnimatedCheck } from "./AnimatedCheck";
+import { AnimatedCheck } from "./AnimatedCheck/ui/AnimatedCheck";
 import { useThemeColors } from "../hooks/useTheme";
 import { CustomText } from "./CustomText";
 import { ThemedView } from "./Theme/ui/ThemedView";
@@ -53,7 +53,7 @@ export const CheckList: FC<TPropTypes> = ({
             >
               {item.title}
             </CustomText>
-            <AnimatedCheck isChecked={isChecked} />
+            <AnimatedCheck size={22} isChecked={isChecked} />
           </Pressable>
         );
       })}

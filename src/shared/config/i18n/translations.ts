@@ -233,8 +233,10 @@ export const TRANSLATIONS = {
         'Если у вас есть идеи, которые помогут сделать Taskbook лучше, напишите об этом',
       writeAboutProblemYouHaveUsingTaskbook:
         'Напишите о проблеме, с которой вы сталкиваетесь, когда пользуетесь Taskbook',
-      appSharingMessage:
-        `Попробуй Taskbook, чтобы:\n 1) повысить свою продуктивность\n 2) вырабатывать полезные привычки\n 3) не забывать о важных делах`,
+      appSharingMessage: `Попробуй Taskbook, чтобы:\n 1) повысить свою продуктивность\n 2) вырабатывать полезные привычки\n 3) не забывать о важных делах`,
+      updateIsAvailable: 'Доступно обновление',
+      updateAppToUseNewFeatures:
+        'Пожалуйста, обновите приложение, чтобы использовать новый функционал',
     },
   },
   en: {
@@ -465,6 +467,8 @@ export const TRANSLATIONS = {
         'Write about the problem you have when using Taskbook',
       appSharingMessage:
         'Try Taskbook to:\n 1) increase your productivity\n 2) develop healthy habits\n 3) not forget about important things',
+      updateIsAvailable: 'Update is available',
+      updateAppToUseNewFeatures: 'Please, update the app to use new features',
     },
   },
 };

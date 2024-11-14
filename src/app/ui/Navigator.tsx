@@ -15,23 +15,29 @@ import {useAutoSyncCallback} from '../api/useAutoSyncCallback.api';
 import {useBackupInfo} from '@/entities/settings';
 import {useCheckTrialPeriodCallback} from '../model/useCheckTrialPeriodCallback';
 import {useLogScreenChangeCallback} from '../api/useLogScreenChangeCallback';
+import app from '../../../app.json';
+import {useIsAppUpdateAvailable} from '../api/useIsAppUpdateAvailable';
+import {askUserToUpdateApp} from '../lib/askUserUpdateApp';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
 export const Navigator = () => {
-  const routeNameRef = useRef<string | undefined>();
   const navigationRef =
     useRef<NavigationContainerRef<RootStackParamsList> | null>(null);
   const [loading, setLoading] = useState(true);
-  const {data: user, subscription} = useUser();
+  const {data: user, subscription, firstAppRunDate} = useUser();
   const {onAppLoad} = useTaskActions();
   const backupInfo = useBackupInfo();
+  const isAppUpdateAvailable = useIsAppUpdateAvailable(app.version);
   const appState = useRef(AppState.currentState);
   const timeout = useRef<NodeJS.Timeout | null>(null);
   const interval = useRef<NodeJS.Timeout | null>(null);
 
   const autoSyncCallback = useAutoSyncCallback(backupInfo);
-  const checkTrialPeriodCallback = useCheckTrialPeriodCallback(subscription);
+  const checkTrialPeriodCallback = useCheckTrialPeriodCallback(
+    subscription,
+    firstAppRunDate,
+  );
   const {setFirstScreen, logScreenChange} =
     useLogScreenChangeCallback(navigationRef);
 
@@ -55,6 +61,12 @@ export const Navigator = () => {
     }
     appState.current = nextAppState;
   };
+
+  useEffect(() => {
+    if (isAppUpdateAvailable) {
+      askUserToUpdateApp();
+    }
+  }, [isAppUpdateAvailable]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', onAppStateChange);

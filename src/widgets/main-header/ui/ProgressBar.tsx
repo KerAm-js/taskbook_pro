@@ -2,18 +2,34 @@ import {
   useCompletedTasksCount,
   useSelectedDate,
   useTaskIds,
-} from "@/entities/task";
-import { COLORS, SCREEN_PADDING } from "@/shared";
-import { StyleSheet, View } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+} from '@/entities/task';
+import {
+  useFirstAppRunDate,
+  useIsUserAskedRateApp,
+  useUserActions,
+} from '@/entities/user';
+import {COLORS, SCREEN_PADDING} from '@/shared';
+import {useEffect, useRef} from 'react';
+import {StyleSheet, View} from 'react-native';
+import ReactNativeInAppReview from 'react-native-in-app-review';
+import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
+
+const askUserRateApp = async () => {
+  try {
+    await ReactNativeInAppReview.RequestInAppReview();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const ProgressBar = () => {
   const taskIds = useTaskIds();
+  const isUserAskedRateApp = useIsUserAskedRateApp();
+  const firstAppRunDate = useFirstAppRunDate();
+  const {setUserHasBeenAskedRateApp} = useUserActions();
   const selectedDate = useSelectedDate();
   const completedTasksCount = useCompletedTasksCount();
+  const prevCompletedTasksCount = useRef(completedTasksCount);
 
   const progressStyleAnim = useAnimatedStyle(() => {
     const tasksCount = taskIds[selectedDate].length;
@@ -24,6 +40,18 @@ const ProgressBar = () => {
       width: withTiming(`${progress}%`),
     };
   }, [taskIds, selectedDate, completedTasksCount]);
+
+  useEffect(() => {
+    if (
+      !isUserAskedRateApp &&
+      prevCompletedTasksCount.current < completedTasksCount &&
+      firstAppRunDate - Date.now() > 259200000
+    ) {
+      askUserRateApp();
+      setUserHasBeenAskedRateApp();
+    }
+    prevCompletedTasksCount.current = completedTasksCount;
+  }, [completedTasksCount]);
 
   return (
     <View style={styles.container}>

@@ -47,7 +47,7 @@ export const SettingsFooter = () => {
       borderColorName="lineGrey"
       colorName="background">
       <ThemedText colorName="accent" style={styles.appName}>
-        Taskbook Pro
+        Taskbook
       </ThemedText>
       {versionShown && (
         <Animated.View entering={FadeInDown.delay(100).duration(400)}>

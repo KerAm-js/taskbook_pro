@@ -31,7 +31,6 @@ export type Rate = {
 };
 
 export type Subscription = {
-  trialPeriodStartDate: number;
   isTrialPeriodExpired: boolean;
 } & (
   | {
@@ -49,5 +48,7 @@ export interface IUserState {
   error: TApiMessage | null;
   success: TApiMessage | null;
   data?: User;
+  firstAppRunDate: number;
   subscription: Subscription;
+  isUserAskedRateApp: boolean; 
 }

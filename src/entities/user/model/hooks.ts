@@ -21,3 +21,15 @@ export const useUser = () => {
   const user = useSelector((state: RootState) => state.user);
   return user;
 };
+
+export const useIsUserAskedRateApp = () => {
+  const result = useSelector(
+    (state: RootState) => state.user.isUserAskedRateApp,
+  );
+  return result;
+};
+
+export const useFirstAppRunDate = () => {
+  const result = useSelector((state: RootState) => state.user.firstAppRunDate);
+  return result;
+};

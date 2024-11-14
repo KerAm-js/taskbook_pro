@@ -7,8 +7,9 @@ const initialState: IUserState = {
   loading: false,
   error: null,
   success: null,
+  isUserAskedRateApp: false,
+  firstAppRunDate: Date.now(),
   subscription: {
-    trialPeriodStartDate: Date.now(),
     isTrialPeriodExpired: false,
   },
 };
@@ -47,6 +48,9 @@ export const userSlice = createSlice({
         ...state.subscription,
         isTrialPeriodExpired: false,
       };
+    },
+    setUserHasBeenAskedRateApp: state => {
+      state.isUserAskedRateApp = true;
     },
   },
   extraReducers: builder => {

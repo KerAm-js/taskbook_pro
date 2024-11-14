@@ -1,17 +1,26 @@
-import { FC, useEffect } from "react";
-import { StyleSheet } from "react-native";
-import { useThemeColors } from "../hooks/useTheme";
+import {FC, useEffect} from 'react';
+import {Pressable, StyleSheet} from 'react-native';
+import {useThemeColors} from '../hooks/useTheme';
 import Animated, {
   interpolate,
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-} from "react-native-reanimated";
-import { COLORS } from "../config/style/colors";
+} from 'react-native-reanimated';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import {COLORS} from '../config/style/colors';
 
-export const Toggle: FC<{ value: boolean }> = ({ value }) => {
-  const { colors } = useThemeColors();
+const hapticOptions = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+
+export const Toggle: FC<{value: boolean; toggle: () => void}> = ({
+  value,
+  toggle,
+}) => {
+  const {colors} = useThemeColors();
 
   const colorProgress = useSharedValue(0);
 
@@ -19,7 +28,7 @@ export const Toggle: FC<{ value: boolean }> = ({ value }) => {
     const backgroundColor = interpolateColor(
       colorProgress.value,
       [0, 1],
-      [colors.grey, COLORS.green]
+      [colors.grey, COLORS.green],
     );
     return {
       backgroundColor,
@@ -29,8 +38,8 @@ export const Toggle: FC<{ value: boolean }> = ({ value }) => {
   const sliderStyleAnim = useAnimatedStyle(() => {
     const translateX = interpolate(colorProgress.value, [0, 1], [0, 20]);
     return {
-      transform: [{ translateX }],
-      backgroundColor: COLORS.white
+      transform: [{translateX}],
+      backgroundColor: COLORS.white,
     };
   });
 
@@ -38,10 +47,17 @@ export const Toggle: FC<{ value: boolean }> = ({ value }) => {
     colorProgress.value = withTiming(value ? 1 : 0);
   }, [value]);
 
+  const onPress = () => {
+    toggle();
+    ReactNativeHapticFeedback.trigger('impactLight', hapticOptions);
+  };
+
   return (
-    <Animated.View style={[styles.container, containerStyleAnim]}>
-      <Animated.View style={[styles.slider, sliderStyleAnim]} />
-    </Animated.View>
+    <Pressable onPress={onPress} hitSlop={{top: 12, bottom: 12}}>
+      <Animated.View style={[styles.container, containerStyleAnim]}>
+        <Animated.View style={[styles.slider, sliderStyleAnim]} />
+      </Animated.View>
+    </Pressable>
   );
 };
 
@@ -50,7 +66,7 @@ const styles = StyleSheet.create({
     height: 24,
     width: 44,
     borderRadius: 12,
-    borderCurve: "continuous",
+    borderCurve: 'continuous',
     padding: 2,
   },
   slider: {

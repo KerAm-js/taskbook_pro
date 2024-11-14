@@ -1,6 +1,6 @@
 import {RootStackParamsList} from '@/shared';
 import {NavigationContainerRef} from '@react-navigation/native';
-import {MutableRefObject, useEffect, useRef} from 'react';
+import {MutableRefObject, useRef} from 'react';
 import analytics from '@react-native-firebase/analytics';
 
 export const useLogScreenChangeCallback = (

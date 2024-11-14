@@ -103,8 +103,6 @@ const Component: FC<TPropTypes> = ({id, index, isInitialRender}) => {
     };
   }, [translationX.value, opacity.value, translationY.value, isTitleEditing]);
 
-  useEffect(() => {}, [isTitleEditing]);
-
   useEffect(() => {
     let timer: any;
     if (isInitialRender.current) {

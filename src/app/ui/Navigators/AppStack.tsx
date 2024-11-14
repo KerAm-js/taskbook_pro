@@ -37,7 +37,7 @@ export const AppStack = () => {
           name="subscription"
           component={Subscription}
           options={{
-            title: 'Taskbook Pro',
+            title: 'Taskbook',
             headerTitle: CustomHeader.Title,
             headerBackVisible: false,
             headerStyle: {
@@ -93,7 +93,7 @@ export const AppStack = () => {
               name="subscription"
               component={Subscription}
               options={{
-                title: 'Taskbook Pro',
+                title: 'Taskbook',
               }}
             />
             <Stack.Screen name="account" component={Account} />

@@ -15,19 +15,19 @@ const hapticOptions = {
   ignoreAndroidSystemSettings: false,
 };
 
+const loadSound = async () => {
+  Sound.setCategory('Playback');
+  const sound = new Sound('success.mp3', Sound.MAIN_BUNDLE, error => {
+    if (!error) {
+      sound.play();
+    }
+  });
+};
+
 export const ToggleTask: FC<Pick<Task, 'id'>> = ({id}) => {
   const isCompleted = useIsTaskCompleted(id);
   const {repeatingType, isRegular} = useTaskRepeatingInfo(id);
   const {toggleTask} = useTaskActions();
-
-  const loadSound = async () => {
-    Sound.setCategory('Playback');
-    const sound = new Sound('success.mp3', Sound.MAIN_BUNDLE, error => {
-      if (!error) {
-        sound.play();
-      }
-    });
-  };
 
   const onPressHanlder = () => {
     if (!isCompleted) {
