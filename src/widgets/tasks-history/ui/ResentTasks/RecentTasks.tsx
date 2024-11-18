@@ -199,6 +199,8 @@ export const RecentTasks: FC<TPropTypes> = ({searchDate, isSearching}) => {
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           ListEmptyComponent={ListEmptyComponent}
+          entering={FadeIn.duration(150)}
+          exiting={FadeOut}
         />
       )}
     </View>

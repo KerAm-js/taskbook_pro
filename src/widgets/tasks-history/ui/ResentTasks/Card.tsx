@@ -42,7 +42,6 @@ export const Card: FC<TPropTypes> = React.memo(({id, remove}) => {
         nightStyle={styles.taskNight}
         colorName="background"
         nightColorName="backgroundSecond">
-        <ToggleTask id={id} />
         <TaskRow id={id} onPress={onPress} blackWhenCompleted />
       </ThemedView>
     </Animated.View>
@@ -56,6 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderCurve: 'continuous',
     marginBottom: 10,
+    paddingLeft: 15,
   },
   taskNight: {
     shadowColor: 'rgba(0, 0, 0, 0)',

@@ -10,7 +10,7 @@ export const SectionTitle: FC<{date: number}> = React.memo(({date}) => {
     <Animated.View
       entering={FadeIn.duration(150)}
       exiting={FadeOut.duration(150)}>
-      <ThemedText colorName="textGrey" style={styles.title}>
+      <ThemedText colorName="accent" style={styles.title}>
         {getDateTitle(date, t)}
       </ThemedText>
     </Animated.View>
@@ -21,5 +21,6 @@ const styles = StyleSheet.create({
   title: {
     ...TEXT_STYLES.title,
     marginVertical: 10,
+    paddingLeft: 15,
   },
 });

@@ -34,6 +34,9 @@ import {telegramSvg} from '@/shared/assets/svg/telegram';
 import {lightBulbFillSvg} from '@/shared/assets/svg/lightBulbFill';
 import {dangerFillSvg} from '@/shared/assets/svg/dangerFill';
 
+const itunesItemId = 1604538068;
+const URL = `itms-apps://itunes.apple.com/app/${itunesItemId}`;
+
 export const SettingsList = () => {
   const {t} = useTranslation();
   const navigation =
@@ -42,9 +45,6 @@ export const SettingsList = () => {
   const {data: user} = useUser();
   const fastInputMode = useFastInputMode();
 
-  const itunesItemId = 1604538068;
-  const url = `itms-apps://itunes.apple.com/app/${itunesItemId}`;
-
   const onToggleFastInputMode = () => {
     toggleFastInputMode();
     logEvent('toggle_quick_addition', {value: !fastInputMode});
@@ -52,13 +52,10 @@ export const SettingsList = () => {
 
   const shareApp = async () => {
     try {
-      const result = await Share.share(
-          {
-            url,
-            message: `${t('appSharingMessage')}\n\n${url}`,
-            title: 'Taskbook'
-          }
-      );
+      const result = await Share.share({
+        message: `${t('appSharingMessage')}\n\nhttps://apps.apple.com/ru/app/microsoft-to-do/id1274495053?mt=12`,
+        title: 'Taskbook',
+      });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // shared with activity type of result.activityType
@@ -74,10 +71,7 @@ export const SettingsList = () => {
   };
 
   const rateApp = () => {
-    const itunesItemId = 1604538068;
-    Linking.openURL(
-      `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id${itunesItemId}?action=write-review`,
-    );
+    Linking.openURL(URL);
   };
 
   // TODO FOR RELEASE - correct app page link

@@ -237,6 +237,10 @@ export const TRANSLATIONS = {
       updateIsAvailable: 'Доступно обновление',
       updateAppToUseNewFeatures:
         'Пожалуйста, обновите приложение, чтобы использовать новый функционал',
+      return: 'Вернуть',
+      returnToTaskList: 'Вернуть в список задач?',
+      taskWillBeDeletedFromHistoryForever:
+        'Задача будет удалена из истории навсегда',
     },
   },
   en: {
@@ -469,6 +473,10 @@ export const TRANSLATIONS = {
         'Try Taskbook to:\n 1) increase your productivity\n 2) develop healthy habits\n 3) not forget about important things',
       updateIsAvailable: 'Update is available',
       updateAppToUseNewFeatures: 'Please, update the app to use new features',
+      return: 'Return',
+      returnToTaskList: 'Return it to the task list?',
+      taskWillBeDeletedFromHistoryForever:
+        'The task will be deleted from the history forever',
     },
   },
 };

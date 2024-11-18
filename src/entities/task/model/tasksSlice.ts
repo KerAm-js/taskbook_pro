@@ -149,6 +149,7 @@ export const tasksSlice = createSlice({
         } else {
           rescheduleIfOverdue(state, task.id);
           updateTaskNotifications(state, task.id);
+          sortTasksByReminder(state, task.date);
           if (task.isRegular) {
             const onTaskFind = (id: Task['id']) =>
               deleteTaskNotifications(state, id);

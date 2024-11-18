@@ -21,7 +21,7 @@ import {
   WEEK_DAYS,
 } from '@/shared';
 import {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import {StyleSheet, ScrollView, View} from 'react-native';
+import {StyleSheet, ScrollView, View, Alert} from 'react-native';
 import {FormButton} from '@/shared';
 import {useTranslation} from 'react-i18next';
 import {
@@ -53,8 +53,13 @@ const monthDays = Array(31)
   .map((_, i) => i + 1);
 
 export const TaskForm = () => {
-  const {updateTask, deleteTask, addTask, endTaskEditingWithTaskForm} =
-    useTaskActions();
+  const {
+    updateTask,
+    deleteTask,
+    toggleTask,
+    addTask,
+    endTaskEditingWithTaskForm,
+  } = useTaskActions();
   const {t} = useTranslation();
   const navigation = useNavigation();
   const selectedDate = useSelectedDate();
@@ -190,7 +195,6 @@ export const TaskForm = () => {
     } else {
       addTask(taskData);
     }
-    isSubmitted.current = true;
     navigation.goBack();
   };
 
@@ -198,8 +202,30 @@ export const TaskForm = () => {
     if (id) {
       deleteTask(id);
     }
-    isSubmitted.current = true;
     navigation.goBack();
+  };
+
+  const onReturn = () => {
+    if (id) {
+      Alert.alert(
+        t('returnToTaskList'),
+        t('taskWillBeDeletedFromHistoryForever'),
+        [
+          {
+            text: t('return'),
+            style: 'destructive',
+            onPress: () => {
+              toggleTask(id);
+              navigation.goBack();
+            },
+          },
+          {
+            text: t('cancel'),
+            style: 'cancel',
+          },
+        ],
+      );
+    }
   };
 
   useEffect(() => {
@@ -303,12 +329,20 @@ export const TaskForm = () => {
             title={id ? 'save' : 'add'}
             onPress={onSubmit}
           />
-          {!!id && taskToEdit?.date >= today && (
+          {!!id && taskToEdit?.date >= today ? (
             <FormButton
               type="destructive"
-              title={id ? 'delete' : 'add'}
+              title={'delete'}
               onPress={onDelete}
             />
+          ) : (
+            taskToEdit.isCompleted && (
+              <FormButton
+                type="destructive"
+                title={'return'}
+                onPress={onReturn}
+              />
+            )
           )}
         </View>
       </ScrollView>
