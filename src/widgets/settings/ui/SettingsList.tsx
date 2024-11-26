@@ -99,9 +99,6 @@ export const SettingsList = () => {
         contentContainerStyle={styles.scrollContentContainer}
         showsVerticalScrollIndicator={false}>
         <UserInfo />
-        <View style={styles.paddingContainer}>
-          <TaskbookForever />
-        </View>
         <View style={styles.section}>
           <CustomText themed colorName="textGrey" style={styles.categoryTitle}>
             general
