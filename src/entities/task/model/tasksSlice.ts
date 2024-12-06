@@ -178,9 +178,6 @@ export const tasksSlice = createSlice({
       const id = state.taskToUpdateId;
       if (id) {
         const prevDateOfTask = state.entities[id].date;
-        const prevRemindTime = state.entities[id].remindTime
-          ? {...state.entities[id].remindTime}
-          : undefined;
         if (action.payload.isRegular) {
           updateRegularTask(state, id, action.payload);
         } else {
@@ -189,12 +186,7 @@ export const tasksSlice = createSlice({
         const task = state.entities[id];
         if (task.date !== prevDateOfTask) {
           changeTaskDate(state, task, prevDateOfTask);
-        }
-        if (
-          task.date !== prevDateOfTask ||
-          prevRemindTime?.hour !== task.remindTime?.hour ||
-          prevRemindTime?.minute !== task.remindTime?.minute
-        ) {
+        } else {
           sortTasksByReminder(state, task.date);
         }
         updateTaskNotifications(state, task.id);

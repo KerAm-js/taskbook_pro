@@ -60,7 +60,7 @@ export const TaskInputTitle: FC<{task: Task}> = ({task}) => {
   return (
     <TextInput
       ref={inputRef}
-      style={[styles.input, {color: text}]}
+      style={[styles.input, {color: colors.text}]}
       autoCorrect={false}
       multiline
       placeholder={t('enterText')}
